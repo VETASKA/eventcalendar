@@ -1,0 +1,57 @@
+# Runs next to Harvey on the same server. Only the web port is published, and only on 127.0.0.1:
+# Caddy (already installed for Harvey) serves the domain; the database and Redis stay inside.
+x-app: &app
+  build: .
+  env_file: .env
+  restart: unless-stopped
+  depends_on:
+    db: {condition: service_healthy}
+    redis: {condition: service_started}
+  logging: {driver: json-file, options: {max-size: "10m", max-file: "3"}}
+
+services:
+  db:
+    image: postgres:16
+    environment:
+      POSTGRES_DB: eventcalendar
+      POSTGRES_USER: eventcalendar
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes: [pgdata:/var/lib/postgresql/data]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U eventcalendar"]
+      interval: 5s
+      retries: 20
+    restart: unless-stopped
+
+  redis:
+    image: redis:7-alpine
+    command: ["redis-server", "--appendonly", "yes"]
+    volumes: [redisdata:/data]
+    restart: unless-stopped
+
+  migrate:
+    <<: *app
+    restart: "no"
+    command: ["python", "manage.py", "migrate", "--noinput"]
+
+  web:
+    <<: *app
+    depends_on:
+      migrate: {condition: service_completed_successfully}
+    ports: ["127.0.0.1:${WEB_PORT:-8100}:8000"]
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request;urllib.request.urlopen('http://127.0.0.1:8000/healthz')"]
+      interval: 15s
+      retries: 5
+
+  worker:
+    <<: *app
+    command: ["celery", "-A", "config", "worker", "-l", "info", "--concurrency", "2"]
+
+  beat:
+    <<: *app
+    command: ["celery", "-A", "config", "beat", "-l", "info", "-s", "/tmp/celerybeat-schedule"]
+
+volumes:
+  pgdata:
+  redisdata:
