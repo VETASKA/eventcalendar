@@ -53,7 +53,7 @@ def test_event_page(client, push, admin_user):
     r = client.get(api["url"])
     html = r.content.decode()
     assert r.status_code == 200 and "Форум підприємців 1" in html and "14 березня 2027" in html
-    assert "Час уточнюється" in html and "Київ" in html and '"@type": "Event"' in html
+    assert "час уточнюється" in html and "Київ" in html and '"@type": "Event"' in html
     assert "Реєстрація та квитки" in html and "https://tickets.example/ev" in html
     # several ticket services: all shown, the first is the main button; «primary» mode shows one
     TicketLink.objects.create(event=ev, label="Concert.ua", url="https://concert.ua/x", position=1)
