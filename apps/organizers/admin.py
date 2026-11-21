@@ -1,8 +1,7 @@
 from django.contrib import admin
+from unfold.admin import ModelAdmin
 
 from .models import Claim, EventGrant, Membership, Organization
 
-admin.site.register(Organization)
-admin.site.register(Membership)
-admin.site.register(Claim)
-admin.site.register(EventGrant)
+for m in (Organization, Membership, Claim, EventGrant):
+    admin.site.register(m, ModelAdmin)

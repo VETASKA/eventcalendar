@@ -1,14 +1,17 @@
 {% extends "admin/base_site.html" %}
 {% block content %}
-<h1>Схвалити {{ count }} подій?</h1>
-<p>Кожна картка перевіряється окремо. Події з помилками не будуть опубліковані — їх буде перелічено після дії.
-  Масове схвалення не видає прав організаторам.</p>
-<ul>{% for e in events|slice:":30" %}<li>{{ e }}</li>{% endfor %}{% if count > 30 %}<li>…та ще {{ count|add:"-30" }}</li>{% endif %}</ul>
-<form method="post">{% csrf_token %}
-  {% for e in events %}<input type="hidden" name="_selected_action" value="{{ e.pk }}">{% endfor %}
-  <input type="hidden" name="action" value="{{ action }}">
-  <input type="hidden" name="confirm" value="yes">
-  <input type="submit" value="Так, схвалити {{ count }}">
-  <a href="." class="button cancel-link">Скасувати</a>
-</form>
+<div class="max-w-3xl">
+  <h1 class="font-semibold text-xl mb-4 text-important">Одобрить {{ count }} событий?</h1>
+  <p class="mb-4">Каждая карточка проверяется отдельно. События с ошибками не будут опубликованы — их список появится
+    после действия. Массовое одобрение не выдаёт прав организаторам.</p>
+  <ul class="list-disc pl-6 mb-6">{% for e in events|slice:":30" %}<li>{{ e }}</li>{% endfor %}
+    {% if count > 30 %}<li>…и ещё {{ count|add:"-30" }}</li>{% endif %}</ul>
+  <form method="post" class="flex gap-3">{% csrf_token %}
+    {% for e in events %}<input type="hidden" name="_selected_action" value="{{ e.pk }}">{% endfor %}
+    <input type="hidden" name="action" value="{{ action }}">
+    <input type="hidden" name="confirm" value="yes">
+    <button type="submit" class="bg-primary-600 text-white font-medium px-4 py-2 rounded-default">Да, одобрить {{ count }}</button>
+    <a href="." class="border border-base-200 px-4 py-2 rounded-default">Отмена</a>
+  </form>
+</div>
 {% endblock %}

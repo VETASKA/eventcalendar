@@ -3,22 +3,28 @@ from django.db import models
 
 
 class Site(models.Model):
-    code = models.SlugField(unique=True, help_text="Короткий код: ua, pl-test …")
-    name = models.CharField(max_length=120)
-    default_locale = models.CharField(max_length=5, default="uk")
-    locales = models.JSONField(default=list, help_text='Напр. ["uk", "en", "pl"]')
-    timezone = models.CharField(max_length=64, default="Europe/Kyiv")
-    countries = models.ManyToManyField("geo.Country", blank=True, related_name="sites")
+    code = models.SlugField("код", unique=True, help_text="Короткий код: ua, pl-test …")
+    name = models.CharField("название", max_length=120)
+    default_locale = models.CharField("язык по умолчанию", max_length=5, default="uk")
+    locales = models.JSONField("языки сайта", default=list, help_text='Напр. ["uk", "en", "pl"]')
+    timezone = models.CharField("часовой пояс", max_length=64, default="Europe/Kyiv")
+    countries = models.ManyToManyField("geo.Country", verbose_name="страны", blank=True, related_name="sites")
     # online events with no city: shown here only after a moderator ties them to this storefront
-    show_online = models.BooleanField(default=True)
-    theme = models.CharField(max_length=40, default="default")
-    digest_weekday = models.PositiveSmallIntegerField(default=4, help_text="0 = понеділок")
-    digest_time = models.TimeField(default="10:00")
+    show_online = models.BooleanField("показывать онлайн-события", default=True)
+    theme = models.CharField("оформление", max_length=40, default="default")
+    digest_weekday = models.PositiveSmallIntegerField("день дайджеста", default=4, help_text="0 = понедельник")
+    digest_time = models.TimeField("время дайджеста", default="10:00")
     # names of environment variables / secret entries, never the secrets themselves
-    secrets_ref = models.JSONField(default=dict, blank=True,
-                                   help_text='{"telegram_token": "UA_TG_TOKEN", "mail_from": "UA_MAIL_FROM"}')
-    is_active = models.BooleanField(default=True)
-    is_default = models.BooleanField(default=False, help_text="Сайт для запитів без відомого домену (локально)")
+    secrets_ref = models.JSONField("ссылки на секреты", default=dict, blank=True,
+                                   help_text='Имена переменных окружения, не сами секреты: '
+                                             '{"telegram_token": "UA_TG_TOKEN"}')
+    is_active = models.BooleanField("включён", default=True)
+    is_default = models.BooleanField("сайт по умолчанию", default=False,
+                                     help_text="Для запросов с неизвестного домена (локально)")
+
+    class Meta:
+        verbose_name = "сайт"
+        verbose_name_plural = "сайты"
 
     def __str__(self):
         return self.name
@@ -28,9 +34,13 @@ class Site(models.Model):
 
 
 class SiteDomain(models.Model):
-    site = models.ForeignKey(Site, on_delete=models.CASCADE, related_name="domains")
-    host = models.CharField(max_length=253, unique=True)
-    is_primary = models.BooleanField(default=False)
+    site = models.ForeignKey(Site, verbose_name="сайт", on_delete=models.CASCADE, related_name="domains")
+    host = models.CharField("домен", max_length=253, unique=True)
+    is_primary = models.BooleanField("основной", default=False)
+
+    class Meta:
+        verbose_name = "домен"
+        verbose_name_plural = "домены"
 
     def save(self, *a, **kw):
         self.host = self.host.strip().lower().rstrip(".")

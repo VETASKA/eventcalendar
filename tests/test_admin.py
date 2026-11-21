@@ -10,16 +10,16 @@ def test_queue_and_bulk_approve(admin_client, push):
     r = admin_client.get("/admin/catalog/event/?flag=no_type")
     assert r.status_code == 200
     for path in ("/admin/catalog/event/", f"/admin/catalog/event/{good.pk}/change/", "/admin/intake/intakeitem/",
-                 "/admin/geo/city/", "/admin/audit/auditlog/"):
+                 "/admin/geo/city/", "/admin/audit/auditlog/", "/admin/", "/admin/auth/user/"):
         assert admin_client.get(path).status_code == 200, path
     ids = list(Event.objects.values_list("pk", flat=True))
     r = admin_client.post("/admin/catalog/event/", {"action": "bulk_approve", "_selected_action": ids})
-    assert r.status_code == 200 and "Схвалити 2" in r.content.decode()
+    assert r.status_code == 200 and "одобрить 2" in r.content.decode()
     assert not SitePublication.objects.filter(status="published").exists()   # confirmation first
     r = admin_client.post("/admin/catalog/event/", {"action": "bulk_approve", "_selected_action": ids,
                                                      "confirm": "yes"}, follow=True)
     text = r.content.decode()
-    assert "Опубліковано: 1" in text and "не вказано тип" in text
+    assert "Опубликовано: 1" in text and "не вказано тип" in text
     assert SitePublication.objects.get(event=good).status == "published"
 
 

@@ -1,8 +1,7 @@
 from django.contrib import admin
+from unfold.admin import ModelAdmin
 
 from .models import Announcement, Delivery, Reminder, Subscription
 
-admin.site.register(Subscription)
-admin.site.register(Reminder)
-admin.site.register(Announcement)
-admin.site.register(Delivery)
+for m in (Subscription, Reminder, Announcement, Delivery):
+    admin.site.register(m, ModelAdmin)

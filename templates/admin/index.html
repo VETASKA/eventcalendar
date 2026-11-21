@@ -1,0 +1,37 @@
+{% extends 'admin/base.html' %}
+{% load i18n unfold %}
+
+{% block title %}Обзор | {{ site_title }}{% endblock %}
+{% block branding %}{% include "unfold/helpers/site_branding.html" %}{% endblock %}
+
+{% block content %}
+<div class="flex flex-col gap-8">
+  <div class="grid gap-6 md:grid-cols-2 xl:grid-cols-4">
+    {% for k in kpis %}
+      {% component "unfold/components/card.html" with href=k.href icon=k.icon %}
+        {% component "unfold/components/text.html" %}{{ k.title }}{% endcomponent %}
+        {% component "unfold/components/title.html" %}{{ k.value }}{% endcomponent %}
+      {% endcomponent %}
+    {% endfor %}
+  </div>
+
+  <div class="grid gap-6 lg:grid-cols-2">
+    {% component "unfold/components/card.html" with title="Что проверить в очереди" %}
+      <ul class="flex flex-col gap-3">
+        {% for c in checks %}
+          <li class="flex justify-between"><a class="text-primary-600 hover:underline" href="{{ c.href }}">{{ c.title }}</a>
+            <span class="font-semibold">{{ c.value }}</span></li>
+        {% endfor %}
+      </ul>
+    {% endcomponent %}
+    {% component "unfold/components/card.html" with title="Источники" %}
+      <ul class="flex flex-col gap-3">
+        {% for s in sources %}
+          <li class="flex justify-between"><span>{{ s.name }}</span>
+            <span class="text-subtle">{{ s.items }} записей · последний приём {{ s.last|default:"—" }}</span></li>
+        {% empty %}<li class="text-subtle">Источников пока нет</li>{% endfor %}
+      </ul>
+    {% endcomponent %}
+  </div>
+</div>
+{% endblock %}

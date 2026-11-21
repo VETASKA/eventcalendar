@@ -30,6 +30,8 @@ ALLOWED_HOSTS = env_list("DJANGO_ALLOWED_HOSTS", "localhost,127.0.0.1")
 CSRF_TRUSTED_ORIGINS = env_list("DJANGO_CSRF_TRUSTED_ORIGINS")
 
 INSTALLED_APPS = [
+    "unfold",
+    "unfold.contrib.filters",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -44,6 +46,7 @@ INSTALLED_APPS = [
     "apps.organizers",
     "apps.subscriptions",
     "apps.audit",
+    "apps.public",
 ]
 
 MIDDLEWARE = [
@@ -57,6 +60,7 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "apps.portals.middleware.CurrentSiteMiddleware",
+    "apps.core.middleware.AdminLanguageMiddleware",
 ]
 
 ROOT_URLCONF = "config.urls"
@@ -95,6 +99,8 @@ AUTH_PASSWORD_VALIDATORS = [
 LANGUAGE_CODE = "uk"
 LANGUAGES = [("uk", "Українська"), ("en", "English"), ("pl", "Polski")]
 LOCALE_PATHS = [BASE_DIR / "locale"]
+# The moderation admin is in Russian (the owner's choice); the public site stays uk / en / pl.
+ADMIN_LANGUAGE = "ru"
 USE_I18N = True
 TIME_ZONE = "Europe/Kyiv"
 USE_TZ = True
@@ -133,3 +139,63 @@ LOGGING = {
 
 # Django 6 default; silences the transitional warning
 FORMS_URLFIELD_ASSUME_HTTPS = True
+
+# ── Admin look (django-unfold) ─────────────────────────────────────────────
+from django.urls import reverse_lazy  # noqa: E402
+
+UNFOLD = {
+    "SITE_TITLE": "EventCalendar",
+    "SITE_HEADER": "EventCalendar",
+    "SITE_SUBHEADER": "модерация",
+    "SITE_SYMBOL": "calendar_month",
+    "SITE_URL": "/",
+    "SHOW_HISTORY": True,
+    "SHOW_VIEW_ON_SITE": False,
+    "DASHBOARD_CALLBACK": "apps.core.dashboard.dashboard_callback",
+    "COLORS": {
+        "primary": {"50": "oklch(97.7% .014 308.299)", "100": "oklch(94.6% .033 307.174)",
+                    "200": "oklch(90.2% .063 306.703)", "300": "oklch(82.7% .119 306.383)",
+                    "400": "oklch(71.4% .203 305.504)", "500": "oklch(62.7% .265 303.9)",
+                    "600": "oklch(55.8% .288 302.321)", "700": "oklch(49.6% .265 301.924)",
+                    "800": "oklch(43.8% .218 303.724)", "900": "oklch(38.1% .176 304.987)",
+                    "950": "oklch(29.1% .149 302.717)"},
+    },
+    "SIDEBAR": {
+        "show_search": True,
+        "show_all_applications": False,
+        "navigation": [
+            {"title": "Модерация", "items": [
+                {"title": "Обзор", "icon": "dashboard", "link": reverse_lazy("admin:index")},
+                {"title": "Очередь модерации", "icon": "pending_actions",
+                 "link": lambda request: reverse_lazy("admin:catalog_event_changelist") + "?state__exact=pending"},
+                {"title": "Все события", "icon": "event", "link": reverse_lazy("admin:catalog_event_changelist")},
+                {"title": "Предложенные изменения", "icon": "difference",
+                 "link": reverse_lazy("admin:catalog_eventrevision_changelist")},
+                {"title": "Записи импорта", "icon": "input", "link": reverse_lazy("admin:intake_intakeitem_changelist")},
+            ]},
+            {"title": "Справочники", "items": [
+                {"title": "Типы событий", "icon": "category", "link": reverse_lazy("admin:catalog_eventtype_changelist")},
+                {"title": "Тематики", "icon": "sell", "link": reverse_lazy("admin:catalog_topic_changelist")},
+                {"title": "Города", "icon": "location_city", "link": reverse_lazy("admin:geo_city_changelist")},
+                {"title": "Регионы", "icon": "map", "link": reverse_lazy("admin:geo_region_changelist")},
+                {"title": "Страны", "icon": "public", "link": reverse_lazy("admin:geo_country_changelist")},
+            ]},
+            {"title": "Организаторы и подписки", "collapsible": True, "items": [
+                {"title": "Организации", "icon": "business", "link": reverse_lazy("admin:organizers_organization_changelist")},
+                {"title": "Запросы «Это моё событие»", "icon": "verified_user",
+                 "link": reverse_lazy("admin:organizers_claim_changelist")},
+                {"title": "Подписки", "icon": "mail", "link": reverse_lazy("admin:subscriptions_subscription_changelist")},
+                {"title": "Журнал отправок", "icon": "outbox", "link": reverse_lazy("admin:subscriptions_delivery_changelist")},
+            ]},
+            {"title": "Настройки", "collapsible": True, "items": [
+                {"title": "Сайты", "icon": "language", "link": reverse_lazy("admin:portals_site_changelist")},
+                {"title": "Источники", "icon": "hub", "link": reverse_lazy("admin:intake_eventsource_changelist")},
+                {"title": "Пользователи", "icon": "person", "link": reverse_lazy("admin:auth_user_changelist")},
+                {"title": "Журнал действий", "icon": "history", "link": reverse_lazy("admin:audit_auditlog_changelist")},
+            ]},
+        ],
+    },
+}
+
+LOGIN_URL = "/admin/login/"
+LOGIN_REDIRECT_URL = "/admin/"

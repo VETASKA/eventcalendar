@@ -1,0 +1,209 @@
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+"Language: ru\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+
+msgid "Search apps and models..."
+msgstr "Поиск по разделам…"
+
+msgid "Type to search"
+msgstr "Поиск…"
+
+msgid "Filters"
+msgstr "Фильтры"
+
+msgid "Apply Filters"
+msgstr "Применить фильтры"
+
+msgid "Reset filters"
+msgstr "Сбросить фильтры"
+
+msgid "Clear all filters"
+msgstr "Сбросить все фильтры"
+
+msgid "Toggle filter"
+msgstr "Показать / скрыть фильтр"
+
+msgid "Hide counts"
+msgstr "Скрыть количество"
+
+msgid "Show counts"
+msgstr "Показать количество"
+
+msgid "All applications"
+msgstr "Все разделы"
+
+msgid "Add row"
+msgstr "Добавить строку"
+
+msgid "Clear selection"
+msgstr "Снять выделение"
+
+msgid "Run"
+msgstr "Выполнить"
+
+msgid "Run the selected action"
+msgstr "Выполнить выбранное действие"
+
+msgid "Select action"
+msgstr "Выберите действие"
+
+msgid "Select action to run"
+msgstr "Выберите действие"
+
+msgid "Toggle sidebar"
+msgstr "Свернуть меню"
+
+msgid "Toggle dark/light mode"
+msgstr "Тёмная / светлая тема"
+
+msgid "Dark"
+msgstr "Тёмная"
+
+msgid "Light"
+msgstr "Светлая"
+
+msgid "System"
+msgstr "Как в системе"
+
+msgid "Toggle password visibility"
+msgstr "Показать пароль"
+
+msgid "No results found"
+msgstr "Ничего не найдено"
+
+msgid "Nothing matched your search"
+msgstr "По запросу ничего не найдено"
+
+msgid "This page yielded into no results."
+msgstr "Здесь пока пусто."
+
+msgid "No data"
+msgstr "Нет данных"
+
+msgid "Not enough data."
+msgstr "Недостаточно данных."
+
+msgid "Recent searches"
+msgstr "Недавние запросы"
+
+msgid "Open command tool"
+msgstr "Открыть поиск"
+
+msgid "Command tool shortcuts"
+msgstr "Клавиши поиска"
+
+msgid "Available shortcuts"
+msgstr "Горячие клавиши"
+
+msgid "Changelist shortcuts"
+msgstr "Клавиши в списке"
+
+msgid "Global shortcuts"
+msgstr "Общие клавиши"
+
+msgid "Open shortcuts list"
+msgstr "Список горячих клавиш"
+
+msgid "Navigate"
+msgstr "Переход"
+
+msgid "Open selection"
+msgstr "Открыть"
+
+msgid "Open selection in new tab"
+msgstr "Открыть в новой вкладке"
+
+msgid "Go back"
+msgstr "Назад"
+
+msgid "Create new record"
+msgstr "Создать запись"
+
+msgid "Return to site"
+msgstr "На сайт"
+
+msgid "Date from"
+msgstr "Дата с"
+
+msgid "Date to"
+msgstr "Дата по"
+
+msgid "From"
+msgstr "С"
+
+msgid "To"
+msgstr "По"
+
+msgid "Click to cancel"
+msgstr "Нажмите, чтобы отменить"
+
+msgid "Remove from sorting"
+msgstr "Убрать из сортировки"
+
+msgid "Toggle sorting"
+msgstr "Сортировка"
+
+msgid "Choose file to upload"
+msgstr "Выберите файл"
+
+msgid "Click to download"
+msgstr "Скачать"
+
+msgid "Image preview"
+msgstr "Просмотр изображения"
+
+msgid "Select record"
+msgstr "Выберите запись"
+
+msgid "Select"
+msgstr "Выбрать"
+
+msgid "Show all"
+msgstr "Показать все"
+
+msgid "Objects"
+msgstr "Объекты"
+
+msgid "General"
+msgstr "Основное"
+
+msgid "Summary"
+msgstr "Итого"
+
+msgid "Unknown"
+msgstr "Неизвестно"
+
+msgid "Unknown content"
+msgstr "Неизвестное содержимое"
+
+msgid "Value"
+msgstr "Значение"
+
+msgid "Previous"
+msgstr "Назад"
+
+msgid "Next"
+msgstr "Дальше"
+
+msgid "Submit"
+msgstr "Отправить"
+
+msgid "Save and view"
+msgstr "Сохранить и посмотреть"
+
+msgid " By %(filter_title)s "
+msgstr " %(filter_title)s "
+
+msgid "No, take me back"
+msgstr "Нет, вернуться"
+
+msgid "Yes, I’m sure"
+msgstr "Да, удалить"
+
+msgid "This item will be deleted."
+msgstr "Эта запись будет удалена."
+msgid "Select value"
+msgstr "Не выбрано"
+

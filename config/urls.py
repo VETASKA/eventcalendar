@@ -3,13 +3,15 @@ from django.urls import path
 
 from apps.core import views as core
 from apps.intake import views as intake
+from apps.public import views as public
 
-admin.site.site_header = "EventCalendar — модерація"
+admin.site.site_header = "EventCalendar — модерация"
 admin.site.site_title = "EventCalendar"
 
 urlpatterns = [
     path("healthz", core.healthz),
     path("api/v1/intake/events", intake.intake_events),
     path("admin/", admin.site.urls),
-    path("", core.home),
+    path("api/v1/events", public.events_api),
+    path("", public.calendar_page),
 ]
