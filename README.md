@@ -44,7 +44,7 @@ python -m pytest                      # needs the same PostgreSQL
 ## Server (same VPS as Harvey)
 
 ```bash
-sudo git clone git@github.com:VETASKA/eventcalendar.git /opt/eventcalendar
+sudo git clone https://github.com/VETASKA/eventcalendar.git /opt/eventcalendar
 sudo bash /opt/eventcalendar/deploy/install.sh     # Docker, .env with secrets, Caddy, Harvey token, backups
 sudo bash /opt/eventcalendar/deploy/update.sh      # later updates
 ```

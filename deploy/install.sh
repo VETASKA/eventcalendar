@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # EventCalendar — first-time setup on the Harvey server (Ubuntu 22.04 / 24.04).
 #
-#   sudo git clone git@github.com:VETASKA/eventcalendar.git /opt/eventcalendar
+#   sudo git clone https://github.com/VETASKA/eventcalendar.git /opt/eventcalendar
 #   sudo bash /opt/eventcalendar/deploy/install.sh
 #
 # Asks for: the site domain and a login for the moderation admin.
@@ -71,7 +71,7 @@ MANAGE="docker compose exec -T web python manage.py"
 $MANAGE seed_reference --domain "$DOMAIN" --domain "www.$DOMAIN" >/dev/null
 ok "справочники и сайт $DOMAIN"
 
-if ! $MANAGE shell -c "from django.contrib.auth import get_user_model as g; exit(0 if g().objects.filter(is_superuser=True).exists() else 1)"; then
+if ! $MANAGE shell -c "from django.contrib.auth import get_user_model as g; import sys; sys.exit(0 if g().objects.filter(is_superuser=True).exists() else 1)" 2>/dev/null; then
   say "Администратор модерации"
   docker compose exec web python manage.py createsuperuser
 fi
@@ -106,7 +106,7 @@ ok "https://$DOMAIN (сертификат выпустится сам, когд�
 # ── Harvey: token for pushing events ─────────────────────────────────────
 say "Связь с Харви"
 if [ -f "$HARVEY/.env" ] && ! grep -q '^CALENDAR_TOKEN=' "$HARVEY/.env"; then
-  TOKEN=$($MANAGE create_source harvey --name "Харві" | tail -1)
+  TOKEN=$($MANAGE create_source harvey --name "Харві" --rotate | tail -1)
   case "$TOKEN" in ec_*) ;; *) fail "Не удалось выдать токен: $TOKEN";; esac
   printf '\n# EventCalendar: Harvey sends events here\nCALENDAR_URL=http://127.0.0.1:%s\nCALENDAR_TOKEN=%s\n' "$PORT" "$TOKEN" >> "$HARVEY/.env"
   systemctl restart harvey-panel 2>/dev/null || true
