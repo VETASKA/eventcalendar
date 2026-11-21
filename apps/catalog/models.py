@@ -58,6 +58,9 @@ class Event(models.Model):
     source_url = models.URLField("первоисточник", max_length=1000, blank=True)
     registration_url = models.URLField("регистрация / билеты", max_length=1000, blank=True)
     price_text = models.CharField("цена", max_length=120, blank=True)
+    TICKETS_MODE = [("all", "показывать все сервисы"), ("primary", "только первый по порядку")]
+    tickets_mode = models.CharField("билетные сервисы на странице", max_length=8, choices=TICKETS_MODE, default="all",
+                                    help_text="Если у события несколько сервисов продажи билетов (вкладка «Билеты»)")
     # why this event belongs to a country's storefront (spec §4): {"ua_phone": true, "lang_uk": true, ...}
     geo_signals = models.JSONField("признаки географии", default=dict, blank=True)
     geo_reason = models.CharField("основание географии", max_length=300, blank=True,
@@ -96,6 +99,24 @@ class EventTranslation(models.Model):
         verbose_name = "перевод"
         verbose_name_plural = "переводы"
         constraints = [models.UniqueConstraint(fields=["event", "lang"], name="uniq_event_translation")]
+
+
+class TicketLink(models.Model):
+    """One place to buy tickets / register. Several per event; the moderator sets the order and visibility."""
+    event = models.ForeignKey(Event, verbose_name="событие", on_delete=models.CASCADE, related_name="ticket_links")
+    label = models.CharField("сервис", max_length=80, help_text="Как подписать кнопку: RegToEVENT, Concert.ua, Karabas …")
+    url = models.URLField("ссылка", max_length=1000)
+    price_text = models.CharField("цена там", max_length=120, blank=True)
+    position = models.PositiveSmallIntegerField("порядок", default=0, help_text="Первый — главная кнопка")
+    is_active = models.BooleanField("показывать", default=True)
+
+    class Meta:
+        ordering = ["position", "id"]
+        verbose_name = "билетный сервис"
+        verbose_name_plural = "билетные сервисы"
+
+    def __str__(self):
+        return self.label
 
 
 class Occurrence(models.Model):

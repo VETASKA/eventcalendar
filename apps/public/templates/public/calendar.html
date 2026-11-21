@@ -1,26 +1,8 @@
-{% load static %}<!doctype html>
-<html lang="uk">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Календар подій — {{ site.name }}</title>
-<meta name="description" content="Календар подій України: конференції, форуми, концерти, стендапи та інше.">
-<link rel="canonical" href="{{ request.scheme }}://{{ request.get_host }}/">
-<style>
-  :root { --ink:#1f1b2e; --muted:#6b6780; --line:#e7e4ef; --bg:#faf9fc; --brand:#7c3aed; --brand-soft:#f1eafe; }
-  * { box-sizing:border-box; }
-  html, body { height:100%; margin:0; }
-  body { font:15px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,Ubuntu,sans-serif; color:var(--ink); background:var(--bg);
-         display:flex; flex-direction:column; }
-  header { display:flex; align-items:center; gap:12px; padding:10px 20px; background:#fff; border-bottom:1px solid var(--line); }
-  .logo { display:flex; align-items:center; gap:10px; font-weight:700; font-size:18px; text-decoration:none; color:var(--ink); }
-  .logo i { width:30px; height:30px; border-radius:8px; background:var(--brand); display:grid; place-items:center;
-            color:#fff; font-style:normal; font-size:15px; }
-  .logo small { font-weight:500; color:var(--muted); font-size:13px; }
-  main { flex:1; min-height:0; padding:12px 20px 20px; display:flex; flex-direction:column; }
-  #calendar { flex:1; min-height:560px; background:#fff; border:1px solid var(--line); border-radius:14px; padding:14px; }
-  .empty { color:var(--muted); font-size:14px; margin:8px 2px 0; }
-  .fc { --fc-border-color:var(--line); --fc-today-bg-color:var(--brand-soft); --fc-event-bg-color:var(--brand);
+{% extends "public/base.html" %}{% load static %}
+{% block title %}Календар подій — {{ site.name }}{% endblock %}
+{% block meta %}<meta name="description" content="Календар подій України: конференції, форуми, концерти, стендапи та інше.">
+<link rel="canonical" href="{{ request.scheme }}://{{ request.get_host }}/">{% endblock %}
+{% block css %}  .fc { --fc-border-color:var(--line); --fc-today-bg-color:var(--brand-soft); --fc-event-bg-color:var(--brand);
         --fc-event-border-color:var(--brand); --fc-button-bg-color:#fff; --fc-button-border-color:var(--line);
         --fc-button-text-color:var(--ink); --fc-button-hover-bg-color:var(--brand-soft);
         --fc-button-hover-border-color:var(--line); --fc-button-active-bg-color:var(--brand);
@@ -35,24 +17,18 @@
   .fc .fc-day-other .fc-daygrid-day-number { color:#b8b4c6; }
   .fc .fc-button:focus-visible, a:focus-visible { outline:2px solid var(--brand); outline-offset:2px; }
   @media (max-width: 600px) {
-    header, main { padding-left:10px; padding-right:10px; }
-    .logo { font-size:16px; } .logo small { display:none; }
     #calendar { padding:8px; border-radius:10px; min-height:480px; }
     .fc .fc-toolbar { flex-wrap:wrap; gap:8px; }
     .fc .fc-toolbar-title { font-size:17px; }
     .fc .fc-button { padding:5px 9px; font-size:13px; }
     .fc .fc-daygrid-event { font-size:11px; }
   }
-</style>
-</head>
-<body>
-<header>
-  <a class="logo" href="/"><i>▦</i>{{ site.name }} <small>календар подій</small></a>
-</header>
-<main>
+{% endblock %}
+{% block main %}
   <div id="calendar" aria-label="Календар подій"></div>
   <p class="empty" id="state" role="status" aria-live="polite"></p>
-</main>
+{% endblock %}
+{% block scripts %}
 <script src="{% static 'vendor/fullcalendar-6.1.22/index.global.min.js' %}"></script>
 <script src="{% static 'vendor/fullcalendar-6.1.22/uk.global.min.js' %}"></script>
 <script>
@@ -83,12 +59,8 @@
         })
         .catch(err => { state.textContent = 'Не вдалося завантажити події. Оновіть сторінку.'; fail(err); });
     },
-    eventClick: function (info) {
-      if (info.event.url) { info.jsEvent.preventDefault(); window.open(info.event.url, '_blank', 'noopener'); }
-    },
   });
   cal.render();
 })();
 </script>
-</body>
-</html>
+{% endblock %}

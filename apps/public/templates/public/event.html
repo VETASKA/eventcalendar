@@ -1,0 +1,77 @@
+{% extends "public/base.html" %}
+{% block title %}{{ title }} — {{ request.site.name }}{% endblock %}
+{% block meta %}
+<meta name="description" content="{{ summary|default:title|truncatechars:160 }}">
+<link rel="canonical" href="{{ request.scheme }}://{{ request.get_host }}{{ request.path }}">
+{% if jsonld %}<script type="application/ld+json">{{ jsonld|safe }}</script>{% endif %}
+{% endblock %}
+{% block css %}
+  main { display:block; overflow:auto; }
+  .wrap { max-width:860px; margin:0 auto; }
+  .back { display:inline-flex; gap:6px; color:var(--muted); text-decoration:none; font-size:14px; margin:6px 0 14px; }
+  .back:hover { color:var(--brand); }
+  .card { background:#fff; border:1px solid var(--line); border-radius:16px; padding:28px; }
+  .chips { display:flex; flex-wrap:wrap; gap:6px; margin-bottom:12px; }
+  .chip { background:var(--brand-soft); color:#5b21b6; border-radius:999px; padding:3px 11px; font-size:13px; font-weight:500; }
+  .chip.gray { background:#f1f0f5; color:var(--ink); }
+  h1 { font-size:30px; line-height:1.2; margin:0 0 10px; }
+  .summary { font-size:16px; color:#3b3650; margin:0 0 22px; }
+  .lang { font-size:12px; color:var(--muted); border:1px solid var(--line); border-radius:6px; padding:1px 6px; margin-left:6px; }
+  .facts { display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:14px; margin:0 0 24px; }
+  .fact { border:1px solid var(--line); border-radius:12px; padding:14px 16px; }
+  .fact b { display:block; font-size:12px; color:var(--muted); font-weight:600; text-transform:uppercase; letter-spacing:.04em; margin-bottom:4px; }
+  .fact span { font-size:15.5px; }
+  .fact small { color:var(--muted); display:block; }
+  .status { display:inline-block; background:#fee2e2; color:#991b1b; border-radius:8px; padding:2px 8px; font-size:13px; font-weight:600; margin-top:4px; }
+  .tickets { display:flex; flex-wrap:wrap; gap:10px; margin:6px 0 20px; }
+  .btn { display:inline-flex; align-items:center; gap:8px; padding:12px 20px; border-radius:11px; text-decoration:none; font-weight:600;
+         border:1px solid var(--line); color:var(--ink); background:#fff; }
+  .btn:hover { border-color:var(--brand); }
+  .btn.main { background:var(--brand); border-color:var(--brand); color:#fff; }
+  .btn.main:hover { background:#6d28d9; }
+  .btn small { font-weight:400; opacity:.85; }
+  .muted { color:var(--muted); font-size:14px; }
+  .muted a { color:var(--muted); }
+  @media (max-width:600px) { .card { padding:18px; border-radius:12px; } h1 { font-size:23px; } .btn { width:100%; justify-content:center; } }
+{% endblock %}
+{% block main %}
+<div class="wrap">
+  <a class="back" href="/">← До календаря</a>
+  <article class="card">
+    <div class="chips">
+      {% if type %}<span class="chip">{{ type }}</span>{% endif %}
+      {% for t in topics %}<span class="chip gray">{{ t }}</span>{% endfor %}
+      {% if format %}<span class="chip gray">{{ format }}</span>{% endif %}
+    </div>
+    <h1>{{ title }}{% if foreign_lang %}<span class="lang" title="Мова оригіналу">{{ e.original_language|upper }}</span>{% endif %}</h1>
+    {% if summary %}<p class="summary">{{ summary }}</p>{% endif %}
+
+    <div class="facts">
+      {% for s in sessions %}
+      <div class="fact"><b>{% if sessions|length > 1 %}Сеанс {{ forloop.counter }}{% else %}Коли{% endif %}</b>
+        <span>{{ s.days }}</span><small>{% if s.weekday %}{{ s.weekday }}, {{ s.time|lower }}{% else %}{{ s.time }}{% endif %}</small>
+        {% if s.status %}<span class="status">{{ s.status }}</span>{% endif %}</div>
+      {% endfor %}
+      {% if city or format == "Онлайн" %}
+      <div class="fact"><b>Де</b><span>{% if format == "Онлайн" %}Онлайн{% else %}{{ city }}{% endif %}</span>
+        {% if venue %}<small>{{ venue }}</small>{% endif %}</div>
+      {% endif %}
+      {% if e.price_text %}<div class="fact"><b>Ціна</b><span>{{ e.price_text }}</span></div>{% endif %}
+      {% if e.organizer_name %}<div class="fact"><b>Організатор</b><span>{{ e.organizer_name }}</span>
+        {% if e.organizer_verified %}<small>✓ Організатор підтверджений</small>{% endif %}</div>{% endif %}
+    </div>
+
+    {% if tickets %}
+    <div class="tickets">
+      {% for t in tickets %}
+        <a class="btn{% if forloop.first %} main{% endif %}" href="{{ t.url }}" target="_blank" rel="noopener nofollow">
+          {% if t.label == "Реєстрація та квитки" %}{{ t.label }}{% else %}Квитки · {{ t.label }}{% endif %}
+          {% if t.price %}<small>· {{ t.price }}</small>{% endif %} ↗</a>
+      {% endfor %}
+    </div>
+    {% endif %}
+    <p class="muted">{% if e.source_url %}Джерело: <a href="{{ e.source_url }}" target="_blank" rel="noopener nofollow">{{ e.source_url|truncatechars:60 }}</a> · {% endif %}
+      Реєстрація та оплата — на сайті організатора.</p>
+  </article>
+</div>
+{% endblock %}

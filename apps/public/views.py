@@ -48,7 +48,7 @@ def events_api(request):
             "end": (o.ends_at.isoformat() if timed and o.ends_at
                     else None if timed else (o.end_date + timedelta(days=1)).isoformat()),
             "allDay": not timed,
-            "url": e.registration_url or e.source_url,
+            "url": f"/events/{e.pk}-{e.slug}/",
             "city": o.city.label("uk") if o.city_id else "",
             "format": e.format,
             "type": e.event_type.names.get("uk", "")
@@ -57,3 +57,100 @@ def events_api(request):
             "status": o.status,
         })
     return JsonResponse({"events": items})
+
+
+# ── event page ───────────────────────────────────────────────────────────────
+import json  # noqa: E402
+
+from django.http import Http404  # noqa: E402
+from django.shortcuts import redirect  # noqa: E402
+
+from apps.catalog.models import Event  # noqa: E402
+
+UK_MONTHS = ["січня", "лютого", "березня", "квітня", "травня", "червня", "липня", "серпня", "вересня", "жовтня",
+             "листопада", "грудня"]
+UK_WEEKDAYS = ["понеділок", "вівторок", "середа", "четвер", "пʼятниця", "субота", "неділя"]
+FORMAT_UK = {"offline": "Офлайн", "online": "Онлайн", "hybrid": "Гібрид"}
+STATUS_UK = {"cancelled": "Скасовано", "postponed": "Перенесено, нова дата уточнюється", "rescheduled": "Перенесено"}
+
+
+def _uk_date(d) -> str:
+    return f"{d.day} {UK_MONTHS[d.month - 1]} {d.year}"
+
+
+def _when(o) -> dict:
+    from django.utils import timezone as tz
+    import zoneinfo
+    days = _uk_date(o.start_date) if o.start_date == o.end_date else \
+        f"{_uk_date(o.start_date)} — {_uk_date(o.end_date)}"
+    weekday = UK_WEEKDAYS[o.start_date.weekday()] if o.start_date == o.end_date else ""
+    if o.precision == "datetime" and o.starts_at:
+        zone = zoneinfo.ZoneInfo(o.timezone or "Europe/Kyiv")
+        t = tz.localtime(o.starts_at, zone).strftime("%H:%M")
+        if o.ends_at:
+            t += "–" + tz.localtime(o.ends_at, zone).strftime("%H:%M")
+    elif o.precision == "all_day":
+        t = "Весь день"
+    else:
+        t = "Час уточнюється"
+    return {"days": days, "weekday": weekday, "time": t, "status": STATUS_UK.get(o.status, ""), "o": o}
+
+
+def _jsonld(request, e, occs, tickets) -> str:
+    o = occs[0] if occs else None
+    if not o:
+        return ""
+    data = {"@context": "https://schema.org", "@type": "Event", "name": e.title,
+            "url": request.build_absolute_uri(),
+            "startDate": o.starts_at.isoformat() if o.precision == "datetime" and o.starts_at else o.start_date.isoformat(),
+            "endDate": (o.ends_at.isoformat() if o.precision == "datetime" and o.ends_at else o.end_date.isoformat()),
+            "eventStatus": {"cancelled": "https://schema.org/EventCancelled",
+                            "postponed": "https://schema.org/EventPostponed",
+                            "rescheduled": "https://schema.org/EventRescheduled"}.get(o.status,
+                                                                                      "https://schema.org/EventScheduled"),
+            "eventAttendanceMode": {"online": "https://schema.org/OnlineEventAttendanceMode",
+                                    "hybrid": "https://schema.org/MixedEventAttendanceMode"}.get(
+                e.format, "https://schema.org/OfflineEventAttendanceMode")}
+    if e.summary:
+        data["description"] = e.summary
+    if e.format == "online":
+        data["location"] = {"@type": "VirtualLocation", "url": (tickets[0]["url"] if tickets else e.source_url)}
+    elif o.city_id:
+        data["location"] = {"@type": "Place", "name": o.venue or o.city.name,
+                            "address": {"@type": "PostalAddress", "addressLocality": o.city.name,
+                                        "addressCountry": o.city.country_id,
+                                        **({"streetAddress": o.address} if o.address else {})}}
+    if e.organizer_name:
+        data["organizer"] = {"@type": "Organization", "name": e.organizer_name,
+                             **({"url": e.organizer_site} if e.organizer_site else {})}
+    if tickets:
+        data["offers"] = [{"@type": "Offer", "url": t["url"]} for t in tickets]
+    return json.dumps(data, ensure_ascii=False).replace("</", "<\\/")
+
+
+@require_GET
+def event_page(request, pk: int, slug: str = ""):
+    e = (Event.objects.select_related("event_type", "country")
+         .filter(pk=pk, publications__site=request.site, publications__status="published").first())
+    if e is None:
+        raise Http404
+    if slug != e.slug:
+        return redirect(f"/events/{e.pk}-{e.slug}/", permanent=True)
+    occs = list(e.occurrences.select_related("city").order_by("start_date", "starts_at"))
+    tickets = [{"label": t.label, "url": t.url, "price": t.price_text}
+               for t in e.ticket_links.filter(is_active=True)]
+    if not tickets and e.registration_url:
+        tickets = [{"label": "Реєстрація та квитки", "url": e.registration_url, "price": ""}]
+    if e.tickets_mode == "primary":
+        tickets = tickets[:1]
+    tr = e.translations.filter(lang="uk").first()
+    return render(request, "public/event.html", {
+        "e": e, "title": tr.title if tr else e.title, "summary": tr.summary if tr else e.summary,
+        "sessions": [_when(o) for o in occs], "tickets": tickets,
+        "format": FORMAT_UK.get(e.format, ""), "type": e.event_type.names.get("uk", "") if e.event_type_id else "",
+        "topics": [t.names.get("uk", t.code) for t in e.topics.all()],
+        "city": next((o.city.name for o in occs if o.city_id), ""),
+        "venue": next((o.venue for o in occs if o.venue), ""),
+        "jsonld": _jsonld(request, e, occs, tickets),
+        "foreign_lang": e.original_language not in ("", "uk") and not tr,
+    })

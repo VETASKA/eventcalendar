@@ -19,7 +19,7 @@
     {% component "unfold/components/card.html" with title="Что проверить в очереди" %}
       <ul class="flex flex-col gap-3">
         {% for c in checks %}
-          <li class="flex justify-between"><a class="text-primary-600 hover:underline" href="{{ c.href }}">{{ c.title }}</a>
+          <li class="flex justify-between"><a class="text-primary-700 dark:text-primary-300 hover:underline" href="{{ c.href }}">{{ c.title }}</a>
             <span class="font-semibold">{{ c.value }}</span></li>
         {% endfor %}
       </ul>

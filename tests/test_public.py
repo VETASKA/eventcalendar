@@ -41,3 +41,30 @@ def test_api_validates_range(client, ref):
     assert client.get("/api/v1/events").status_code == 400
     assert client.get("/api/v1/events?from=2027-01-01&to=2027-06-01").status_code == 400
     assert client.get("/api/v1/events?from=2027-03-01&to=2027-04-01").json() == {"events": []}
+
+
+def test_event_page(client, push, admin_user):
+    from apps.catalog.models import TicketLink
+    push([harvey_item(1, date="2027-03-14")])
+    publish_all(admin_user)
+    ev = Event.objects.get()
+    api = client.get("/api/v1/events?from=2027-03-01&to=2027-04-01").json()["events"][0]
+    assert api["url"] == f"/events/{ev.pk}-{ev.slug}/"
+    r = client.get(api["url"])
+    html = r.content.decode()
+    assert r.status_code == 200 and "Форум підприємців 1" in html and "14 березня 2027" in html
+    assert "Час уточнюється" in html and "Київ" in html and '"@type": "Event"' in html
+    assert "Реєстрація та квитки" in html and "https://tickets.example/ev" in html
+    # several ticket services: all shown, the first is the main button; «primary» mode shows one
+    TicketLink.objects.create(event=ev, label="Concert.ua", url="https://concert.ua/x", position=1)
+    TicketLink.objects.create(event=ev, label="Karabas", url="https://karabas.com/x", position=2)
+    html = client.get(api["url"]).content.decode()
+    assert "Квитки · Concert.ua" in html and "Квитки · Karabas" in html and "tickets.example" not in html
+    ev.tickets_mode = "primary"
+    ev.save()
+    html = client.get(api["url"]).content.decode()
+    assert "Concert.ua" in html and "Karabas" not in html
+    # wrong slug → permanent redirect to the right one; unpublished → 404
+    assert client.get(f"/events/{ev.pk}-old-name/").status_code == 301
+    services.unpublish(ev, Site.objects.get(code="ua"), admin_user, reason="test")
+    assert client.get(api["url"]).status_code == 404

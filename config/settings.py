@@ -141,6 +141,7 @@ LOGGING = {
 FORMS_URLFIELD_ASSUME_HTTPS = True
 
 # ── Admin look (django-unfold) ─────────────────────────────────────────────
+from django.templatetags.static import static  # noqa: E402
 from django.urls import reverse_lazy  # noqa: E402
 
 UNFOLD = {
@@ -150,6 +151,7 @@ UNFOLD = {
     "SITE_SYMBOL": "calendar_month",
     "SITE_URL": "/",
     "SHOW_HISTORY": True,
+    "STYLES": [lambda request: static("admin_extra/admin.css")],
     "SHOW_VIEW_ON_SITE": False,
     "DASHBOARD_CALLBACK": "apps.core.dashboard.dashboard_callback",
     "COLORS": {

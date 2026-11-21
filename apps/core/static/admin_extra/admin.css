@@ -1,0 +1,10 @@
+/* Readability fixes on top of Unfold. Unfold's CSS lives in cascade layers; this file loads first, so a layer
+   declared here is the first one, and its !important rules win over the theme's !important utilities. */
+@layer ecfix {
+  select option, select optgroup { background-color: #ffffff !important; color: #111827 !important; }
+  .dark select option, .dark select optgroup { background-color: #1f2937 !important; color: #f3f4f6 !important; }
+
+  /* the dropdown inside the purple «selected N» bar */
+  select[name=action] { background-color: #ffffff !important; color: #111827 !important; border-color: #ffffff !important; }
+  .dark select[name=action] { background-color: #111827 !important; color: #f3f4f6 !important; border-color: #4b5563 !important; }
+}

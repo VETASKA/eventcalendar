@@ -8,7 +8,8 @@ from unfold.admin import ModelAdmin, TabularInline
 from unfold.decorators import display
 
 from . import services
-from .models import Event, EventRevision, EventTranslation, EventType, Occurrence, SitePublication, Topic
+from .models import (Event, EventRevision, EventTranslation, EventType, Occurrence, SitePublication, TicketLink,
+                     Topic)
 
 FLAG_LABELS = {
     "no_title": "нет названия", "no_date": "нет даты", "no_format": "нет формата", "no_type": "нет типа",
@@ -24,6 +25,15 @@ class OccurrenceInline(TabularInline):
     extra = 0
     fields = ("start_date", "end_date", "precision", "starts_at", "ends_at", "city", "venue", "status")
     autocomplete_fields = ("city",)
+    tab = True
+
+
+class TicketLinkInline(TabularInline):
+    model = TicketLink
+    extra = 0
+    fields = ("position", "label", "url", "price_text", "is_active")
+    ordering_field = "position"
+    hide_ordering_field = True
     tab = True
 
 
@@ -125,11 +135,14 @@ class EventAdmin(ModelAdmin):
     date_hierarchy = "created_at"
     autocomplete_fields = ("topics", "event_type")
     readonly_fields = ("state", "geo_signals_view", "flags", "organizer_verified", "created_at", "updated_at")
-    inlines = [OccurrenceInline, PublicationInline, TranslationInline, RevisionInline]
+    inlines = [OccurrenceInline, TicketLinkInline, PublicationInline, TranslationInline, RevisionInline]
     actions = ["bulk_approve", "bulk_reject"]
     fieldsets = (
         ("Главное", {"fields": ("title", "summary", ("format", "event_type"), "topics", "state", "flags")}),
-        ("Ссылки и цена", {"fields": ("source_url", "registration_url", "price_text", "original_language")}),
+        ("Ссылки и цена", {"fields": ("source_url", "registration_url", "tickets_mode", "price_text",
+                                       "original_language"),
+                            "description": "Несколько сервисов продажи билетов — во вкладке «Билетные сервисы». "
+                                           "Если их нет, на странице будет кнопка «Регистрация / билеты»."}),
         ("Организатор", {"fields": (("organizer_name", "organizer_site"), "organization", "organizer_verified")}),
         ("География", {"fields": ("country", "geo_signals_view", "geo_reason")}),
         ("Служебное", {"classes": ["collapse"], "fields": ("created_at", "updated_at", "expected_revision")}),
@@ -143,7 +156,7 @@ class EventAdmin(ModelAdmin):
     @display(description="название", ordering="title")
     def title_link(self, obj):
         from django.urls import reverse
-        return format_html('<a class="font-medium text-primary-600" href="{}">{}</a>',
+        return format_html('<a class="font-medium text-primary-700 dark:text-primary-300" href="{}">{}</a>',
                            reverse("admin:catalog_event_change", args=[obj.pk]), obj.title)
 
     @display(description="дата")
