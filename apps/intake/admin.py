@@ -18,7 +18,7 @@ class IntakeItemAdmin(ModelAdmin):
     list_filter = ("source", "status", "initial_load", "removed_in_source")
     search_fields = ("external_id", "url", "normalized_url")
     readonly_fields = [f.name for f in IntakeItem._meta.fields]
-    actions = ["reprocess"]
+    actions = ["reprocess", "refetch"]
 
     def has_add_permission(self, request):
         return False
@@ -29,3 +29,14 @@ class IntakeItemAdmin(ModelAdmin):
             with transaction.atomic():
                 process(IntakeItem.objects.select_for_update().get(pk=item.pk))
         self.message_user(request, f"Обработано: {queryset.count()}", messages.SUCCESS)
+
+    @admin.action(description="Загрузить страницу заново (предложенные ссылки)")
+    def refetch(self, request, queryset):
+        from .tasks import fetch_page
+        n = 0
+        for item in queryset.filter(source__code="form"):
+            payload = {k: v for k, v in item.payload.items() if k not in ("parsed", "fetch")}
+            IntakeItem.objects.filter(pk=item.pk).update(payload=payload, status="queued")
+            transaction.on_commit(lambda pk=item.pk: fetch_page.delay(pk))
+            n += 1
+        self.message_user(request, f"Поставлено в очередь: {n}", messages.SUCCESS)

@@ -16,7 +16,8 @@ FLAG_LABELS = {
     "no_title": "нет названия", "no_date": "нет даты", "no_format": "нет формата", "no_type": "нет типа",
     "country_unknown": "страна?", "city_unknown": "город не найден", "city_ambiguous": "город неоднозначен",
     "removed_in_source": "удалено в источнике", "from_visitor": "предложено посетителем",
-    "check_title": "уточнить название",
+    "check_title": "уточнить название", "fetch_failed": "сайт не ответил",
+    "more_sessions": "в источнике несколько сеансов",
 }
 STATE_COLORS = {"draft": "info", "pending": "warning", "approved": "success", "rejected": "danger",
                 "withdrawn": "danger"}
@@ -149,11 +150,13 @@ class EventAdmin(ModelAdmin):
     search_fields = ("title", "organizer_name", "source_url")
     date_hierarchy = "created_at"
     autocomplete_fields = ("topics", "event_type")
-    readonly_fields = ("state", "geo_signals_view", "flags", "organizer_verified", "created_at", "updated_at")
+    readonly_fields = ("state", "geo_signals_view", "flags", "organizer_verified", "created_at", "updated_at",
+                       "source_hint")
     inlines = [OccurrenceInline, TicketLinkInline, PublicationInline, TranslationInline, RevisionInline]
     actions = ["bulk_approve", "bulk_reject"]
     fieldsets = (
-        ("Главное", {"fields": ("title", "summary", ("format", "event_type"), "topics", "state", "flags")}),
+        ("Главное", {"fields": ("title", "source_hint", "summary", ("format", "event_type"), "topics", "state",
+                                "flags")}),
         ("Ссылки и цена", {"fields": ("source_url", "registration_url", "tickets_mode", "price_text",
                                        "original_language"),
                             "description": "Несколько сервисов продажи билетов — во вкладке «Билетные сервисы». "
@@ -224,6 +227,14 @@ class EventAdmin(ModelAdmin):
             " ", '<span class="inline-block rounded-default px-2 py-0.5 text-xs bg-base-100 '
                  'dark:bg-base-800 whitespace-nowrap">{}</span>',
             ((FLAG_LABELS.get(f, f),) for f in obj.review_flags))
+
+    @display(description="описание в источнике")
+    def source_hint(self, obj):
+        """The source's own text, for writing a short summary in our words (it is never published as is)."""
+        hints = [i.normalized.get("hint_description") for i in obj.intake_items.all() if i.normalized]
+        text = next((h for h in hints if h), "")
+        return format_html('<div class="text-sm text-font-subtle-light dark:text-font-subtle-dark max-w-3xl">{}</div>',
+                           text) if text else "—"
 
     @display(description="признаки географии")
     def geo_signals_view(self, obj):

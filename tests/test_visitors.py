@@ -145,29 +145,41 @@ def test_admin_pages_for_new_sections(admin_client, three):
         assert admin_client.get(p).status_code == 200, p
 
 
-def test_suggest_event_goes_to_moderation(client, three):
-    r = client.post("/suggest/", {"url": "fest.com.ua/winter?utm_source=fb", "date": "2099-12-20", "city": "Одеса",
-                                  "type": "festival", "email": "fan@ex.ua"})
+@pytest.fixture(autouse=True)
+def _offline_fetch(monkeypatch):
+    """Suggested links are not fetched from the internet in tests: the page «does not answer»."""
+    from apps.intake import fetcher, tasks
+    monkeypatch.setattr(tasks, "safe_fetch", lambda url, **kw: fetcher.FetchResult(False, url, error="offline",
+                                                                                   temporary=True))
+
+
+def test_suggest_event_goes_to_moderation(client, three, django_capture_on_commit_callbacks):
+    with django_capture_on_commit_callbacks(execute=True):
+        r = client.post("/suggest/", {"url": "fest.com.ua/winter?utm_source=fb", "date": "2099-12-20", "city": "Одеса",
+                                      "type": "festival", "email": "fan@ex.ua"})
     assert r.status_code == 302
     from apps.intake.models import IntakeItem
     item = IntakeItem.objects.get(source__code="form")
     ev = item.event
     assert ev.state == "pending" and ev.title == "fest.com.ua" and ev.source_url == "https://fest.com.ua/winter?utm_source=fb"
     assert ev.event_type.code == "festival" and "from_visitor" in ev.review_flags and "no_type" not in ev.review_flags
+    assert "fetch_failed" in ev.review_flags
     o = ev.occurrences.get()
     assert str(o.start_date) == "2099-12-20" and o.city.name == "Одеса"
     assert item.payload["email"] == "fan@ex.ua"
     assert ev.publications.get().status == "pending"            # not visible before moderation
     # the same link again (other tracking params) → no second card
-    client.post("/suggest/", {"url": "https://www.fest.com.ua/winter/"})
+    with django_capture_on_commit_callbacks(execute=True):
+        client.post("/suggest/", {"url": "https://www.fest.com.ua/winter/"})
     assert Event.objects.filter(source_url__contains="fest.com.ua").count() == 1
 
 
-def test_suggest_only_link_is_required(client, three):
+def test_suggest_only_link_is_required(client, three, django_capture_on_commit_callbacks):
     assert client.post("/suggest/", {"url": ""}).status_code == 302
     from apps.intake.models import IntakeItem
     assert not IntakeItem.objects.filter(source__code="form").exists()
-    client.post("/suggest/", {"url": "https://only-link.ua/e"})
+    with django_capture_on_commit_callbacks(execute=True):
+        client.post("/suggest/", {"url": "https://only-link.ua/e"})
     ev = IntakeItem.objects.get(source__code="form").event
     assert {"no_date", "no_type"} <= set(ev.review_flags) and not ev.occurrences.exists()
 

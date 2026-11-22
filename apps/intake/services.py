@@ -66,6 +66,10 @@ def receive(source: EventSource, raw: dict, *, schema: int = 1, initial_load: bo
         item.attempts += 1
         item.save()
         process(item)
+        if item.status == "queued":
+            from .tasks import fetch_page
+            pk = item.pk
+            transaction.on_commit(lambda: fetch_page.delay(pk))
     return {"external_id": ext, "result": "created" if created else "updated", "status": item.status,
             "event_id": item.event_id}
 

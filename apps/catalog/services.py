@@ -49,10 +49,12 @@ def _set_occurrences(event: Event, occs: list[dict]) -> None:
     keep = set()
     for o in occs:
         tz = (event.country.timezone if event.country_id and event.country.timezone else "Europe/Kyiv")
-        Occurrence.objects.update_or_create(
-            event=event, source_key=o["source_key"],
-            defaults={"start_date": o["start_date"], "end_date": o["end_date"], "precision": o["precision"],
-                      "timezone": tz, "city": City.objects.filter(pk=o.get("city_id")).first()})
+        defaults = {"start_date": o["start_date"], "end_date": o["end_date"], "precision": o["precision"],
+                    "timezone": tz, "city": City.objects.filter(pk=o.get("city_id")).first()}
+        for k in ("starts_at", "ends_at", "venue", "address", "status"):
+            if k in o:
+                defaults[k] = o[k] or ({"venue": "", "address": "", "status": "scheduled"}.get(k))
+        Occurrence.objects.update_or_create(event=event, source_key=o["source_key"], defaults=defaults)
         keep.add(o["source_key"])
     event.occurrences.exclude(source_key="").exclude(source_key__in=keep).delete()
 
@@ -70,6 +72,9 @@ def _occ_comparable(occs: list[dict]) -> list[dict]:
 
 def apply_intake(item, n: dict) -> None:
     from apps.intake.models import IntakeItem
+
+    if n["status"] == "queued":
+        return                                 # waiting for the page to be fetched: nothing to show yet
 
     event = item.event
     if event is None and n["normalized_url"]:
@@ -90,7 +95,8 @@ def apply_intake(item, n: dict) -> None:
         event = Event.objects.create(
             state="pending", country=_country(f["country_code"]), review_flags=n["flags"],
             geo_signals=f["geo_signals"], **{k: f[k] for k in IMPORT_FIELDS},
-            event_type=EventType.objects.filter(code=f.get("event_type_code") or "", is_active=True).first())
+            event_type=EventType.objects.filter(code=f.get("event_type_code") or "", is_active=True).first(),
+            format=f.get("format") or "")
         item.event = event
         _set_occurrences(event, n["occurrences"])
         _ensure_publications(event)
