@@ -224,6 +224,9 @@ def save_moderator_edit(event: Event, data: dict, user, *, expected_revision: in
         for k, v in data.items():
             setattr(current, k, v)
         current.manual_fields = sorted(set(current.manual_fields) | set(data))
+        filled = {"no_format": bool(current.format), "no_type": bool(current.event_type_id),
+                  "check_title": "title" in data}
+        current.review_flags = [f for f in current.review_flags if not filled.get(f)]
         current.revision += 1
         current.save()
         log("event.edit", current, actor=user, fields=sorted(data))

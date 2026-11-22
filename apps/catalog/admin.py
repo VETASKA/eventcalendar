@@ -138,11 +138,14 @@ class EventForm(forms.ModelForm):
 @admin.register(Event)
 class EventAdmin(ModelAdmin):
     form = EventForm
-    list_display = ("title_link", "first_date", "city_name", "country_name", "state_badge", "flags", "pending_revisions")
+    list_display = ("title_link", "first_date", "city_name", "country_name", "format", "event_type", "state_badge",
+                    "flags", "pending_revisions")
+    # filled straight in the list, then one «Сохранить» for the whole page; no need to open each card
+    list_editable = ("format", "event_type")
     list_display_links = None
     list_filter = ("state", FlagFilter, SiteFilter, SourceFilter, UaSignalFilter, "country", "format", "event_type")
     list_filter_sheet = True
-    list_per_page = 50
+    list_per_page = 100
     search_fields = ("title", "organizer_name", "source_url")
     date_hierarchy = "created_at"
     autocomplete_fields = ("topics", "event_type")
@@ -159,6 +162,28 @@ class EventAdmin(ModelAdmin):
         ("География", {"fields": ("country", "geo_signals_view", "geo_reason")}),
         ("Служебное", {"classes": ["collapse"], "fields": ("created_at", "updated_at", "expected_revision")}),
     )
+
+    def get_changelist_form(self, request, **kwargs):
+        """Plain, wide dropdowns in the list (no autocomplete / «add type» buttons), choices loaded once."""
+        types = [("", "— тип —")] + [(t.pk, str(t)) for t in EventType.objects.filter(is_active=True)]
+        fmts = [("", "— формат —")] + list(Event.FORMAT)
+        style = {"style": "min-width:150px", "class": "border border-base-200 dark:border-base-700 bg-white "
+                 "dark:bg-base-900 rounded-default px-3 py-2 text-font-default-light dark:text-font-default-dark"}
+
+        class ListForm(forms.ModelForm):
+            format = forms.ChoiceField(choices=fmts, required=False, widget=forms.Select(attrs=style))
+            event_type = forms.TypedChoiceField(choices=types, required=False, coerce=int, empty_value=None,
+                                                widget=forms.Select(attrs=style))
+
+            class Meta:
+                model = Event
+                fields = ("format", "event_type")
+
+            def clean_event_type(self):
+                v = self.cleaned_data["event_type"]
+                return EventType.objects.get(pk=v) if v else None
+
+        return ListForm
 
     def get_queryset(self, request):
         first = Occurrence.objects.filter(event=OuterRef("pk")).order_by("start_date", "starts_at", "id")

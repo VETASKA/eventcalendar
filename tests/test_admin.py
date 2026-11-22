@@ -45,3 +45,32 @@ def test_event_list_sorts_by_date_city_country(admin_client, push):
     assert titles("-3") == "ГБАВ"
     assert titles("4")[0] == "В" and titles("4")[-1] == "Г"     # Польща, Україна ×2, no country last
     assert titles("-4")[0] in "АБ" and titles("-4")[-1] == "Г"
+
+
+def test_fill_format_and_type_in_the_list_then_bulk_approve(admin_client, push):
+    from apps.catalog.models import Event, EventType, SitePublication
+    push([harvey_item(1), harvey_item(2)])
+    e1, e2 = Event.objects.order_by("id")
+    forum = EventType.objects.get(code="forum")
+    page = admin_client.get("/admin/catalog/event/?state__exact=pending").content.decode()
+    assert f'name="form-0-format"' in page and f'name="form-0-event_type"' in page
+    # one «Сохранить» for the page: only the first row gets values
+    data = {"form-TOTAL_FORMS": "2", "form-INITIAL_FORMS": "2", "form-MIN_NUM_FORMS": "0", "form-MAX_NUM_FORMS": "1000",
+            "_save": "Сохранить"}
+    rows = [(e1, "offline", forum.pk), (e2, "", "")]
+    import re
+    ids = dict((int(i), int(pk)) for i, pk in re.findall(r'name="form-(\d+)-id" value="(\d+)"', page))
+    for i, pk in ids.items():
+        ev, fmt, typ = next(r for r in rows if r[0].pk == pk)
+        data.update({f"form-{i}-id": str(pk), f"form-{i}-format": fmt, f"form-{i}-event_type": str(typ)})
+    r = admin_client.post("/admin/catalog/event/?state__exact=pending", data)
+    assert r.status_code == 302, r.content.decode()[:2000]
+    e1.refresh_from_db(); e2.refresh_from_db()
+    assert e1.format == "offline" and e1.event_type == forum
+    assert "no_format" not in e1.review_flags and "no_type" not in e1.review_flags
+    assert {"format", "event_type"} <= set(e1.manual_fields)
+    assert e2.format == "" and "no_type" in e2.review_flags
+    admin_client.post("/admin/catalog/event/", {"action": "bulk_approve", "_selected_action": [e1.pk, e2.pk],
+                                                 "confirm": "yes"})
+    assert SitePublication.objects.get(event=e1).status == "published"
+    assert SitePublication.objects.get(event=e2).status == "pending"
