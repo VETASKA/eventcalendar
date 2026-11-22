@@ -1,0 +1,478 @@
+{
+ "календар подій": {
+  "en": "event calendar",
+  "pl": "kalendarz wydarzeń"
+ },
+ "Мова": {
+  "en": "Language",
+  "pl": "Język"
+ },
+ "Кабінет": {
+  "en": "My account",
+  "pl": "Moje konto"
+ },
+ "Увійти": {
+  "en": "Sign in",
+  "pl": "Zaloguj się"
+ },
+ "Вийти": {
+  "en": "Sign out",
+  "pl": "Wyloguj się"
+ },
+ "Мої події": {
+  "en": "My events",
+  "pl": "Moje wydarzenia"
+ },
+ "підтверджено": {
+  "en": "confirmed",
+  "pl": "potwierdzone"
+ },
+ "Поки немає. Відкрийте свою подію в календарі й натисніть «Це моя подія».": {
+  "en": "None yet. Open your event in the calendar and click “This is my event”.",
+  "pl": "Na razie brak. Otwórz swoje wydarzenie w kalendarzu i kliknij „To moje wydarzenie”."
+ },
+ "Заявки": {
+  "en": "Requests",
+  "pl": "Wnioski"
+ },
+ "надіслано": {
+  "en": "sent",
+  "pl": "wysłano"
+ },
+ "відхилено": {
+  "en": "rejected",
+  "pl": "odrzucono"
+ },
+ "прострочено": {
+  "en": "expired",
+  "pl": "wygasło"
+ },
+ "на перевірці": {
+  "en": "under review",
+  "pl": "w weryfikacji"
+ },
+ "Календар подій": {
+  "en": "Event calendar",
+  "pl": "Kalendarz wydarzeń"
+ },
+ "Календар подій України: конференції, форуми, концерти, стендапи та інше.": {
+  "en": "Events in Ukraine: conferences, forums, concerts, stand-up and more.",
+  "pl": "Wydarzenia w Ukrainie: konferencje, fora, koncerty, stand-up i więcej."
+ },
+ "Пошук за назвою": {
+  "en": "Search by name",
+  "pl": "Szukaj po nazwie"
+ },
+ "Пошук за назвою події": {
+  "en": "Search events by name",
+  "pl": "Szukaj wydarzeń po nazwie"
+ },
+ "Знайти…": {
+  "en": "Find…",
+  "pl": "Znajdź…"
+ },
+ "Знайти": {
+  "en": "Find",
+  "pl": "Znajdź"
+ },
+ "Скинути": {
+  "en": "Reset",
+  "pl": "Wyczyść"
+ },
+ "Показати": {
+  "en": "Show",
+  "pl": "Pokaż"
+ },
+ "Запропонувати подію": {
+  "en": "Suggest an event",
+  "pl": "Zaproponuj wydarzenie"
+ },
+ "Події періоду": {
+  "en": "Events in this period",
+  "pl": "Wydarzenia w tym okresie"
+ },
+ "Надішліть посилання — модератор перевірить і додасть подію в календар.": {
+  "en": "Send a link — a moderator will check it and add the event to the calendar.",
+  "pl": "Wyślij link — moderator sprawdzi go i doda wydarzenie do kalendarza."
+ },
+ "Необовʼязково, але допоможе швидше:": {
+  "en": "Optional, but it helps:",
+  "pl": "Opcjonalnie, ale przyspieszy weryfikację:"
+ },
+ "Скасувати": {
+  "en": "Cancel",
+  "pl": "Anuluj"
+ },
+ "Надіслати": {
+  "en": "Send",
+  "pl": "Wyślij"
+ },
+ "Сьогодні": {
+  "en": "Today",
+  "pl": "Dziś"
+ },
+ "Місяць": {
+  "en": "Month",
+  "pl": "Miesiąc"
+ },
+ "Тиждень": {
+  "en": "Week",
+  "pl": "Tydzień"
+ },
+ "Завантаження…": {
+  "en": "Loading…",
+  "pl": "Ładowanie…"
+ },
+ "У цьому періоді поки немає опублікованих подій.": {
+  "en": "No published events in this period yet.",
+  "pl": "W tym okresie nie ma jeszcze opublikowanych wydarzeń."
+ },
+ "У цьому періоді немає подій за вашим запитом.": {
+  "en": "No events match your filters in this period.",
+  "pl": "Brak wydarzeń pasujących do filtrów w tym okresie."
+ },
+ "Не вдалося завантажити події. Оновіть сторінку.": {
+  "en": "Could not load events. Please reload the page.",
+  "pl": "Nie udało się wczytać wydarzeń. Odśwież stronę."
+ },
+ "Нічого не знайдено серед майбутніх подій.": {
+  "en": "Nothing found among upcoming events.",
+  "pl": "Nic nie znaleziono wśród nadchodzących wydarzeń."
+ },
+ "весь день": {
+  "en": "all day",
+  "pl": "cały dzień"
+ },
+ "час уточнюється": {
+  "en": "time to be confirmed",
+  "pl": "godzina do potwierdzenia"
+ },
+ "скасовано": {
+  "en": "cancelled",
+  "pl": "odwołane"
+ },
+ "подія": {
+  "en": "event",
+  "pl": "wydarzenie"
+ },
+ "події": {
+  "en": "events",
+  "pl": "wydarzenia"
+ },
+ "подій": {
+  "en": "events",
+  "pl": "wydarzeń"
+ },
+ "Це моя подія": {
+  "en": "This is my event",
+  "pl": "To moje wydarzenie"
+ },
+ "Заявку вже надіслано": {
+  "en": "Request already sent",
+  "pl": "Wniosek już wysłany"
+ },
+ "Розкажіть, хто ви. Модератор перевірить дані, і подія зʼявиться у вашому кабінеті — тоді ви зможете її оновлювати.": {
+  "en": "Tell us who you are. A moderator will check the details, and the event will appear in your account — then you can update it.",
+  "pl": "Powiedz nam, kim jesteś. Moderator sprawdzi dane, a wydarzenie pojawi się na Twoim koncie — wtedy będzie można je aktualizować."
+ },
+ "Надіслати заявку": {
+  "en": "Send request",
+  "pl": "Wyślij wniosek"
+ },
+ "Ви надіслали заявку на «%(t)s» %(d)s. Модератор перевірить її, і подія зʼявиться у вашому кабінеті.": {
+  "en": "You requested “%(t)s” on %(d)s. A moderator will review it and the event will appear in your account.",
+  "pl": "Wysłano wniosek dotyczący „%(t)s” %(d)s. Moderator go sprawdzi, a wydarzenie pojawi się na Twoim koncie."
+ },
+ "До календаря": {
+  "en": "Back to calendar",
+  "pl": "Do kalendarza"
+ },
+ "Мова оригіналу": {
+  "en": "Original language",
+  "pl": "Język oryginału"
+ },
+ "Коли": {
+  "en": "When",
+  "pl": "Kiedy"
+ },
+ "Де": {
+  "en": "Where",
+  "pl": "Gdzie"
+ },
+ "Онлайн": {
+  "en": "Online",
+  "pl": "Online"
+ },
+ "Ціна": {
+  "en": "Price",
+  "pl": "Cena"
+ },
+ "Організатор": {
+  "en": "Organizer",
+  "pl": "Organizator"
+ },
+ "Організатор підтверджений": {
+  "en": "Verified organizer",
+  "pl": "Zweryfikowany organizator"
+ },
+ "Квитки": {
+  "en": "Tickets",
+  "pl": "Bilety"
+ },
+ "Знайшли помилку?": {
+  "en": "Found a mistake?",
+  "pl": "Znalazłeś błąd?"
+ },
+ "Джерело": {
+  "en": "Source",
+  "pl": "Źródło"
+ },
+ "Реєстрація та оплата — на сайті організатора.": {
+  "en": "Registration and payment are on the organizer’s site.",
+  "pl": "Rejestracja i płatność — na stronie organizatora."
+ },
+ "Напишіть, що не так у картці — модератор перевірить і виправить.": {
+  "en": "Tell us what is wrong — a moderator will check and fix it.",
+  "pl": "Napisz, co jest nie tak — moderator sprawdzi i poprawi."
+ },
+ "Сеанс %(n)s": {
+  "en": "Session %(n)s",
+  "pl": "Termin %(n)s"
+ },
+ "Вхід": {
+  "en": "Sign in",
+  "pl": "Logowanie"
+ },
+ "Кабінет організатора": {
+  "en": "Organizer account",
+  "pl": "Konto organizatora"
+ },
+ "Щоб заявити свою подію, увійдіть або створіть кабінет — це хвилина.": {
+  "en": "To claim your event, sign in or create an account — it takes a minute.",
+  "pl": "Aby zgłosić swoje wydarzenie, zaloguj się lub załóż konto — to zajmie minutę."
+ },
+ "Створити кабінет": {
+  "en": "Create account",
+  "pl": "Załóż konto"
+ },
+ "Офлайн": {
+  "en": "In person",
+  "pl": "Stacjonarnie"
+ },
+ "Гібрид": {
+  "en": "Hybrid",
+  "pl": "Hybrydowo"
+ },
+ "Скасовано": {
+  "en": "Cancelled",
+  "pl": "Odwołane"
+ },
+ "Перенесено, нова дата уточнюється": {
+  "en": "Postponed, new date to be announced",
+  "pl": "Przełożone, nowa data wkrótce"
+ },
+ "Перенесено": {
+  "en": "Rescheduled",
+  "pl": "Przeniesione"
+ },
+ "Усі категорії": {
+  "en": "All categories",
+  "pl": "Wszystkie kategorie"
+ },
+ "Усі міста": {
+  "en": "All cities",
+  "pl": "Wszystkie miasta"
+ },
+ "Будь-який формат": {
+  "en": "Any format",
+  "pl": "Dowolny format"
+ },
+ "Весь день": {
+  "en": "All day",
+  "pl": "Cały dzień"
+ },
+ "Час уточнюється": {
+  "en": "Time to be confirmed",
+  "pl": "Godzina do potwierdzenia"
+ },
+ "Реєстрація та квитки": {
+  "en": "Registration and tickets",
+  "pl": "Rejestracja i bilety"
+ },
+ "Дата або час": {
+  "en": "Date or time",
+  "pl": "Data lub godzina"
+ },
+ "Місце": {
+  "en": "Place",
+  "pl": "Miejsce"
+ },
+ "Ціна або квитки": {
+  "en": "Price or tickets",
+  "pl": "Cena lub bilety"
+ },
+ "Подію скасовано": {
+  "en": "Event cancelled",
+  "pl": "Wydarzenie odwołane"
+ },
+ "Інше": {
+  "en": "Other",
+  "pl": "Inne"
+ },
+ "Що не так": {
+  "en": "What is wrong",
+  "pl": "Co jest nie tak"
+ },
+ "Опишіть, будь ласка": {
+  "en": "Please describe",
+  "pl": "Opisz, proszę"
+ },
+ "Наприклад: подію перенесли на 12 березня": {
+  "en": "For example: the event moved to 12 March",
+  "pl": "Na przykład: wydarzenie przeniesiono na 12 marca"
+ },
+ "Email, якщо хочете відповідь": {
+  "en": "Email, if you want a reply",
+  "pl": "E-mail, jeśli chcesz odpowiedź"
+ },
+ "Ваше імʼя": {
+  "en": "Your name",
+  "pl": "Imię"
+ },
+ "Email": {
+  "en": "Email",
+  "pl": "E-mail"
+ },
+ "Пароль": {
+  "en": "Password",
+  "pl": "Hasło"
+ },
+ "Не менше 10 символів": {
+  "en": "At least 10 characters",
+  "pl": "Co najmniej 10 znaków"
+ },
+ "Цей email уже зареєстровано. Увійдіть.": {
+  "en": "This email is already registered. Please sign in.",
+  "pl": "Ten e-mail jest już zarejestrowany. Zaloguj się."
+ },
+ "Організація або бренд": {
+  "en": "Organization or brand",
+  "pl": "Organizacja lub marka"
+ },
+ "Ваша роль": {
+  "en": "Your role",
+  "pl": "Twoja rola"
+ },
+ "Наприклад: організатор, менеджер, PR": {
+  "en": "For example: organizer, manager, PR",
+  "pl": "Na przykład: organizator, menedżer, PR"
+ },
+ "Телефон для звʼязку": {
+  "en": "Contact phone",
+  "pl": "Telefon kontaktowy"
+ },
+ "Чим можете підтвердити": {
+  "en": "How can you prove it",
+  "pl": "Czym możesz to potwierdzić"
+ },
+ "Посилання на сторінку, де вас вказано, пошта на домені організатора, соцмережі події — усе, що допоможе модератору.": {
+  "en": "A page that lists you, an email on the organizer’s domain, the event’s social media — anything that helps the moderator.",
+  "pl": "Strona, na której jesteś wymieniony, e-mail w domenie organizatora, media społecznościowe wydarzenia — wszystko, co pomoże moderatorowi."
+ },
+ "Посилання на подію": {
+  "en": "Link to the event",
+  "pl": "Link do wydarzenia"
+ },
+ "Ваш email": {
+  "en": "Your email",
+  "pl": "Twój e-mail"
+ },
+ "Якщо хочете дізнатися, коли подію опублікують": {
+  "en": "If you want to know when it is published",
+  "pl": "Jeśli chcesz wiedzieć, kiedy zostanie opublikowane"
+ },
+ "Дата": {
+  "en": "Date",
+  "pl": "Data"
+ },
+ "Місто": {
+  "en": "City",
+  "pl": "Miasto"
+ },
+ "Категорія": {
+  "en": "Category",
+  "pl": "Kategoria"
+ },
+ "Дякуємо! Повідомлення надіслано модератору.": {
+  "en": "Thank you! Your message has been sent to a moderator.",
+  "pl": "Dziękujemy! Wiadomość została wysłana do moderatora."
+ },
+ "Забагато повідомлень. Спробуйте пізніше.": {
+  "en": "Too many messages. Please try later.",
+  "pl": "Zbyt wiele wiadomości. Spróbuj później."
+ },
+ "Опишіть, будь ласка, що саме не так.": {
+  "en": "Please describe what exactly is wrong.",
+  "pl": "Opisz, proszę, co dokładnie jest nie tak."
+ },
+ "Забагато спроб входу. Спробуйте за годину.": {
+  "en": "Too many sign-in attempts. Try again in an hour.",
+  "pl": "Zbyt wiele prób logowania. Spróbuj za godzinę."
+ },
+ "Невірний email або пароль.": {
+  "en": "Wrong email or password.",
+  "pl": "Nieprawidłowy e-mail lub hasło."
+ },
+ "Забагато реєстрацій з цієї адреси. Спробуйте пізніше.": {
+  "en": "Too many sign-ups from this address. Please try later.",
+  "pl": "Zbyt wiele rejestracji z tego adresu. Spróbuj później."
+ },
+ "Кабінет створено.": {
+  "en": "Your account has been created.",
+  "pl": "Konto zostało utworzone."
+ },
+ "Ця подія вже у вашому кабінеті.": {
+  "en": "This event is already in your account.",
+  "pl": "To wydarzenie jest już na Twoim koncie."
+ },
+ "Забагато заявок. Спробуйте пізніше.": {
+  "en": "Too many requests. Please try later.",
+  "pl": "Zbyt wiele wniosków. Spróbuj później."
+ },
+ "Заявку надіслано. Модератор перевірить її і відповість у кабінеті.": {
+  "en": "Request sent. A moderator will review it and reply in your account.",
+  "pl": "Wniosek wysłany. Moderator go sprawdzi i odpowie na Twoim koncie."
+ },
+ "Дякуємо! Подію надіслано на перевірку.": {
+  "en": "Thank you! The event has been sent for review.",
+  "pl": "Dziękujemy! Wydarzenie zostało wysłane do weryfikacji."
+ },
+ "Забагато пропозицій. Спробуйте пізніше.": {
+  "en": "Too many suggestions. Please try later.",
+  "pl": "Zbyt wiele propozycji. Spróbuj później."
+ },
+ "Вкажіть, будь ласка, коректне посилання на подію.": {
+  "en": "Please give a valid link to the event.",
+  "pl": "Podaj, proszę, prawidłowy link do wydarzenia."
+ },
+ "Ця подія вже є в календарі.": {
+  "en": "This event is already in the calendar.",
+  "pl": "To wydarzenie jest już w kalendarzu."
+ },
+ "Дякуємо! Ця подія вже є у нас і чекає на перевірку.": {
+  "en": "Thank you! We already have this event and it is awaiting review.",
+  "pl": "Dziękujemy! To wydarzenie już mamy i czeka na weryfikację."
+ },
+ "Дякуємо! Подію надіслано на перевірку — після модерації вона зʼявиться в календарі.": {
+  "en": "Thank you! The event has been sent for review — it will appear in the calendar after moderation.",
+  "pl": "Dziękujemy! Wydarzenie wysłano do weryfikacji — pojawi się w kalendarzu po moderacji."
+ },
+ "ще {n}": {
+  "en": "+{n} more",
+  "pl": "+{n} więcej"
+ },
+ "Ще {n} — уточніть запит.": {
+  "en": "{n} more — refine your search.",
+  "pl": "Jeszcze {n} — doprecyzuj wyszukiwanie."
+ }
+}

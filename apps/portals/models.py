@@ -5,6 +5,8 @@ from django.db import models
 class Site(models.Model):
     code = models.SlugField("код", unique=True, help_text="Короткий код: ua, pl-test …")
     name = models.CharField("название", max_length=120)
+    names = models.JSONField("название на языках сайта", default=dict, blank=True,
+                             help_text='{"en": "EventCalendar Ukraine", "pl": "EventCalendar Ukraina"}')
     default_locale = models.CharField("язык по умолчанию", max_length=5, default="uk")
     locales = models.JSONField("языки сайта", default=list, help_text='Напр. ["uk", "en", "pl"]')
     timezone = models.CharField("часовой пояс", max_length=64, default="Europe/Kyiv")

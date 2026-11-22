@@ -69,6 +69,9 @@ class Command(BaseCommand):
             "name": "EventCalendar Україна", "default_locale": "uk", "locales": ["uk", "en", "pl"],
             "timezone": "Europe/Kyiv", "is_default": True})
         site.countries.add(ua)
+        if not site.names:
+            site.names = {"uk": site.name, "en": "EventCalendar Ukraine", "pl": "EventCalendar Ukraina"}
+            site.save(update_fields=["names"])
         defaults = [] if site.domains.exists() else ["eventcalendar.com.ua", "www.eventcalendar.com.ua"]
         for i, host in enumerate(domain or defaults):
             SiteDomain.objects.get_or_create(host=host.lower(), defaults={"site": site, "is_primary": i == 0})

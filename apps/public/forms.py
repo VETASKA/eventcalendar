@@ -1,11 +1,12 @@
 from django import forms
 from django.contrib.auth import password_validation
 from django.contrib.auth.models import User
+from django.utils.translation import gettext_lazy as _
 
 from apps.feedback.models import ErrorReport
 
-KIND_UK = [("date", "Дата або час"), ("place", "Місце"), ("price", "Ціна або квитки"),
-           ("cancelled", "Подію скасовано"), ("other", "Інше")]
+KIND_UK = [("date", _("Дата або час")), ("place", _("Місце")), ("price", _("Ціна або квитки")),
+           ("cancelled", _("Подію скасовано")), ("other", _("Інше"))]
 
 
 class Honeypot(forms.Form):
@@ -17,10 +18,10 @@ class Honeypot(forms.Form):
 
 
 class ErrorReportForm(Honeypot, forms.ModelForm):
-    kind = forms.ChoiceField(label="Що не так", choices=KIND_UK, initial="other")
-    message = forms.CharField(label="Опишіть, будь ласка", max_length=2000,
-                              widget=forms.Textarea(attrs={"rows": 4, "placeholder": "Наприклад: подію перенесли на 12 березня"}))
-    email = forms.EmailField(label="Email, якщо хочете відповідь", required=False)
+    kind = forms.ChoiceField(label=_("Що не так"), choices=KIND_UK, initial="other")
+    message = forms.CharField(label=_("Опишіть, будь ласка"), max_length=2000,
+                              widget=forms.Textarea(attrs={"rows": 4, "placeholder": _("Наприклад: подію перенесли на 12 березня")}))
+    email = forms.EmailField(label=_("Email, якщо хочете відповідь"), required=False)
 
     class Meta:
         model = ErrorReport
@@ -28,15 +29,15 @@ class ErrorReportForm(Honeypot, forms.ModelForm):
 
 
 class RegisterForm(Honeypot, forms.Form):
-    name = forms.CharField(label="Ваше імʼя", max_length=150)
-    email = forms.EmailField(label="Email")
-    password = forms.CharField(label="Пароль", widget=forms.PasswordInput, min_length=10,
-                               help_text="Не менше 10 символів")
+    name = forms.CharField(label=_("Ваше імʼя"), max_length=150)
+    email = forms.EmailField(label=_("Email"))
+    password = forms.CharField(label=_("Пароль"), widget=forms.PasswordInput, min_length=10,
+                               help_text=_("Не менше 10 символів"))
 
     def clean_email(self):
         email = self.cleaned_data["email"].strip().lower()
         if User.objects.filter(username__iexact=email).exists():
-            raise forms.ValidationError("Цей email уже зареєстровано. Увійдіть.")
+            raise forms.ValidationError(_("Цей email уже зареєстровано. Увійдіть."))
         return email
 
     def clean(self):
@@ -50,29 +51,30 @@ class RegisterForm(Honeypot, forms.Form):
 
 
 class LoginForm(forms.Form):
-    email = forms.EmailField(label="Email")
-    password = forms.CharField(label="Пароль", widget=forms.PasswordInput)
+    email = forms.EmailField(label=_("Email"))
+    password = forms.CharField(label=_("Пароль"), widget=forms.PasswordInput)
 
 
 class ClaimForm(forms.Form):
-    org_name = forms.CharField(label="Організація або бренд", max_length=300)
-    role = forms.CharField(label="Ваша роль", max_length=200, help_text="Наприклад: організатор, менеджер, PR")
-    phone = forms.CharField(label="Телефон для звʼязку", max_length=40)
-    evidence = forms.CharField(label="Чим можете підтвердити", max_length=2000, widget=forms.Textarea(attrs={"rows": 4}),
-                               help_text="Посилання на сторінку, де вас вказано, пошта на домені організатора, "
-                                         "соцмережі події — усе, що допоможе модератору.")
+    org_name = forms.CharField(label=_("Організація або бренд"), max_length=300)
+    role = forms.CharField(label=_("Ваша роль"), max_length=200, help_text=_("Наприклад: організатор, менеджер, PR"))
+    phone = forms.CharField(label=_("Телефон для звʼязку"), max_length=40)
+    evidence = forms.CharField(label=_("Чим можете підтвердити"), max_length=2000, widget=forms.Textarea(attrs={"rows": 4}),
+                               help_text=_("Посилання на сторінку, де вас вказано, пошта на домені організатора, "
+                                           "соцмережі події — усе, що допоможе модератору."))
 
 
 class SuggestForm(Honeypot, forms.Form):
-    url = forms.URLField(label="Посилання на подію", max_length=1000, assume_scheme="https",
+    url = forms.URLField(label=_("Посилання на подію"), max_length=1000, assume_scheme="https",
                          widget=forms.URLInput(attrs={"placeholder": "https://…", "autocomplete": "off"}))
-    email = forms.EmailField(label="Ваш email", required=False, help_text="Якщо хочете дізнатися, коли подію опублікують")
-    date = forms.DateField(label="Дата", required=False, widget=forms.DateInput(attrs={"type": "date"}))
-    city = forms.CharField(label="Місто", max_length=100, required=False)
-    type = forms.ChoiceField(label="Категорія", required=False)
+    email = forms.EmailField(label=_("Ваш email"), required=False, help_text=_("Якщо хочете дізнатися, коли подію опублікують"))
+    date = forms.DateField(label=_("Дата"), required=False, widget=forms.DateInput(attrs={"type": "date"}))
+    city = forms.CharField(label=_("Місто"), max_length=100, required=False)
+    type = forms.ChoiceField(label=_("Категорія"), required=False)
 
     def __init__(self, *a, **kw):
         super().__init__(*a, **kw)
         from apps.catalog.models import EventType
-        self.fields["type"].choices = [("", "—")] + [(t.code, t.names.get("uk") or t.code)
+        from apps.core.i18n import name_in
+        self.fields["type"].choices = [("", "—")] + [(t.code, name_in(t.names, fallback=t.code))
                                                       for t in EventType.objects.filter(is_active=True)]

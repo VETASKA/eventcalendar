@@ -1,21 +1,19 @@
-{% extends "public/base.html" %}
-{% block title %}Це моя подія — {{ e.title }}{% endblock %}
+{% extends "public/base.html" %}{% load i18n %}
+{% block title %}{% translate "Це моя подія" %} — {{ e.title }}{% endblock %}
 {% block meta %}<meta name="robots" content="noindex">{% endblock %}
 {% block main %}
 <div class="page">
-  <a class="back" href="/events/{{ e.pk }}-{{ e.slug }}/" style="color:var(--muted);text-decoration:none;font-size:14px">← {{ e.title }}</a>
+  <a class="back" href="{{ lp }}/events/{{ e.pk }}-{{ e.slug }}/" style="color:var(--muted);text-decoration:none;font-size:14px">← {{ e.title }}</a>
   <div class="box" style="margin-top:12px">
     {% if existing %}
-      <h1>Заявку вже надіслано</h1>
-      <p class="lead">Ви надіслали заявку на «{{ e.title }}» {{ existing.created_at|date:"d.m.Y" }}. Модератор перевірить її,
-        і подія зʼявиться у вашому <a href="/cabinet/">кабінеті</a>.</p>
+      <h1>{% translate "Заявку вже надіслано" %}</h1>
+      <p class="lead">{% blocktranslate with t=e.title d=existing.created_at|date:"d.m.Y" %}Ви надіслали заявку на «{{ t }}» {{ d }}. Модератор перевірить її, і подія зʼявиться у вашому кабінеті.{% endblocktranslate %} <a href="{{ lp }}/cabinet/">{% translate "Кабінет" %} →</a></p>
     {% else %}
-      <h1>Це моя подія</h1>
-      <p class="lead">«{{ e.title }}». Розкажіть, хто ви. Модератор перевірить дані, і подія зʼявиться у вашому кабінеті —
-        тоді ви зможете її оновлювати.</p>
+      <h1>{% translate "Це моя подія" %}</h1>
+      <p class="lead">«{{ e.title }}». {% translate "Розкажіть, хто ви. Модератор перевірить дані, і подія зʼявиться у вашому кабінеті — тоді ви зможете її оновлювати." %}</p>
       <form method="post">{% csrf_token %}
         {% for f in form %}{% include "public/_field.html" %}{% endfor %}
-        <button class="submit" type="submit">Надіслати заявку</button>
+        <button class="submit" type="submit">{% translate "Надіслати заявку" %}</button>
       </form>
     {% endif %}
   </div>

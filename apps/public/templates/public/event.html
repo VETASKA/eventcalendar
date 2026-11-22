@@ -1,5 +1,5 @@
-{% extends "public/base.html" %}
-{% block title %}{{ title }} — {{ request.site.name }}{% endblock %}
+{% extends "public/base.html" %}{% load i18n %}
+{% block title %}{{ title }} — {{ site_name }}{% endblock %}
 {% block meta %}
 <meta name="description" content="{{ summary|default:title|truncatechars:160 }}">
 <link rel="canonical" href="{{ request.scheme }}://{{ request.get_host }}{{ request.path }}">
@@ -42,59 +42,60 @@
 {% endblock %}
 {% block main %}
 <div class="wrap">
-  <a class="back" href="/">← До календаря</a>
+  <a class="back" href="{{ lp }}/">← {% translate "До календаря" %}</a>
   <article class="card">
     <div class="chips">
       {% if type %}<span class="chip">{{ type }}</span>{% endif %}
       {% for t in topics %}<span class="chip gray">{{ t }}</span>{% endfor %}
       {% if format %}<span class="chip gray">{{ format }}</span>{% endif %}
     </div>
-    <h1>{{ title }}{% if foreign_lang %}<span class="lang" title="Мова оригіналу">{{ e.original_language|upper }}</span>{% endif %}</h1>
+    <h1>{{ title }}{% if foreign_lang %}<span class="lang" title="{% translate "Мова оригіналу" %}">{{ e.original_language|upper }}</span>{% endif %}</h1>
     {% if summary %}<p class="summary">{{ summary }}</p>{% endif %}
 
     <div class="facts">
       {% for s in sessions %}
-      <div class="fact"><b>{% if sessions|length > 1 %}Сеанс {{ forloop.counter }}{% else %}Коли{% endif %}</b>
-        <span>{{ s.days }}</span><small>{% if s.weekday %}{{ s.weekday }}, {{ s.time|lower }}{% else %}{{ s.time }}{% endif %}</small>
+      <div class="fact"><b>{% if sessions|length > 1 %}{% blocktranslate with n=forloop.counter %}Сеанс {{ n }}{% endblocktranslate %}{% else %}{% translate "Коли" %}{% endif %}</b>
+        <span>{{ s.days }}</span><small>{% if s.weekday %}{{ s.weekday|capfirst }}, {{ s.time|lower }}{% else %}{{ s.time }}{% endif %}</small>
         {% if s.status %}<span class="status">{{ s.status }}</span>{% endif %}</div>
       {% endfor %}
-      {% if city or format == "Онлайн" %}
-      <div class="fact"><b>Де</b><span>{% if format == "Онлайн" %}Онлайн{% else %}{{ city }}{% endif %}</span>
+      {% if city or online %}
+      <div class="fact"><b>{% translate "Де" %}</b><span>{% if online %}{% translate "Онлайн" %}{% else %}{{ city }}{% endif %}</span>
         {% if venue %}<small>{{ venue }}</small>{% endif %}</div>
       {% endif %}
-      {% if e.price_text %}<div class="fact"><b>Ціна</b><span>{{ e.price_text }}</span></div>{% endif %}
-      {% if e.organizer_name %}<div class="fact"><b>Організатор</b><span>{{ e.organizer_name }}</span>
-        {% if e.organizer_verified %}<small>✓ Організатор підтверджений</small>{% endif %}</div>{% endif %}
+      {% if e.price_text %}<div class="fact"><b>{% translate "Ціна" %}</b><span>{{ e.price_text }}</span></div>{% endif %}
+      {% if e.organizer_name %}<div class="fact"><b>{% translate "Організатор" %}</b><span>{{ e.organizer_name }}</span>
+        {% if e.organizer_verified %}<small>✓ {% translate "Організатор підтверджений" %}</small>{% endif %}</div>{% endif %}
     </div>
 
     {% if tickets %}
     <div class="tickets">
       {% for t in tickets %}
         <a class="btn{% if forloop.first %} main{% endif %}" href="{{ t.url }}" target="_blank" rel="noopener nofollow">
-          {% if t.label == "Реєстрація та квитки" %}{{ t.label }}{% else %}Квитки · {{ t.label }}{% endif %}
+          {% if t.generic %}{{ t.label }}{% else %}{% translate "Квитки" %} · {{ t.label }}{% endif %}
           {% if t.price %}<small>· {{ t.price }}</small>{% endif %} ↗</a>
       {% endfor %}
     </div>
     {% endif %}
+    {% block remind %}{% endblock %}
     <div class="owner">
-      <a class="btn small" href="/events/{{ e.pk }}/claim/">Це моя подія</a>
-      <button type="button" class="linkbtn" id="report-open">Знайшли помилку?</button>
+      <a class="btn small" href="{{ lp }}/events/{{ e.pk }}/claim/">{% translate "Це моя подія" %}</a>
+      <button type="button" class="linkbtn" id="report-open">{% translate "Знайшли помилку?" %}</button>
     </div>
-    <p class="muted">{% if e.source_url %}Джерело: <a href="{{ e.source_url }}" target="_blank" rel="noopener nofollow">{{ e.source_url|truncatechars:60 }}</a> · {% endif %}
-      Реєстрація та оплата — на сайті організатора.</p>
+    <p class="muted">{% if e.source_url %}{% translate "Джерело" %}: <a href="{{ e.source_url }}" target="_blank" rel="noopener nofollow">{{ e.source_url|truncatechars:60 }}</a> · {% endif %}
+      {% translate "Реєстрація та оплата — на сайті організатора." %}</p>
   </article>
 </div>
 <dialog id="report" aria-labelledby="report-title">
-  <form method="post" action="/events/{{ e.pk }}/report/">{% csrf_token %}
-    <h2 id="report-title">Знайшли помилку?</h2>
-    <p class="muted" style="margin-top:0">Напишіть, що не так у картці — модератор перевірить і виправить.</p>
+  <form method="post" action="{{ lp }}/events/{{ e.pk }}/report/">{% csrf_token %}
+    <h2 id="report-title">{% translate "Знайшли помилку?" %}</h2>
+    <p class="muted" style="margin-top:0">{% translate "Напишіть, що не так у картці — модератор перевірить і виправить." %}</p>
     <div class="hp" aria-hidden="true">{{ report_form.website }}</div>
     {% with f=report_form.kind %}{% include "public/_field.html" %}{% endwith %}
     {% with f=report_form.message %}{% include "public/_field.html" %}{% endwith %}
     {% with f=report_form.email %}{% include "public/_field.html" %}{% endwith %}
     <div class="dlg-actions">
-      <button type="button" class="linkbtn" id="report-close">Скасувати</button>
-      <button class="submit" type="submit">Надіслати</button>
+      <button type="button" class="linkbtn" id="report-close">{% translate "Скасувати" %}</button>
+      <button class="submit" type="submit">{% translate "Надіслати" %}</button>
     </div>
   </form>
 </dialog>

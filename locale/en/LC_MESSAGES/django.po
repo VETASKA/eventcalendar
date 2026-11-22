@@ -1,0 +1,362 @@
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+"Language: en\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgid "календар подій"
+msgstr "event calendar"
+
+msgid "Мова"
+msgstr "Language"
+
+msgid "Кабінет"
+msgstr "My account"
+
+msgid "Увійти"
+msgstr "Sign in"
+
+msgid "Вийти"
+msgstr "Sign out"
+
+msgid "Мої події"
+msgstr "My events"
+
+msgid "підтверджено"
+msgstr "confirmed"
+
+msgid "Поки немає. Відкрийте свою подію в календарі й натисніть «Це моя подія»."
+msgstr "None yet. Open your event in the calendar and click “This is my event”."
+
+msgid "Заявки"
+msgstr "Requests"
+
+msgid "надіслано"
+msgstr "sent"
+
+msgid "відхилено"
+msgstr "rejected"
+
+msgid "прострочено"
+msgstr "expired"
+
+msgid "на перевірці"
+msgstr "under review"
+
+msgid "Календар подій"
+msgstr "Event calendar"
+
+msgid "Календар подій України: конференції, форуми, концерти, стендапи та інше."
+msgstr "Events in Ukraine: conferences, forums, concerts, stand-up and more."
+
+msgid "Пошук за назвою"
+msgstr "Search by name"
+
+msgid "Пошук за назвою події"
+msgstr "Search events by name"
+
+msgid "Знайти…"
+msgstr "Find…"
+
+msgid "Знайти"
+msgstr "Find"
+
+msgid "Скинути"
+msgstr "Reset"
+
+msgid "Показати"
+msgstr "Show"
+
+msgid "Запропонувати подію"
+msgstr "Suggest an event"
+
+msgid "Події періоду"
+msgstr "Events in this period"
+
+msgid "Надішліть посилання — модератор перевірить і додасть подію в календар."
+msgstr "Send a link — a moderator will check it and add the event to the calendar."
+
+msgid "Необовʼязково, але допоможе швидше:"
+msgstr "Optional, but it helps:"
+
+msgid "Скасувати"
+msgstr "Cancel"
+
+msgid "Надіслати"
+msgstr "Send"
+
+msgid "Сьогодні"
+msgstr "Today"
+
+msgid "Місяць"
+msgstr "Month"
+
+msgid "Тиждень"
+msgstr "Week"
+
+msgid "Завантаження…"
+msgstr "Loading…"
+
+msgid "У цьому періоді поки немає опублікованих подій."
+msgstr "No published events in this period yet."
+
+msgid "У цьому періоді немає подій за вашим запитом."
+msgstr "No events match your filters in this period."
+
+msgid "Не вдалося завантажити події. Оновіть сторінку."
+msgstr "Could not load events. Please reload the page."
+
+msgid "Нічого не знайдено серед майбутніх подій."
+msgstr "Nothing found among upcoming events."
+
+msgid "весь день"
+msgstr "all day"
+
+msgid "час уточнюється"
+msgstr "time to be confirmed"
+
+msgid "скасовано"
+msgstr "cancelled"
+
+msgid "подія"
+msgstr "event"
+
+msgid "події"
+msgstr "events"
+
+msgid "подій"
+msgstr "events"
+
+msgid "Це моя подія"
+msgstr "This is my event"
+
+msgid "Заявку вже надіслано"
+msgstr "Request already sent"
+
+msgid "Розкажіть, хто ви. Модератор перевірить дані, і подія зʼявиться у вашому кабінеті — тоді ви зможете її оновлювати."
+msgstr "Tell us who you are. A moderator will check the details, and the event will appear in your account — then you can update it."
+
+msgid "Надіслати заявку"
+msgstr "Send request"
+
+msgid "Ви надіслали заявку на «%(t)s» %(d)s. Модератор перевірить її, і подія зʼявиться у вашому кабінеті."
+msgstr "You requested “%(t)s” on %(d)s. A moderator will review it and the event will appear in your account."
+
+msgid "До календаря"
+msgstr "Back to calendar"
+
+msgid "Мова оригіналу"
+msgstr "Original language"
+
+msgid "Коли"
+msgstr "When"
+
+msgid "Де"
+msgstr "Where"
+
+msgid "Онлайн"
+msgstr "Online"
+
+msgid "Ціна"
+msgstr "Price"
+
+msgid "Організатор"
+msgstr "Organizer"
+
+msgid "Організатор підтверджений"
+msgstr "Verified organizer"
+
+msgid "Квитки"
+msgstr "Tickets"
+
+msgid "Знайшли помилку?"
+msgstr "Found a mistake?"
+
+msgid "Джерело"
+msgstr "Source"
+
+msgid "Реєстрація та оплата — на сайті організатора."
+msgstr "Registration and payment are on the organizer’s site."
+
+msgid "Напишіть, що не так у картці — модератор перевірить і виправить."
+msgstr "Tell us what is wrong — a moderator will check and fix it."
+
+msgid "Сеанс %(n)s"
+msgstr "Session %(n)s"
+
+msgid "Вхід"
+msgstr "Sign in"
+
+msgid "Кабінет організатора"
+msgstr "Organizer account"
+
+msgid "Щоб заявити свою подію, увійдіть або створіть кабінет — це хвилина."
+msgstr "To claim your event, sign in or create an account — it takes a minute."
+
+msgid "Створити кабінет"
+msgstr "Create account"
+
+msgid "Офлайн"
+msgstr "In person"
+
+msgid "Гібрид"
+msgstr "Hybrid"
+
+msgid "Скасовано"
+msgstr "Cancelled"
+
+msgid "Перенесено, нова дата уточнюється"
+msgstr "Postponed, new date to be announced"
+
+msgid "Перенесено"
+msgstr "Rescheduled"
+
+msgid "Усі категорії"
+msgstr "All categories"
+
+msgid "Усі міста"
+msgstr "All cities"
+
+msgid "Будь-який формат"
+msgstr "Any format"
+
+msgid "Весь день"
+msgstr "All day"
+
+msgid "Час уточнюється"
+msgstr "Time to be confirmed"
+
+msgid "Реєстрація та квитки"
+msgstr "Registration and tickets"
+
+msgid "Дата або час"
+msgstr "Date or time"
+
+msgid "Місце"
+msgstr "Place"
+
+msgid "Ціна або квитки"
+msgstr "Price or tickets"
+
+msgid "Подію скасовано"
+msgstr "Event cancelled"
+
+msgid "Інше"
+msgstr "Other"
+
+msgid "Що не так"
+msgstr "What is wrong"
+
+msgid "Опишіть, будь ласка"
+msgstr "Please describe"
+
+msgid "Наприклад: подію перенесли на 12 березня"
+msgstr "For example: the event moved to 12 March"
+
+msgid "Email, якщо хочете відповідь"
+msgstr "Email, if you want a reply"
+
+msgid "Ваше імʼя"
+msgstr "Your name"
+
+msgid "Email"
+msgstr "Email"
+
+msgid "Пароль"
+msgstr "Password"
+
+msgid "Не менше 10 символів"
+msgstr "At least 10 characters"
+
+msgid "Цей email уже зареєстровано. Увійдіть."
+msgstr "This email is already registered. Please sign in."
+
+msgid "Організація або бренд"
+msgstr "Organization or brand"
+
+msgid "Ваша роль"
+msgstr "Your role"
+
+msgid "Наприклад: організатор, менеджер, PR"
+msgstr "For example: organizer, manager, PR"
+
+msgid "Телефон для звʼязку"
+msgstr "Contact phone"
+
+msgid "Чим можете підтвердити"
+msgstr "How can you prove it"
+
+msgid "Посилання на сторінку, де вас вказано, пошта на домені організатора, соцмережі події — усе, що допоможе модератору."
+msgstr "A page that lists you, an email on the organizer’s domain, the event’s social media — anything that helps the moderator."
+
+msgid "Посилання на подію"
+msgstr "Link to the event"
+
+msgid "Ваш email"
+msgstr "Your email"
+
+msgid "Якщо хочете дізнатися, коли подію опублікують"
+msgstr "If you want to know when it is published"
+
+msgid "Дата"
+msgstr "Date"
+
+msgid "Місто"
+msgstr "City"
+
+msgid "Категорія"
+msgstr "Category"
+
+msgid "Дякуємо! Повідомлення надіслано модератору."
+msgstr "Thank you! Your message has been sent to a moderator."
+
+msgid "Забагато повідомлень. Спробуйте пізніше."
+msgstr "Too many messages. Please try later."
+
+msgid "Опишіть, будь ласка, що саме не так."
+msgstr "Please describe what exactly is wrong."
+
+msgid "Забагато спроб входу. Спробуйте за годину."
+msgstr "Too many sign-in attempts. Try again in an hour."
+
+msgid "Невірний email або пароль."
+msgstr "Wrong email or password."
+
+msgid "Забагато реєстрацій з цієї адреси. Спробуйте пізніше."
+msgstr "Too many sign-ups from this address. Please try later."
+
+msgid "Кабінет створено."
+msgstr "Your account has been created."
+
+msgid "Ця подія вже у вашому кабінеті."
+msgstr "This event is already in your account."
+
+msgid "Забагато заявок. Спробуйте пізніше."
+msgstr "Too many requests. Please try later."
+
+msgid "Заявку надіслано. Модератор перевірить її і відповість у кабінеті."
+msgstr "Request sent. A moderator will review it and reply in your account."
+
+msgid "Дякуємо! Подію надіслано на перевірку."
+msgstr "Thank you! The event has been sent for review."
+
+msgid "Забагато пропозицій. Спробуйте пізніше."
+msgstr "Too many suggestions. Please try later."
+
+msgid "Вкажіть, будь ласка, коректне посилання на подію."
+msgstr "Please give a valid link to the event."
+
+msgid "Ця подія вже є в календарі."
+msgstr "This event is already in the calendar."
+
+msgid "Дякуємо! Ця подія вже є у нас і чекає на перевірку."
+msgstr "Thank you! We already have this event and it is awaiting review."
+
+msgid "Дякуємо! Подію надіслано на перевірку — після модерації вона зʼявиться в календарі."
+msgstr "Thank you! The event has been sent for review — it will appear in the calendar after moderation."
+
+msgid "ще {n}"
+msgstr "+{n} more"
+
+msgid "Ще {n} — уточніть запит."
+msgstr "{n} more — refine your search."
