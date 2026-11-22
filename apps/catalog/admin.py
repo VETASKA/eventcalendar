@@ -14,7 +14,8 @@ from .models import (Event, EventRevision, EventTranslation, EventType, Occurren
 FLAG_LABELS = {
     "no_title": "нет названия", "no_date": "нет даты", "no_format": "нет формата", "no_type": "нет типа",
     "country_unknown": "страна?", "city_unknown": "город не найден", "city_ambiguous": "город неоднозначен",
-    "removed_in_source": "удалено в источнике",
+    "removed_in_source": "удалено в источнике", "from_visitor": "предложено посетителем",
+    "check_title": "уточнить название",
 }
 STATE_COLORS = {"draft": "info", "pending": "warning", "approved": "success", "rejected": "danger",
                 "withdrawn": "danger"}

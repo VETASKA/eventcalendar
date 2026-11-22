@@ -30,7 +30,20 @@
   .multi-panel small { color:var(--muted); }
   .reset { border:0; background:none; color:var(--muted); font:inherit; cursor:pointer; text-decoration:underline; padding:6px; }
   .reset:hover { color:var(--brand); }
+  .suggest-btn { margin-left:auto; padding:10px 16px; border:0; border-radius:11px; background:var(--brand); color:#fff;
+                 font:inherit; font-weight:600; cursor:pointer; white-space:nowrap; }
+  .suggest-btn:hover { background:#6d28d9; }
+  .suggest-btn:focus-visible { outline:2px solid var(--brand); outline-offset:2px; }
+  dialog { border:0; border-radius:16px; padding:24px; width:min(520px, calc(100% - 24px)); box-shadow:0 24px 60px rgba(31,27,46,.25); }
+  dialog::backdrop { background:rgba(31,27,46,.45); }
+  dialog h2 { margin:0 0 4px; font-size:20px; }
+  dialog .lead { color:var(--muted); margin:0 0 16px; font-size:14px; }
+  dialog .opt { color:var(--muted); font-size:13px; margin:4px 0 10px; border-top:1px solid var(--line); padding-top:12px; }
+  .grid2 { display:grid; grid-template-columns:1fr 1fr; gap:0 12px; }
+  .dlg-actions { display:flex; justify-content:flex-end; align-items:center; gap:16px; margin-top:4px; }
   @media (max-width: 600px) {
+    .suggest-btn { width:100%; margin-left:0; }
+    .grid2 { grid-template-columns:1fr; }
     .search { flex-basis:100%; max-width:none; }
     .multi { flex:1; } .multi-btn { width:100%; max-width:none; justify-content:space-between; }
     .multi-panel { left:0; right:0; min-width:0; }
@@ -80,9 +93,29 @@
     {% endif %}
     <button type="button" class="reset" id="reset"{% if not q and not types %} hidden{% endif %}>Скинути</button>
     <noscript><button type="submit">Показати</button></noscript>
+    <button type="button" class="suggest-btn" id="suggest-open">+ Запропонувати подію</button>
   </form>
   <div id="calendar" aria-label="Календар подій"></div>
   <p class="empty" id="state" role="status" aria-live="polite"></p>
+  <dialog id="suggest" aria-labelledby="suggest-title">
+    <form method="post" action="/suggest/">{% csrf_token %}
+      <h2 id="suggest-title">Запропонувати подію</h2>
+      <p class="lead">Надішліть посилання — модератор перевірить і додасть подію в календар.</p>
+      <div class="hp" aria-hidden="true">{{ suggest.website }}</div>
+      {% with f=suggest.url %}{% include "public/_field.html" %}{% endwith %}
+      <p class="opt">Необовʼязково, але допоможе швидше:</p>
+      <div class="grid2">
+        {% with f=suggest.date %}{% include "public/_field.html" %}{% endwith %}
+        {% with f=suggest.city %}{% include "public/_field.html" %}{% endwith %}
+      </div>
+      {% with f=suggest.type %}{% include "public/_field.html" %}{% endwith %}
+      {% with f=suggest.email %}{% include "public/_field.html" %}{% endwith %}
+      <div class="dlg-actions">
+        <button type="button" class="linkbtn" id="suggest-close">Скасувати</button>
+        <button class="submit" type="submit">Надіслати</button>
+      </div>
+    </form>
+  </dialog>
 {% endblock %}
 {% block scripts %}
 <script src="{% static 'vendor/fullcalendar-6.1.22/index.global.min.js' %}"></script>
@@ -194,6 +227,12 @@
   }
   syncUi();
   if (qInput.value.trim()) search();
+
+  const dlg = $('suggest');
+  $('suggest-open').addEventListener('click', () => { dlg.showModal(); dlg.querySelector('input[name=url]').focus(); });
+  $('suggest-close').addEventListener('click', () => dlg.close());
+  dlg.addEventListener('click', e => { if (e.target === dlg) dlg.close(); });
+  if (location.hash === '#suggest') dlg.showModal();
 })();
 </script>
 {% endblock %}

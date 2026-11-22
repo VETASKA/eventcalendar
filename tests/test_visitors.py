@@ -40,7 +40,8 @@ def three(harvey_token, admin_user):
 
 def test_category_filter_shows_only_types_with_events(client, three):
     html = client.get("/").content.decode()
-    assert 'value="standup"' in html and 'value="concert"' in html and 'value="forum"' not in html
+    box = 'type="checkbox" name="type" value="{}"'
+    assert box.format("standup") in html and box.format("concert") in html and box.format("forum") not in html
     assert ">2</small>" in html                                   # two stand-ups
 
 
@@ -142,3 +143,50 @@ def test_claim_on_unpublished_event_is_404(client, three, admin_user):
 def test_admin_pages_for_new_sections(admin_client, three):
     for p in ("/admin/", "/admin/feedback/errorreport/", "/admin/organizers/claim/", "/admin/organizers/organization/"):
         assert admin_client.get(p).status_code == 200, p
+
+
+def test_suggest_event_goes_to_moderation(client, three):
+    r = client.post("/suggest/", {"url": "fest.com.ua/winter?utm_source=fb", "date": "2099-12-20", "city": "Одеса",
+                                  "type": "festival", "email": "fan@ex.ua"})
+    assert r.status_code == 302
+    from apps.intake.models import IntakeItem
+    item = IntakeItem.objects.get(source__code="form")
+    ev = item.event
+    assert ev.state == "pending" and ev.title == "fest.com.ua" and ev.source_url == "https://fest.com.ua/winter?utm_source=fb"
+    assert ev.event_type.code == "festival" and "from_visitor" in ev.review_flags and "no_type" not in ev.review_flags
+    o = ev.occurrences.get()
+    assert str(o.start_date) == "2099-12-20" and o.city.name == "Одеса"
+    assert item.payload["email"] == "fan@ex.ua"
+    assert ev.publications.get().status == "pending"            # not visible before moderation
+    # the same link again (other tracking params) → no second card
+    client.post("/suggest/", {"url": "https://www.fest.com.ua/winter/"})
+    assert Event.objects.filter(source_url__contains="fest.com.ua").count() == 1
+
+
+def test_suggest_only_link_is_required(client, three):
+    assert client.post("/suggest/", {"url": ""}).status_code == 302
+    from apps.intake.models import IntakeItem
+    assert not IntakeItem.objects.filter(source__code="form").exists()
+    client.post("/suggest/", {"url": "https://only-link.ua/e"})
+    ev = IntakeItem.objects.get(source__code="form").event
+    assert {"no_date", "no_type"} <= set(ev.review_flags) and not ev.occurrences.exists()
+
+
+def test_suggest_known_published_event_points_to_it(client, three):
+    ev = three[0]
+    r = client.post("/suggest/", {"url": ev.source_url})
+    from urllib.parse import unquote
+    assert unquote(r["Location"]) == f"/events/{ev.pk}-{ev.slug}/"
+
+
+def test_suggest_spam_protection(client, three):
+    client.post("/suggest/", {"url": "https://spam.example/", "website": "x"})
+    for i in range(12):
+        client.post("/suggest/", {"url": f"https://e{i}.ua/"})
+    from apps.intake.models import IntakeItem
+    assert IntakeItem.objects.filter(source__code="form").count() == 10
+
+
+def test_home_has_suggest_form(client, three):
+    html = client.get("/").content.decode()
+    assert "Запропонувати подію" in html and 'name="url"' in html and 'value="festival"' in html

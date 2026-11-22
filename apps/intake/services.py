@@ -10,10 +10,10 @@ from django.utils import timezone
 
 from apps.catalog import services as catalog
 
-from .adapters import harvey
+from .adapters import form, harvey
 from .models import EventSource, IntakeItem
 
-ADAPTERS = {"harvey": harvey.normalize}
+ADAPTERS = {"harvey": harvey.normalize, "form": form.normalize}
 VOLATILE = {"updated_at", "sent_at", "scanned_at"}   # changes that alone do not mean «the event changed»
 
 

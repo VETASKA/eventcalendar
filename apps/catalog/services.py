@@ -10,7 +10,7 @@ from apps.audit.models import log
 from apps.geo.models import City, Country
 from apps.portals.models import Site
 
-from .models import Event, EventRevision, Occurrence, SitePublication
+from .models import Event, EventRevision, EventType, Occurrence, SitePublication
 
 IMPORT_FIELDS = ("title", "original_language", "organizer_name", "organizer_site", "source_url",
                  "registration_url", "price_text")
@@ -89,7 +89,8 @@ def apply_intake(item, n: dict) -> None:
     if event is None:
         event = Event.objects.create(
             state="pending", country=_country(f["country_code"]), review_flags=n["flags"],
-            geo_signals=f["geo_signals"], **{k: f[k] for k in IMPORT_FIELDS})
+            geo_signals=f["geo_signals"], **{k: f[k] for k in IMPORT_FIELDS},
+            event_type=EventType.objects.filter(code=f.get("event_type_code") or "", is_active=True).first())
         item.event = event
         _set_occurrences(event, n["occurrences"])
         _ensure_publications(event)

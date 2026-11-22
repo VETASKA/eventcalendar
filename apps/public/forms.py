@@ -61,3 +61,18 @@ class ClaimForm(forms.Form):
     evidence = forms.CharField(label="Чим можете підтвердити", max_length=2000, widget=forms.Textarea(attrs={"rows": 4}),
                                help_text="Посилання на сторінку, де вас вказано, пошта на домені організатора, "
                                          "соцмережі події — усе, що допоможе модератору.")
+
+
+class SuggestForm(Honeypot, forms.Form):
+    url = forms.URLField(label="Посилання на подію", max_length=1000, assume_scheme="https",
+                         widget=forms.URLInput(attrs={"placeholder": "https://…", "autocomplete": "off"}))
+    email = forms.EmailField(label="Ваш email", required=False, help_text="Якщо хочете дізнатися, коли подію опублікують")
+    date = forms.DateField(label="Дата", required=False, widget=forms.DateInput(attrs={"type": "date"}))
+    city = forms.CharField(label="Місто", max_length=100, required=False)
+    type = forms.ChoiceField(label="Категорія", required=False)
+
+    def __init__(self, *a, **kw):
+        super().__init__(*a, **kw)
+        from apps.catalog.models import EventType
+        self.fields["type"].choices = [("", "—")] + [(t.code, t.names.get("uk") or t.code)
+                                                      for t in EventType.objects.filter(is_active=True)]

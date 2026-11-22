@@ -133,3 +133,42 @@ def cabinet_view(request):
               .exclude(status="approved").order_by("-created_at"))
     events = user_events(request.user).prefetch_related("occurrences__city", "publications")
     return render(request, "public/cabinet.html", {"claims": claims, "events": events})
+
+
+# ── «Запропонувати подію» ────────────────────────────────────────────────────
+
+@require_POST
+def suggest_view(request):
+    import hashlib
+
+    from apps.core.text import norm_url
+    from apps.intake.models import EventSource, IntakeItem
+    from apps.intake.services import receive
+
+    from .forms import SuggestForm
+
+    form = SuggestForm(request.POST)
+    if form.is_bot():
+        messages.success(request, "Дякуємо! Подію надіслано на перевірку.")
+        return redirect("/")
+    if not allow(request, "suggest", limit=10):
+        messages.error(request, "Забагато пропозицій. Спробуйте пізніше.")
+        return redirect("/")
+    if not form.is_valid():
+        messages.error(request, "Вкажіть, будь ласка, коректне посилання на подію.")
+        return redirect("/#suggest")
+    d = form.cleaned_data
+    key = norm_url(d["url"])
+    known = IntakeItem.objects.filter(normalized_url=key, event__isnull=False).select_related("event").first()
+    if known:
+        live = known.event.publications.filter(site=request.site, status="published").exists()
+        messages.success(request, "Ця подія вже є в календарі." if live else
+                         "Дякуємо! Ця подія вже є у нас і чекає на перевірку.")
+        return redirect(f"/events/{known.event_id}-{known.event.slug}/" if live else "/")
+    src, _ = EventSource.objects.get_or_create(code="form", defaults={"name": "Форма «Запропонувати подію»"})
+    country = next(iter(sorted(request.site.country_codes())), "")
+    receive(src, {"external_id": hashlib.sha256(key.encode()).hexdigest()[:40], "url": d["url"],
+                  "email": d["email"], "date": d["date"].isoformat() if d["date"] else "", "city": d["city"],
+                  "type": d["type"], "country": country, "ip": ip_hash(request)[:16]})
+    messages.success(request, "Дякуємо! Подію надіслано на перевірку — після модерації вона зʼявиться в календарі.")
+    return redirect("/")

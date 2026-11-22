@@ -48,8 +48,9 @@ def type_facets(site) -> list[dict]:
 @require_GET
 def calendar_page(request):
     q, types = _filters(request)
+    from .forms import SuggestForm
     return render(request, "public/calendar.html", {"site": request.site, "q": q, "types": types,
-                                                    "facets": type_facets(request.site)})
+                                                    "facets": type_facets(request.site), "suggest": SuggestForm()})
 
 
 @require_GET

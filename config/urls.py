@@ -18,6 +18,7 @@ urlpatterns = [
     path("events/<int:pk>/report/", cabinet.report_error),
     path("events/<int:pk>/claim/", cabinet.claim_view),
     re_path(r"^events/(?P<pk>\d+)(?:-(?P<slug>[^/]*))?/$", public.event_page, name="event"),
+    path("suggest/", cabinet.suggest_view),
     path("cabinet/", cabinet.cabinet_view),
     path("cabinet/login/", cabinet.login_view),
     path("cabinet/register/", cabinet.register_view),
