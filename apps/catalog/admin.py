@@ -1,7 +1,8 @@
 """Moderation in the admin (spec §5): the queue, per-card actions and confirmed bulk approval."""
 from django import forms
 from django.contrib import admin, messages
-from django.db.models import Count, Q
+from django.db.models import Count, F, OuterRef, Q, Subquery
+from django.db.models.fields.json import KeyTextTransform
 from django.template.response import TemplateResponse
 from django.utils.html import format_html, format_html_join
 from unfold.admin import ModelAdmin, TabularInline
@@ -19,6 +20,16 @@ FLAG_LABELS = {
 }
 STATE_COLORS = {"draft": "info", "pending": "warning", "approved": "success", "rejected": "danger",
                 "withdrawn": "danger"}
+
+
+class NullsLast(F):
+    """Column sort where cards with no value go to the end in both directions."""
+
+    def asc(self, **kw):
+        return super().asc(nulls_last=True)
+
+    def desc(self, **kw):
+        return super().desc(nulls_last=True)
 
 
 class OccurrenceInline(TabularInline):
@@ -127,7 +138,7 @@ class EventForm(forms.ModelForm):
 @admin.register(Event)
 class EventAdmin(ModelAdmin):
     form = EventForm
-    list_display = ("title_link", "first_date", "city_name", "country", "state_badge", "flags", "pending_revisions")
+    list_display = ("title_link", "first_date", "city_name", "country_name", "state_badge", "flags", "pending_revisions")
     list_display_links = None
     list_filter = ("state", FlagFilter, SiteFilter, SourceFilter, UaSignalFilter, "country", "format", "event_type")
     list_filter_sheet = True
@@ -150,8 +161,12 @@ class EventAdmin(ModelAdmin):
     )
 
     def get_queryset(self, request):
+        first = Occurrence.objects.filter(event=OuterRef("pk")).order_by("start_date", "starts_at", "id")
         return (super().get_queryset(request).select_related("country")
-                .annotate(_pending=Count("revisions", filter=Q(revisions__status="proposed"), distinct=True))
+                .annotate(_pending=Count("revisions", filter=Q(revisions__status="proposed"), distinct=True),
+                          _first_date=Subquery(first.values("start_date")[:1]),
+                          _city=Subquery(first.values("city__name")[:1]),
+                          _country=KeyTextTransform("uk", "country__names"))
                 .prefetch_related("occurrences__city"))
 
     @display(description="название", ordering="title")
@@ -160,15 +175,17 @@ class EventAdmin(ModelAdmin):
         return format_html('<a class="font-medium text-primary-700 dark:text-primary-300" href="{}">{}</a>',
                            reverse("admin:catalog_event_change", args=[obj.pk]), obj.title)
 
-    @display(description="дата")
+    @display(description="дата", ordering=NullsLast("_first_date"))
     def first_date(self, obj):
-        o = next(iter(obj.occurrences.all()), None)
-        return o.start_date.strftime("%d.%m.%Y") if o else "—"
+        return obj._first_date.strftime("%d.%m.%Y") if obj._first_date else "—"
 
-    @display(description="город")
+    @display(description="город", ordering=NullsLast("_city"))
     def city_name(self, obj):
-        o = next(iter(obj.occurrences.all()), None)
-        return o.city.name if o and o.city_id else "—"
+        return obj._city or "—"
+
+    @display(description="страна", ordering=NullsLast("_country"))
+    def country_name(self, obj):
+        return obj._country or "—"
 
     @display(description="статус", ordering="state", label=STATE_COLORS)
     def state_badge(self, obj):
