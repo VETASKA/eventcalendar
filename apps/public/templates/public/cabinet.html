@@ -1,0 +1,50 @@
+{% extends "public/base.html" %}
+{% block title %}Кабінет — {{ request.site.name }}{% endblock %}
+{% block meta %}<meta name="robots" content="noindex">{% endblock %}
+{% block css %}
+  .page { max-width:760px; }
+  .head { display:flex; align-items:center; justify-content:space-between; gap:12px; margin:0 0 16px; }
+  .head h1 { margin:0; font-size:24px; }
+  h2 { font-size:17px; margin:22px 0 10px; }
+  .row { display:flex; justify-content:space-between; align-items:center; gap:12px; padding:12px 0; border-top:1px solid var(--line); }
+  .row:first-of-type { border-top:0; }
+  .row a { color:var(--ink); font-weight:600; text-decoration:none; }
+  .row a:hover { color:var(--brand); }
+  .row small { display:block; color:var(--muted); font-weight:400; }
+  .tag { white-space:nowrap; font-size:13px; padding:3px 10px; border-radius:999px; background:#f1f0f5; }
+  .tag.open { background:#fef3c7; color:#92400e; } .tag.rejected { background:#fee2e2; color:#991b1b; }
+  .tag.ok { background:#dcfce7; color:#166534; }
+  .note { color:var(--muted); font-size:14px; }
+{% endblock %}
+{% block main %}
+<div class="page">
+  <div class="box">
+    <div class="head">
+      <h1>Кабінет</h1>
+      <form method="post" action="/cabinet/logout/">{% csrf_token %}<button class="linkbtn" type="submit">Вийти</button></form>
+    </div>
+    <p class="note">{{ user.first_name|default:user.email }} · {{ user.email }}</p>
+
+    <h2>Мої події</h2>
+    {% for e in events %}
+      <div class="row"><div><a href="/events/{{ e.pk }}-{{ e.slug }}/">{{ e.title }}</a>
+        <small>{% with o=e.occurrences.all.0 %}{% if o %}{{ o.start_date|date:"d.m.Y" }}{% if o.city %} · {{ o.city.name }}{% endif %}{% endif %}{% endwith %}</small></div>
+        <span class="tag ok">підтверджено</span></div>
+    {% empty %}
+      <p class="note">Поки немає. Відкрийте свою подію в календарі й натисніть «Це моя подія».</p>
+    {% endfor %}
+
+    {% if claims %}
+    <h2>Заявки</h2>
+    {% for c in claims %}
+      <div class="row"><div><a href="/events/{{ c.event.pk }}-{{ c.event.slug }}/">{{ c.event.title }}</a>
+        <small>надіслано {{ c.created_at|date:"d.m.Y" }}{% if c.decision_note %} · {{ c.decision_note }}{% endif %}</small></div>
+        {% if c.status == "rejected" %}<span class="tag rejected">відхилено</span>
+        {% elif c.status == "expired" %}<span class="tag">прострочено</span>
+        {% else %}<span class="tag open">на перевірці</span>{% endif %}</div>
+    {% endfor %}
+    {% endif %}
+    <p class="note" style="margin-top:22px">Редагування своїх подій і додавання нових зʼявляться в кабінеті найближчим часом.</p>
+  </div>
+</div>
+{% endblock %}

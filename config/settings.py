@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     "apps.subscriptions",
     "apps.audit",
     "apps.public",
+    "apps.feedback",
 ]
 
 MIDDLEWARE = [
@@ -119,6 +120,10 @@ CELERY_TASK_ACKS_LATE = True
 CELERY_TASK_REJECT_ON_WORKER_LOST = True
 CELERY_TIMEZONE = TIME_ZONE
 
+# Cache: rate limits for public forms. Redis in production, memory locally / in tests.
+CACHES = {"default": {"BACKEND": "django.core.cache.backends.redis.RedisCache", "LOCATION": REDIS_URL}
+          if env("REDIS_URL") else {"BACKEND": "django.core.cache.backends.locmem.LocMemCache"}}
+
 # Intake API: max items in one POST
 INTAKE_MAX_BATCH = int(env("INTAKE_MAX_BATCH", "200"))
 
@@ -174,6 +179,8 @@ UNFOLD = {
                 {"title": "Предложенные изменения", "icon": "difference",
                  "link": reverse_lazy("admin:catalog_eventrevision_changelist")},
                 {"title": "Записи импорта", "icon": "input", "link": reverse_lazy("admin:intake_intakeitem_changelist")},
+                {"title": "Сообщения об ошибках", "icon": "report",
+                 "link": reverse_lazy("admin:feedback_errorreport_changelist")},
             ]},
             {"title": "Справочники", "items": [
                 {"title": "Типы событий", "icon": "category", "link": reverse_lazy("admin:catalog_eventtype_changelist")},
@@ -199,5 +206,5 @@ UNFOLD = {
     },
 }
 
-LOGIN_URL = "/admin/login/"
+LOGIN_URL = "/cabinet/login/"
 LOGIN_REDIRECT_URL = "/admin/"

@@ -6,7 +6,7 @@
 
 {% block content %}
 <div class="flex flex-col gap-8">
-  <div class="grid gap-6 md:grid-cols-2 xl:grid-cols-4">
+  <div class="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
     {% for k in kpis %}
       {% component "unfold/components/card.html" with href=k.href icon=k.icon %}
         {% component "unfold/components/text.html" %}{{ k.title }}{% endcomponent %}

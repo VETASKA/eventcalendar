@@ -31,6 +31,7 @@ class Membership(models.Model):
 
 
 class Claim(models.Model):
+    """«Це моя подія»: a request for rights on one event. Rights appear only after a moderator approves."""
     METHOD = [("file", "файл на сайте"), ("email", "корпоративная почта"), ("manual", "ручная проверка")]
     STATUS = [("open", "открыт"), ("verified", "контроль подтверждён"), ("approved", "права выданы"),
               ("rejected", "отклонён"), ("expired", "просрочен")]
@@ -39,20 +40,28 @@ class Claim(models.Model):
                               related_name="claims")
     organization = models.ForeignKey(Organization, verbose_name="организация", null=True, blank=True,
                                      on_delete=models.SET_NULL)
-    method = models.CharField("способ", max_length=8, choices=METHOD)
+    method = models.CharField("способ", max_length=8, choices=METHOD, default="manual")
+    org_name = models.CharField("организация (как указал)", max_length=300, blank=True)
+    role = models.CharField("должность / роль", max_length=200, blank=True)
+    phone = models.CharField("телефон", max_length=40, blank=True)
     host = models.CharField("хост", max_length=253, blank=True)
     verify_path = models.CharField("путь к файлу", max_length=500, blank=True)
     token_hash = models.CharField(max_length=64, blank=True)
     expires_at = models.DateTimeField("действует до", null=True, blank=True)
     attempts = models.PositiveSmallIntegerField("попыток", default=0)
     status = models.CharField("статус", max_length=10, choices=STATUS, default="open")
-    evidence = models.TextField("доказательства", blank=True)
+    evidence = models.TextField("чем подтверждает", blank=True,
+                                help_text="Ссылка на страницу, где он указан, корпоративная почта, комментарий")
     decision_note = models.TextField("решение модератора", blank=True)
     created_at = models.DateTimeField("создан", auto_now_add=True)
 
     class Meta:
+        ordering = ["-created_at"]
         verbose_name = "запрос «Это моё событие»"
         verbose_name_plural = "запросы «Это моё событие»"
+
+    def __str__(self):
+        return f"{self.user} → {self.event}"
 
 
 class EventGrant(models.Model):
@@ -69,3 +78,6 @@ class EventGrant(models.Model):
     class Meta:
         verbose_name = "право на событие"
         verbose_name_plural = "права на события"
+
+    def __str__(self):
+        return f"{self.organization} → {self.event}"

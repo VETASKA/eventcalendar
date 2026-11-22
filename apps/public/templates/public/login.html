@@ -1,0 +1,48 @@
+{% extends "public/base.html" %}
+{% block title %}Вхід — {{ request.site.name }}{% endblock %}
+{% block meta %}<meta name="robots" content="noindex">{% endblock %}
+{% block css %}
+  .tabs { display:flex; gap:4px; background:#f1f0f5; padding:4px; border-radius:12px; margin:0 0 18px; }
+  .tabs button { flex:1; border:0; background:none; padding:9px; border-radius:9px; font:inherit; font-weight:600; color:var(--muted); cursor:pointer; }
+  .tabs button[aria-selected=true] { background:#fff; color:var(--ink); box-shadow:0 1px 3px rgba(0,0,0,.08); }
+{% endblock %}
+{% block main %}
+<div class="page">
+  <div class="box">
+    <h1>Кабінет організатора</h1>
+    <p class="lead">Щоб заявити свою подію, увійдіть або створіть кабінет — це хвилина.</p>
+    <div class="tabs" role="tablist">
+      <button type="button" role="tab" id="t-login" aria-selected="{% if tab == 'login' %}true{% else %}false{% endif %}">Увійти</button>
+      <button type="button" role="tab" id="t-reg" aria-selected="{% if tab == 'register' %}true{% else %}false{% endif %}">Створити кабінет</button>
+    </div>
+    <form method="post" action="/cabinet/login/" id="p-login"{% if tab != 'login' %} hidden{% endif %}>{% csrf_token %}
+      <input type="hidden" name="next" value="{{ next }}">
+      {% for e in form.non_field_errors %}<p class="form-err">{{ e }}</p>{% endfor %}
+      {% for f in form %}{% include "public/_field.html" %}{% endfor %}
+      <button class="submit" type="submit">Увійти</button>
+    </form>
+    <form method="post" action="/cabinet/register/" id="p-reg"{% if tab != 'register' %} hidden{% endif %}>{% csrf_token %}
+      <input type="hidden" name="next" value="{{ next }}">
+      <div class="hp" aria-hidden="true">{{ reg.website }}</div>
+      {% for e in reg.non_field_errors %}<p class="form-err">{{ e }}</p>{% endfor %}
+      {% with f=reg.name %}{% include "public/_field.html" %}{% endwith %}
+      {% with f=reg.email %}{% include "public/_field.html" %}{% endwith %}
+      {% with f=reg.password %}{% include "public/_field.html" %}{% endwith %}
+      <button class="submit" type="submit">Створити кабінет</button>
+    </form>
+  </div>
+</div>
+{% endblock %}
+{% block scripts %}
+<script>
+(function () {
+  const tabs = { 't-login': 'p-login', 't-reg': 'p-reg' };
+  Object.keys(tabs).forEach(id => document.getElementById(id).addEventListener('click', () => {
+    Object.entries(tabs).forEach(([t, p]) => {
+      document.getElementById(t).setAttribute('aria-selected', String(t === id));
+      document.getElementById(p).hidden = t !== id;
+    });
+  }));
+})();
+</script>
+{% endblock %}

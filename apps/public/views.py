@@ -1,11 +1,12 @@
 """Public storefront: the calendar page and the events API behind it (stage 2 adds filters and cards)."""
 from datetime import date, timedelta
 
+from django.db.models import Count, Q
 from django.http import JsonResponse
 from django.shortcuts import render
 from django.views.decorators.http import require_GET
 
-from apps.catalog.models import Occurrence
+from apps.catalog.models import EventType, Occurrence
 
 MAX_RANGE_DAYS = 62          # one month view plus the leading / trailing weeks
 
@@ -17,9 +18,58 @@ def _day(v: str | None) -> date | None:
         return None
 
 
+def _published(site):
+    return Q(event__publications__site=site, event__publications__status="published")
+
+
+def _filters(request) -> tuple[str, list[str]]:
+    q = (request.GET.get("q") or "").strip()[:100]
+    types = [t for t in request.GET.getlist("type") if t][:20]
+    return q, types
+
+
+def _apply(qs, q: str, types: list[str], prefix: str = "event__"):
+    if q:
+        qs = qs.filter(Q(**{f"{prefix}title__icontains": q}) | Q(**{f"{prefix}translations__title__icontains": q}))
+    if types:
+        qs = qs.filter(**{f"{prefix}event_type__code__in": types})
+    return qs
+
+
+def type_facets(site) -> list[dict]:
+    """Categories that have at least one published event that has not ended yet (the filter shows only these)."""
+    rows = (EventType.objects.filter(is_active=True,
+                                     event__publications__site=site, event__publications__status="published",
+                                     event__occurrences__end_date__gte=date.today())
+            .annotate(n=Count("event", distinct=True)).order_by("position", "code"))
+    return [{"code": t.code, "name": t.names.get("uk") or t.code, "n": t.n} for t in rows]
+
+
 @require_GET
 def calendar_page(request):
-    return render(request, "public/calendar.html", {"site": request.site})
+    q, types = _filters(request)
+    return render(request, "public/calendar.html", {"site": request.site, "q": q, "types": types,
+                                                    "facets": type_facets(request.site)})
+
+
+@require_GET
+def search_api(request):
+    """GET /api/v1/search?q=&type= — up to 10 upcoming published events matching the filter (any month)."""
+    q, types = _filters(request)
+    if not q and not types:
+        return JsonResponse({"results": [], "total": 0})
+    occs = _apply(Occurrence.objects.filter(_published(request.site), end_date__gte=date.today())
+                  .exclude(status="postponed"), q, types)
+    ids, results = set(), []
+    for o in occs.select_related("event", "city").order_by("start_date", "starts_at", "id")[:200]:
+        if o.event_id in ids:
+            continue
+        ids.add(o.event_id)
+        if len(results) < 10:
+            results.append({"title": o.event.title, "url": f"/events/{o.event_id}-{o.event.slug}/",
+                            "date": _uk_date(o.start_date), "start": o.start_date.isoformat(),
+                            "city": o.city.name if o.city_id else ""})
+    return JsonResponse({"results": results, "total": len(ids)})
 
 
 @require_GET
@@ -30,10 +80,11 @@ def events_api(request):
         return JsonResponse({"error": "from / to are required, YYYY-MM-DD, to > from"}, status=400)
     if (end - start).days > MAX_RANGE_DAYS:
         return JsonResponse({"error": f"range is limited to {MAX_RANGE_DAYS} days"}, status=400)
-    occs = (Occurrence.objects
-            .filter(event__publications__site=request.site, event__publications__status="published",
-                    start_date__lt=end, end_date__gte=start)
+    q, types = _filters(request)
+    occs = (_apply(Occurrence.objects.filter(_published(request.site), start_date__lt=end, end_date__gte=start),
+                   q, types)
             .exclude(status="postponed")
+            .distinct()
             .select_related("event", "event__event_type", "city")
             .order_by("start_date", "starts_at", "id")[:1000])
     items = []
@@ -66,6 +117,8 @@ from django.http import Http404  # noqa: E402
 from django.shortcuts import redirect  # noqa: E402
 
 from apps.catalog.models import Event  # noqa: E402
+
+from .forms import ErrorReportForm  # noqa: E402
 
 UK_MONTHS = ["січня", "лютого", "березня", "квітня", "травня", "червня", "липня", "серпня", "вересня", "жовтня",
              "листопада", "грудня"]
@@ -153,4 +206,5 @@ def event_page(request, pk: int, slug: str = ""):
         "venue": next((o.venue for o in occs if o.venue), ""),
         "jsonld": _jsonld(request, e, occs, tickets),
         "foreign_lang": e.original_language not in ("", "uk") and not tr,
+        "report_form": ErrorReportForm(),
     })

@@ -2,7 +2,40 @@
 {% block title %}Календар подій — {{ site.name }}{% endblock %}
 {% block meta %}<meta name="description" content="Календар подій України: конференції, форуми, концерти, стендапи та інше.">
 <link rel="canonical" href="{{ request.scheme }}://{{ request.get_host }}/">{% endblock %}
-{% block css %}  .fc { --fc-border-color:var(--line); --fc-today-bg-color:var(--brand-soft); --fc-event-bg-color:var(--brand);
+{% block css %}
+  .filters { display:flex; flex-wrap:wrap; gap:10px; margin:0 0 12px; align-items:center; }
+  .search { position:relative; flex:1 1 280px; max-width:460px; display:flex; align-items:center; }
+  .search svg { position:absolute; left:12px; color:var(--muted); pointer-events:none; }
+  .search input { width:100%; padding:10px 12px 10px 38px; border:1px solid var(--line); border-radius:11px; font:inherit;
+                  background:#fff; color:var(--ink); }
+  .search input:focus, .multi-btn:focus-visible { outline:2px solid var(--brand); outline-offset:1px; border-color:var(--brand); }
+  .results { position:absolute; top:calc(100% + 6px); left:0; right:0; z-index:20; background:#fff; border:1px solid var(--line);
+             border-radius:12px; box-shadow:0 12px 30px rgba(31,27,46,.12); padding:6px; max-height:60vh; overflow:auto; }
+  .results a { display:flex; flex-direction:column; padding:8px 10px; border-radius:8px; text-decoration:none; color:var(--ink); }
+  .results a:hover, .results a:focus { background:var(--brand-soft); }
+  .results small { color:var(--muted); }
+  .results .none { margin:6px 10px; color:var(--muted); font-size:14px; }
+  .multi { position:relative; }
+  .multi-btn { display:flex; align-items:center; gap:8px; padding:10px 14px; border:1px solid var(--line); border-radius:11px;
+               background:#fff; font:inherit; color:var(--ink); cursor:pointer; max-width:340px; }
+  .multi-btn span { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .multi-btn.on { border-color:var(--brand); background:var(--brand-soft); color:#5b21b6; font-weight:500; }
+  .multi-panel { position:absolute; top:calc(100% + 6px); left:0; z-index:20; min-width:260px; background:#fff;
+                 border:1px solid var(--line); border-radius:12px; box-shadow:0 12px 30px rgba(31,27,46,.12); padding:6px;
+                 max-height:60vh; overflow:auto; }
+  .multi-panel label { display:flex; align-items:center; gap:10px; padding:8px 10px; border-radius:8px; cursor:pointer; }
+  .multi-panel label:hover { background:var(--brand-soft); }
+  .multi-panel input { width:17px; height:17px; accent-color:var(--brand); }
+  .multi-panel span { flex:1; }
+  .multi-panel small { color:var(--muted); }
+  .reset { border:0; background:none; color:var(--muted); font:inherit; cursor:pointer; text-decoration:underline; padding:6px; }
+  .reset:hover { color:var(--brand); }
+  @media (max-width: 600px) {
+    .search { flex-basis:100%; max-width:none; }
+    .multi { flex:1; } .multi-btn { width:100%; max-width:none; justify-content:space-between; }
+    .multi-panel { left:0; right:0; min-width:0; }
+  }
+  .fc { --fc-border-color:var(--line); --fc-today-bg-color:var(--brand-soft); --fc-event-bg-color:var(--brand);
         --fc-event-border-color:var(--brand); --fc-button-bg-color:#fff; --fc-button-border-color:var(--line);
         --fc-button-text-color:var(--ink); --fc-button-hover-bg-color:var(--brand-soft);
         --fc-button-hover-border-color:var(--line); --fc-button-active-bg-color:var(--brand);
@@ -25,6 +58,29 @@
   }
 {% endblock %}
 {% block main %}
+  <form class="filters" id="filters" role="search" action="/" method="get">
+    <div class="search">
+      <svg aria-hidden="true" viewBox="0 0 24 24" width="18" height="18"><circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="2"/><path d="m20 20-3.5-3.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+      <input type="search" name="q" id="q" value="{{ q }}" placeholder="Пошук за назвою" autocomplete="off" aria-label="Пошук за назвою події">
+      <div class="results" id="results" hidden></div>
+    </div>
+    {% if facets %}
+    <div class="multi" id="multi">
+      <button type="button" class="multi-btn" id="multi-btn" aria-haspopup="true" aria-expanded="false">
+        <span id="multi-label">Усі категорії</span>
+        <svg aria-hidden="true" viewBox="0 0 24 24" width="16" height="16"><path d="m6 9 6 6 6-6" fill="none" stroke="currentColor" stroke-width="2"/></svg>
+      </button>
+      <div class="multi-panel" id="multi-panel" hidden>
+        {% for f in facets %}
+        <label><input type="checkbox" name="type" value="{{ f.code }}"{% if f.code in types %} checked{% endif %}>
+          <span>{{ f.name }}</span><small>{{ f.n }}</small></label>
+        {% endfor %}
+      </div>
+    </div>
+    {% endif %}
+    <button type="button" class="reset" id="reset"{% if not q and not types %} hidden{% endif %}>Скинути</button>
+    <noscript><button type="submit">Показати</button></noscript>
+  </form>
   <div id="calendar" aria-label="Календар подій"></div>
   <p class="empty" id="state" role="status" aria-live="polite"></p>
 {% endblock %}
@@ -33,10 +89,31 @@
 <script src="{% static 'vendor/fullcalendar-6.1.22/uk.global.min.js' %}"></script>
 <script>
 (function () {
-  const state = document.getElementById('state');
-  const iso = d => d.toISOString().slice(0, 10);
+  const $ = id => document.getElementById(id);
+  const state = $('state'), qInput = $('q'), results = $('results'), reset = $('reset');
+  const boxes = [...document.querySelectorAll('#multi-panel input[type=checkbox]')];
+  const pad = n => String(n).padStart(2, '0');
+  // local calendar date (not UTC: in Kyiv toISOString() would give the previous day)
+  const ymd = d => d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate());
   const narrow = window.matchMedia('(max-width: 600px)').matches;
-  const cal = new FullCalendar.Calendar(document.getElementById('calendar'), {
+
+  function params() {
+    const p = new URLSearchParams();
+    const q = qInput.value.trim();
+    if (q) p.set('q', q);
+    boxes.filter(b => b.checked).forEach(b => p.append('type', b.value));
+    return p;
+  }
+  function syncUi() {
+    const picked = boxes.filter(b => b.checked).map(b => b.parentElement.querySelector('span').textContent);
+    if ($('multi-label')) $('multi-label').textContent = picked.length ? picked.join(', ') : 'Усі категорії';
+    if ($('multi-btn')) $('multi-btn').classList.toggle('on', picked.length > 0);
+    reset.hidden = !picked.length && !qInput.value.trim();
+    const qs = params().toString();
+    history.replaceState(null, '', qs ? '/?' + qs : '/');
+  }
+
+  const cal = new FullCalendar.Calendar($('calendar'), {
     locale: 'uk',
     firstDay: 1,
     initialView: 'dayGridMonth',
@@ -51,16 +128,72 @@
     eventTimeFormat: { hour: '2-digit', minute: '2-digit', hour12: false },
     events: function (info, ok, fail) {
       state.textContent = 'Завантаження…';
-      fetch('/api/v1/events?from=' + iso(info.start) + '&to=' + iso(info.end))
+      const p = params(); p.set('from', ymd(info.start)); p.set('to', ymd(info.end));
+      fetch('/api/v1/events?' + p)
         .then(r => { if (!r.ok) throw new Error(r.status); return r.json(); })
         .then(d => {
-          state.textContent = d.events.length ? '' : 'У цьому періоді поки немає опублікованих подій.';
+          const filtered = qInput.value.trim() || boxes.some(b => b.checked);
+          state.textContent = d.events.length ? '' : (filtered ? 'У цьому періоді немає подій за вашим запитом.'
+                                                              : 'У цьому періоді поки немає опублікованих подій.');
           ok(d.events.map(e => ({ ...e, title: e.city ? e.title + ' · ' + e.city : e.title })));
         })
         .catch(err => { state.textContent = 'Не вдалося завантажити події. Оновіть сторінку.'; fail(err); });
     },
   });
   cal.render();
+
+  // search results list: matches can be in another month
+  let timer = null, seq = 0;
+  function search() {
+    const p = params();
+    const my = ++seq;
+    if (!p.get('q')) { results.hidden = true; results.innerHTML = ''; return; }
+    fetch('/api/v1/search?' + p).then(r => r.json()).then(d => {
+      if (my !== seq) return;
+      results.innerHTML = '';
+      if (!d.results.length) {
+        results.innerHTML = '<p class="none">Нічого не знайдено серед майбутніх подій.</p>';
+      } else {
+        d.results.forEach(x => {
+          const a = document.createElement('a');
+          a.href = x.url;
+          const t = document.createElement('b'); t.textContent = x.title;
+          const m = document.createElement('small'); m.textContent = x.date + (x.city ? ' · ' + x.city : '');
+          a.append(t, m); results.append(a);
+        });
+        if (d.total > d.results.length) {
+          const more = document.createElement('p'); more.className = 'none';
+          more.textContent = 'Ще ' + (d.total - d.results.length) + ' — уточніть запит.'; results.append(more);
+        }
+      }
+      results.hidden = false;
+    });
+  }
+  function changed(now) {
+    syncUi();
+    clearTimeout(timer);
+    timer = setTimeout(() => { cal.refetchEvents(); search(); }, now ? 0 : 300);
+  }
+  qInput.addEventListener('input', () => changed(false));
+  qInput.addEventListener('focus', () => { if (results.innerHTML) results.hidden = false; });
+  $('filters').addEventListener('submit', e => { e.preventDefault(); changed(true); });
+  boxes.forEach(b => b.addEventListener('change', () => changed(true)));
+  reset.addEventListener('click', () => { qInput.value = ''; boxes.forEach(b => b.checked = false); changed(true); });
+
+  const btn = $('multi-btn'), panel = $('multi-panel');
+  if (btn) {
+    const close = () => { panel.hidden = true; btn.setAttribute('aria-expanded', 'false'); };
+    btn.addEventListener('click', () => { panel.hidden = !panel.hidden; btn.setAttribute('aria-expanded', String(!panel.hidden)); });
+    document.addEventListener('click', e => {
+      if (!$('multi').contains(e.target)) close();
+      if (!e.target.closest('.search')) results.hidden = true;
+    });
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') { close(); results.hidden = true; } });
+  } else {
+    document.addEventListener('click', e => { if (!e.target.closest('.search')) results.hidden = true; });
+  }
+  syncUi();
+  if (qInput.value.trim()) search();
 })();
 </script>
 {% endblock %}

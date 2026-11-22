@@ -1,0 +1,23 @@
+{% extends "public/base.html" %}
+{% block title %}Це моя подія — {{ e.title }}{% endblock %}
+{% block meta %}<meta name="robots" content="noindex">{% endblock %}
+{% block main %}
+<div class="page">
+  <a class="back" href="/events/{{ e.pk }}-{{ e.slug }}/" style="color:var(--muted);text-decoration:none;font-size:14px">← {{ e.title }}</a>
+  <div class="box" style="margin-top:12px">
+    {% if existing %}
+      <h1>Заявку вже надіслано</h1>
+      <p class="lead">Ви надіслали заявку на «{{ e.title }}» {{ existing.created_at|date:"d.m.Y" }}. Модератор перевірить її,
+        і подія зʼявиться у вашому <a href="/cabinet/">кабінеті</a>.</p>
+    {% else %}
+      <h1>Це моя подія</h1>
+      <p class="lead">«{{ e.title }}». Розкажіть, хто ви. Модератор перевірить дані, і подія зʼявиться у вашому кабінеті —
+        тоді ви зможете її оновлювати.</p>
+      <form method="post">{% csrf_token %}
+        {% for f in form %}{% include "public/_field.html" %}{% endfor %}
+        <button class="submit" type="submit">Надіслати заявку</button>
+      </form>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

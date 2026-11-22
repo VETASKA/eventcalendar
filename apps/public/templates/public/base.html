@@ -17,6 +17,12 @@
   .logo i { width:30px; height:30px; border-radius:8px; background:var(--brand); display:grid; place-items:center;
             color:#fff; font-style:normal; font-size:15px; }
   .logo small { font-weight:500; color:var(--muted); font-size:13px; }
+  .top { margin-left:auto; display:flex; gap:14px; }
+  .top a { color:var(--ink); text-decoration:none; font-weight:500; padding:6px 12px; border:1px solid var(--line); border-radius:9px; }
+  .top a:hover { border-color:var(--brand); color:var(--brand); }
+  .flash { max-width:860px; width:100%; margin:0 auto 12px; }
+  .flash p { margin:0 0 6px; padding:10px 14px; border-radius:10px; background:#ecfdf5; color:#065f46; border:1px solid #a7f3d0; }
+  .flash p.error, .flash p.warning { background:#fef2f2; color:#991b1b; border-color:#fecaca; }
   main { flex:1; min-height:0; padding:12px 20px 20px; display:flex; flex-direction:column; }
   #calendar { flex:1; min-height:560px; background:#fff; border:1px solid var(--line); border-radius:14px; padding:14px; }
   .empty { color:var(--muted); font-size:14px; margin:8px 2px 0; }
@@ -24,14 +30,35 @@
     header, main { padding-left:10px; padding-right:10px; }
     .logo { font-size:16px; } .logo small { display:none; }
   }
+  /* shared: pages with a form */
+  .page { max-width:560px; width:100%; margin:8px auto 0; }
+  .box { background:#fff; border:1px solid var(--line); border-radius:16px; padding:26px; }
+  .box h1 { font-size:24px; margin:0 0 6px; }
+  .box .lead { color:var(--muted); margin:0 0 18px; }
+  .field { margin:0 0 14px; }
+  .field label { display:block; font-weight:600; font-size:14px; margin:0 0 5px; }
+  .field input, .field textarea, .field select { width:100%; padding:10px 12px; border:1px solid var(--line); border-radius:10px;
+       font:inherit; color:var(--ink); background:#fff; }
+  .field input:focus, .field textarea:focus, .field select:focus { outline:2px solid var(--brand); outline-offset:1px; border-color:var(--brand); }
+  .field .help { color:var(--muted); font-size:13px; margin-top:4px; }
+  .field .err, .form-err { color:#b91c1c; font-size:13.5px; margin-top:4px; }
+  .hp { position:absolute; left:-9999px; width:1px; height:1px; overflow:hidden; }
+  .submit { display:inline-flex; justify-content:center; padding:12px 20px; border:0; border-radius:11px; background:var(--brand);
+            color:#fff; font:inherit; font-weight:600; cursor:pointer; }
+  .submit:hover { background:#6d28d9; }
+  .linkbtn { border:0; background:none; color:var(--muted); font:inherit; cursor:pointer; text-decoration:underline; padding:0; }
+  @media (max-width:600px) { .box { padding:18px; } .submit { width:100%; } }
 {% block css %}{% endblock %}
 </style>
 </head>
 <body>
 <header>
   <a class="logo" href="/"><i>▦</i>{{ request.site.name }} <small>календар подій</small></a>
+  <nav class="top">{% if user.is_authenticated %}<a href="/cabinet/">Кабінет</a>{% else %}<a href="/cabinet/login/">Увійти</a>{% endif %}</nav>
 </header>
-<main>{% block main %}{% endblock %}</main>
+<main>
+{% if messages %}<div class="flash" role="status">{% for m in messages %}<p class="{{ m.tags }}">{{ m }}</p>{% endfor %}</div>{% endif %}
+{% block main %}{% endblock %}</main>
 {% block scripts %}{% endblock %}
 </body>
 </html>

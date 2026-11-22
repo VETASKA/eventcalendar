@@ -8,6 +8,9 @@ ACTIONS = {
     "publication.approve": "опубликовано",
     "publication.reject": "отклонено",
     "publication.unpublish": "снято с публикации",
+    "claim.approve": "права организатору выданы",
+    "claim.reject": "заявка организатора отклонена",
+    "grant.revoke": "права организатора отозваны",
 }
 
 
