@@ -3,7 +3,7 @@ from django.http import HttpResponseNotFound
 from .models import Site, SiteDomain
 
 # paths that work on any host (health checks, the Harvey intake API on 127.0.0.1)
-HOSTLESS_PREFIXES = ("/healthz", "/api/v1/intake/", "/admin/", "/static/")
+HOSTLESS_PREFIXES = ("/healthz", "/api/v1/intake/", "/admin/", "/static/", "/telegram/")
 
 
 def resolve_site(host: str) -> Site | None:

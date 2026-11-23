@@ -18,11 +18,33 @@ class Subscription(models.Model):
     consent_at = models.DateTimeField("согласие получено", null=True, blank=True)
     consent_source = models.CharField("откуда согласие", max_length=200, blank=True)
     created_at = models.DateTimeField("создана", auto_now_add=True)
+    last_digest_at = models.DateTimeField("последний дайджест", null=True, blank=True)
+    link_token = models.CharField("код привязки Telegram", max_length=40, blank=True, db_index=True)
 
     class Meta:
         verbose_name = "подписка"
         verbose_name_plural = "подписки"
         constraints = [models.UniqueConstraint(fields=["site", "channel", "address"], name="uniq_subscription")]
+
+
+    def masked(self) -> str:
+        if self.channel == "email" and "@" in self.address:
+            name, domain = self.address.split("@", 1)
+            return f"{name[:2]}…@{domain}"
+        return self.address[:3] + "…" if self.address else "—"
+
+    def matches(self, event, occurrences) -> bool:
+        """Does an event fit this subscription's interests (empty list = any)?"""
+        f = self.filters or {}
+        if f.get("type") and (not event.event_type_id or event.event_type.code not in f["type"]):
+            return False
+        if f.get("format") and event.format not in f["format"]:
+            return False
+        if f.get("city"):
+            want = {int(c) for c in f["city"]}
+            if not any(o.city_id in want for o in occurrences) and not (event.format == "online" and not want):
+                return False
+        return True
 
 
 class Reminder(models.Model):

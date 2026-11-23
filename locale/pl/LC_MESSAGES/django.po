@@ -633,3 +633,138 @@ msgstr "Jeśli nie rejestrowałeś się, zignoruj tę wiadomość."
 
 msgid "Вітаємо, %(n)s!"
 msgstr "Witaj, %(n)s!"
+
+msgid "Підписатися"
+msgstr "Subskrybuj"
+
+msgid "Нові події щовівторка"
+msgstr "Nowe wydarzenia w każdy wtorek"
+
+msgid "Раз на тиждень — лише нові події за вашим вибором. Відписатися — одним кліком у кожному листі."
+msgstr "Raz w tygodniu — tylko nowe wydarzenia według Twojego wyboru. Rezygnacja jednym kliknięciem w każdym e-mailu."
+
+msgid "Міста"
+msgstr "Miasta"
+
+msgid "(нічого не обрано — усі)"
+msgstr "(nic nie wybrano — wszystkie)"
+
+msgid "Категорії"
+msgstr "Kategorie"
+
+msgid "Нагадати за добу"
+msgstr "Przypomnij dzień wcześniej"
+
+msgid "Сеанс"
+msgstr "Termin"
+
+msgid "Нагадати"
+msgstr "Przypomnij"
+
+msgid "Відписатися"
+msgstr "Wypisz się"
+
+msgid "Відписатися від розсилки?"
+msgstr "Wypisać się z newslettera?"
+
+msgid "Так, відписатися"
+msgstr "Tak, wypisz mnie"
+
+msgid "Ви відписалися"
+msgstr "Wypisano Cię"
+
+msgid "Листів більше не буде. Підписатися знову можна на головній сторінці."
+msgstr "Nie będziemy już wysyłać e-maili. Możesz ponownie zasubskrybować na stronie głównej."
+
+msgid "Вкажіть email."
+msgstr "Podaj e-mail."
+
+msgid "Забагато спроб. Спробуйте пізніше."
+msgstr "Zbyt wiele prób. Spróbuj później."
+
+msgid "Перевірте email і спробуйте ще раз."
+msgstr "Sprawdź adres e-mail i spróbuj ponownie."
+
+msgid "Підписка в Telegram зʼявиться найближчим часом."
+msgstr "Subskrypcja przez Telegram już wkrótce."
+
+msgid "Майже готово: відкрийте лист і підтвердіть підписку."
+msgstr "Prawie gotowe: otwórz e-mail i potwierdź subskrypcję."
+
+msgid "Посилання недійсне або застаріле."
+msgstr "Link jest nieprawidłowy lub wygasł."
+
+msgid "Підписку підтверджено."
+msgstr "Subskrypcja potwierdzona."
+
+msgid "Email підтверджено — нагадаємо за добу до події."
+msgstr "E-mail potwierdzony — przypomnimy dzień przed wydarzeniem."
+
+msgid "До події менше доби — нагадування вже не встигне."
+msgstr "Do wydarzenia zostało mniej niż dobę — za późno na przypomnienie."
+
+msgid "Нагадаємо за добу до події."
+msgstr "Przypomnimy dzień przed wydarzeniem."
+
+msgid "Підтвердіть email у листі — і ми нагадаємо за добу до події."
+msgstr "Potwierdź e-mail w wiadomości, a przypomnimy dzień przed wydarzeniem."
+
+msgid "Нова дата:"
+msgstr "Nowa data:"
+
+msgid "Нагадування перенесено разом із подією."
+msgstr "Przypomnienie przesunięto razem z wydarzeniem."
+
+msgid "Відписатися:"
+msgstr "Wypisz się:"
+
+msgid "Скасовано: %(t)s"
+msgstr "Odwołane: %(t)s"
+
+msgid "Змінено дату: %(t)s"
+msgstr "Zmiana daty: %(t)s"
+
+msgid "Подію «%(t)s», про яку ви просили нагадати, скасовано."
+msgstr "Wydarzenie „%(t)s”, o którym miałeś otrzymać przypomnienie, zostało odwołane."
+
+msgid "Подію «%(t)s», про яку ви просили нагадати, перенесено."
+msgstr "Wydarzenie „%(t)s”, o którym miałeś otrzymać przypomnienie, zostało przeniesione."
+
+msgid "Нові події за вашим вибором:"
+msgstr "Nowe wydarzenia według Twojego wyboru:"
+
+msgid "Ви отримали цей лист, бо підписалися на календар подій."
+msgstr "Otrzymujesz ten e-mail, ponieważ subskrybujesz kalendarz wydarzeń."
+
+msgid "…та ще %(more)s на сайті"
+msgstr "…i jeszcze %(more)s na stronie"
+
+msgid "Нові події в календарі: %(n)s"
+msgstr "Nowe wydarzenia w kalendarzu: %(n)s"
+
+msgid "Завтра: %(t)s"
+msgstr "Jutro: %(t)s"
+
+msgid "Нагадуємо: «%(t)s» вже завтра."
+msgstr "Przypominamy: „%(t)s” już jutro."
+
+msgid "Підтвердіть email для нагадування"
+msgstr "Potwierdź e-mail, aby otrzymać przypomnienie"
+
+msgid "Підтвердіть підписку на календар подій"
+msgstr "Potwierdź subskrypcję kalendarza wydarzeń"
+
+msgid "Щоб отримати нагадування за добу до події, підтвердіть адресу:"
+msgstr "Aby otrzymać przypomnienie dzień przed wydarzeniem, potwierdź adres:"
+
+msgid "Щовівторка надсилатимемо нові події за вашим вибором."
+msgstr "W każdy wtorek wyślemy nowe wydarzenia według Twojego wyboru."
+
+msgid "Ваш вибір:"
+msgstr "Twój wybór:"
+
+msgid "Підтвердіть підписку (посилання діє 7 днів):"
+msgstr "Potwierdź subskrypcję (link ważny 7 dni):"
+
+msgid "Якщо це були не ви — просто проігноруйте лист."
+msgstr "Jeśli to nie Ty — po prostu zignoruj tę wiadomość."

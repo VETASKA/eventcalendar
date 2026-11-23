@@ -120,6 +120,13 @@ CELERY_BROKER_URL = REDIS_URL
 CELERY_TASK_ACKS_LATE = True
 CELERY_TASK_REJECT_ON_WORKER_LOST = True
 CELERY_TIMEZONE = TIME_ZONE
+from celery.schedules import crontab  # noqa: E402
+
+CELERY_BEAT_SCHEDULE = {
+    # weekly digest: Tuesday 11:00 Kyiv time (owner's choice)
+    "weekly-digest": {"task": "apps.subscriptions.tasks.send_digests", "schedule": crontab(minute=0, hour=11, day_of_week=2)},
+    "reminders": {"task": "apps.subscriptions.tasks.send_due_reminders", "schedule": 300.0},
+}
 
 # Cache: rate limits for public forms. Redis in production, memory locally / in tests.
 CACHES = {"default": {"BACKEND": "django.core.cache.backends.redis.RedisCache", "LOCATION": REDIS_URL}

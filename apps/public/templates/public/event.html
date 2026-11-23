@@ -31,6 +31,9 @@
   .btn.main:hover { background:#6d28d9; }
   .btn small { font-weight:400; opacity:.85; }
   .muted { color:var(--muted); font-size:14px; }
+  .remind { display:flex; flex-wrap:wrap; gap:10px; align-items:center; padding:14px 16px; border:1px solid var(--line);
+            border-radius:12px; margin:0 0 16px; background:#faf9fc; }
+  .remind input[type=email], .remind select { flex:1 1 200px; padding:9px 12px; border:1px solid var(--line); border-radius:10px; font:inherit; }
   .owner { display:flex; align-items:center; gap:18px; flex-wrap:wrap; padding:16px 0 4px; border-top:1px solid var(--line); margin-top:4px; }
   .btn.small { padding:8px 14px; font-size:14px; }
   dialog { border:0; border-radius:16px; padding:24px; width:min(520px, calc(100% - 24px)); box-shadow:0 24px 60px rgba(31,27,46,.25); }
@@ -76,7 +79,16 @@
       {% endfor %}
     </div>
     {% endif %}
-    {% block remind %}{% endblock %}
+    {% if reminders %}
+    <form class="remind" method="post" action="{{ lp }}/remind/">{% csrf_token %}
+      <b>🔔 {% translate "Нагадати за добу" %}</b>
+      <div class="hp" aria-hidden="true"><input name="website" tabindex="-1" autocomplete="off"></div>
+      {% if reminders|length > 1 %}<select name="occurrence" aria-label="{% translate "Сеанс" %}">{% for r in reminders %}<option value="{{ r.id }}">{{ r.label }}</option>{% endfor %}</select>
+      {% else %}<input type="hidden" name="occurrence" value="{{ reminders.0.id }}">{% endif %}
+      <input type="email" name="email" required placeholder="{% translate "Ваш email" %}" aria-label="{% translate "Ваш email" %}" autocomplete="email">
+      <button class="btn small" type="submit">{% translate "Нагадати" %}</button>
+    </form>
+    {% endif %}
     <div class="owner">
       <a class="btn small" href="{{ lp }}/events/{{ e.pk }}/claim/">{% translate "Це моя подія" %}</a>
       <button type="button" class="linkbtn" id="report-open">{% translate "Знайшли помилку?" %}</button>

@@ -1,0 +1,10 @@
+{% extends "public/base.html" %}{% load i18n %}
+{% block title %}{% translate "Відписатися" %}{% endblock %}
+{% block meta %}<meta name="robots" content="noindex">{% endblock %}
+{% block main %}
+<div class="page"><div class="box">
+  <h1>{% translate "Відписатися від розсилки?" %}</h1>
+  <p class="lead">{{ sub.masked }}</p>
+  <form method="post">{% csrf_token %}<button class="submit" type="submit">{% translate "Так, відписатися" %}</button></form>
+</div></div>
+{% endblock %}

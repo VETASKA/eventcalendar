@@ -53,7 +53,19 @@
   .fc .fc-daygrid-day.zoomed { visibility:hidden; }
   .fc .fc-daygrid-more-link { color:var(--brand); font-weight:600; font-size:12.5px; padding:1px 4px; }
   @media (prefers-reduced-motion: reduce) { .loupe { transition:none; } }
-  .suggest-btn { margin-left:auto; padding:10px 16px; border:0; border-radius:11px; background:var(--brand); color:#fff;
+  .actions-right { margin-left:auto; display:flex; gap:10px; }
+  .sub-btn { padding:10px 16px; border:1px solid var(--brand); border-radius:11px; background:#fff; color:var(--brand);
+             font:inherit; font-weight:600; cursor:pointer; white-space:nowrap; }
+  .sub-btn:hover { background:var(--brand-soft); }
+  .checks { display:flex; flex-wrap:wrap; gap:6px; max-height:150px; overflow:auto; }
+  .checks label { display:inline-flex; align-items:center; gap:6px; padding:5px 10px; border:1px solid var(--line);
+                  border-radius:999px; font-weight:400; font-size:13.5px; cursor:pointer; margin:0; }
+  .checks input { width:auto; accent-color:var(--brand); }
+  .field label small { font-weight:400; color:var(--muted); }
+  .tabs2 { display:flex; gap:4px; background:#f1f0f5; padding:4px; border-radius:12px; margin:0 0 14px; }
+  .tabs2 button { flex:1; border:0; background:none; padding:8px; border-radius:9px; font:inherit; font-weight:600; color:var(--muted); cursor:pointer; }
+  .tabs2 button[aria-selected=true] { background:#fff; color:var(--ink); }
+  .suggest-btn { padding:10px 16px; border:0; border-radius:11px; background:var(--brand); color:#fff;
                  font:inherit; font-weight:600; cursor:pointer; white-space:nowrap; }
   .suggest-btn:hover { background:#6d28d9; }
   .suggest-btn:focus-visible { outline:2px solid var(--brand); outline-offset:2px; }
@@ -65,7 +77,7 @@
   .grid2 { display:grid; grid-template-columns:1fr 1fr; gap:0 12px; }
   .dlg-actions { display:flex; justify-content:flex-end; align-items:center; gap:16px; margin-top:4px; }
   @media (max-width: 600px) {
-    .suggest-btn { width:100%; margin-left:0; }
+    .actions-right { width:100%; margin-left:0; } .actions-right button { flex:1; }
     .grid2 { grid-template-columns:1fr; }
     .search { flex-basis:100%; max-width:none; }
     .multi { flex:1 1 45%; } .multi-btn { width:100%; max-width:none; justify-content:space-between; }
@@ -132,7 +144,10 @@
     {% endfor %}
     <button type="button" class="reset" id="reset"{% if not filtered %} hidden{% endif %}>{% translate "Скинути" %}</button>
     <noscript><button type="submit">{% translate "Показати" %}</button></noscript>
-    <button type="button" class="suggest-btn" id="suggest-open">+ {% translate "Запропонувати подію" %}</button>
+    <span class="actions-right">
+      <button type="button" class="sub-btn" id="subscribe-open">{% translate "Підписатися" %}</button>
+      <button type="button" class="suggest-btn" id="suggest-open">+ {% translate "Запропонувати подію" %}</button>
+    </span>
   </form>
   <div id="calendar" aria-label="{% translate "Календар подій" %}"></div>
   <p class="empty" id="state" role="status" aria-live="polite"></p>
@@ -140,6 +155,27 @@
     <h2 id="list-title">{% translate "Події періоду" %}</h2>
     <div id="list-body"></div>
   </section>
+  <dialog id="subscribe" aria-labelledby="subscribe-title">
+    <form method="post" action="{{ lp }}/subscribe/">{% csrf_token %}
+      <h2 id="subscribe-title">{% translate "Нові події щовівторка" %}</h2>
+      <p class="lead">{% translate "Раз на тиждень — лише нові події за вашим вибором. Відписатися — одним кліком у кожному листі." %}</p>
+      <div class="hp" aria-hidden="true"><input name="website" tabindex="-1" autocomplete="off"></div>
+      <input type="hidden" name="channel" value="email" id="sub-channel">
+      {% if telegram %}<div class="tabs2" role="tablist">
+        <button type="button" data-ch="email" aria-selected="true">Email</button>
+        <button type="button" data-ch="telegram" aria-selected="false">Telegram</button></div>{% endif %}
+      <div class="field" id="sub-email-field"><label for="sub-email">{% translate "Ваш email" %}</label>
+        <input type="email" name="email" id="sub-email" autocomplete="email"></div>
+      <div class="field"><label>{% translate "Міста" %} <small>{% translate "(нічого не обрано — усі)" %}</small></label>
+        <div class="checks">{% for c in sub_cities %}<label><input type="checkbox" name="city" value="{{ c.0 }}"> {{ c.1 }}</label>{% endfor %}</div></div>
+      <div class="field"><label>{% translate "Категорії" %} <small>{% translate "(нічого не обрано — усі)" %}</small></label>
+        <div class="checks">{% for t in sub_types %}<label><input type="checkbox" name="type" value="{{ t.0 }}"> {{ t.1 }}</label>{% endfor %}</div></div>
+      <div class="dlg-actions">
+        <button type="button" class="linkbtn" id="subscribe-close">{% translate "Скасувати" %}</button>
+        <button class="submit" type="submit" id="sub-submit">{% translate "Підписатися" %}</button>
+      </div>
+    </form>
+  </dialog>
   <dialog id="suggest" aria-labelledby="suggest-title">
     <form method="post" action="{{ lp }}/suggest/">{% csrf_token %}
       <h2 id="suggest-title">{% translate "Запропонувати подію" %}</h2>
@@ -419,6 +455,25 @@
   }
 
   // ── «Запропонувати подію» ───────────────────────────────────────────────
+  // ── subscription: pre-filled with the current filters ──────────────────
+  const sd = $('subscribe');
+  $('subscribe-open').addEventListener('click', () => {
+    const p = params();
+    sd.querySelectorAll('input[name=city]').forEach(b => b.checked = p.getAll('city').includes(b.value));
+    sd.querySelectorAll('input[name=type]').forEach(b => b.checked = p.getAll('type').includes(b.value));
+    sd.showModal();
+  });
+  $('subscribe-close').addEventListener('click', () => sd.close());
+  sd.addEventListener('click', e => { if (e.target === sd) sd.close(); });
+  sd.querySelectorAll('.tabs2 button').forEach(b => b.addEventListener('click', () => {
+    sd.querySelectorAll('.tabs2 button').forEach(x => x.setAttribute('aria-selected', String(x === b)));
+    $('sub-channel').value = b.dataset.ch;
+    $('sub-email-field').hidden = b.dataset.ch !== 'email';
+    $('sub-email').required = b.dataset.ch === 'email';
+  }));
+  $('sub-email').required = true;
+  if (location.hash === '#subscribe') sd.showModal();
+
   const dlg = $('suggest');
   $('suggest-open').addEventListener('click', () => { dlg.showModal(); dlg.querySelector('input[name=url]').focus(); });
   $('suggest-close').addEventListener('click', () => dlg.close());

@@ -1,0 +1,8 @@
+{% load i18n %}{% if cancelled %}{% blocktranslate with t=event.title %}Скасовано: {{ t }}{% endblocktranslate %}{% else %}{% blocktranslate with t=event.title %}Змінено дату: {{ t }}{% endblocktranslate %}{% endif %}
+{% if cancelled %}{% blocktranslate with t=event.title %}Подію «{{ t }}», про яку ви просили нагадати, скасовано.{% endblocktranslate %}{% else %}{% blocktranslate with t=event.title %}Подію «{{ t }}», про яку ви просили нагадати, перенесено.{% endblocktranslate %}
+{% translate "Нова дата:" %} {{ occ.start_date|date:"j E Y" }}{% if occ.starts_at and occ.precision == "datetime" %}, {{ occ.starts_at|time:"H:i" }}{% endif %}
+{% translate "Нагадування перенесено разом із подією." %}{% endif %}
+
+{{ url }}
+
+{% translate "Відписатися:" %} {{ unsubscribe }}

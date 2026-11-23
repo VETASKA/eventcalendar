@@ -633,3 +633,138 @@ msgstr "If you did not sign up, just ignore this letter."
 
 msgid "Вітаємо, %(n)s!"
 msgstr "Hello, %(n)s!"
+
+msgid "Підписатися"
+msgstr "Subscribe"
+
+msgid "Нові події щовівторка"
+msgstr "New events every Tuesday"
+
+msgid "Раз на тиждень — лише нові події за вашим вибором. Відписатися — одним кліком у кожному листі."
+msgstr "Once a week — only new events you chose. Unsubscribe with one click in any email."
+
+msgid "Міста"
+msgstr "Cities"
+
+msgid "(нічого не обрано — усі)"
+msgstr "(nothing selected — all)"
+
+msgid "Категорії"
+msgstr "Categories"
+
+msgid "Нагадати за добу"
+msgstr "Remind me a day before"
+
+msgid "Сеанс"
+msgstr "Session"
+
+msgid "Нагадати"
+msgstr "Remind me"
+
+msgid "Відписатися"
+msgstr "Unsubscribe"
+
+msgid "Відписатися від розсилки?"
+msgstr "Unsubscribe from the mailing list?"
+
+msgid "Так, відписатися"
+msgstr "Yes, unsubscribe"
+
+msgid "Ви відписалися"
+msgstr "You have unsubscribed"
+
+msgid "Листів більше не буде. Підписатися знову можна на головній сторінці."
+msgstr "No more emails. You can subscribe again on the home page."
+
+msgid "Вкажіть email."
+msgstr "Enter your email."
+
+msgid "Забагато спроб. Спробуйте пізніше."
+msgstr "Too many attempts. Try again later."
+
+msgid "Перевірте email і спробуйте ще раз."
+msgstr "Check your email address and try again."
+
+msgid "Підписка в Telegram зʼявиться найближчим часом."
+msgstr "Telegram subscription is coming soon."
+
+msgid "Майже готово: відкрийте лист і підтвердіть підписку."
+msgstr "Almost done: open the email and confirm your subscription."
+
+msgid "Посилання недійсне або застаріле."
+msgstr "The link is invalid or expired."
+
+msgid "Підписку підтверджено."
+msgstr "Subscription confirmed."
+
+msgid "Email підтверджено — нагадаємо за добу до події."
+msgstr "Email confirmed — we'll remind you a day before the event."
+
+msgid "До події менше доби — нагадування вже не встигне."
+msgstr "The event is less than a day away — too late for a reminder."
+
+msgid "Нагадаємо за добу до події."
+msgstr "We'll remind you a day before the event."
+
+msgid "Підтвердіть email у листі — і ми нагадаємо за добу до події."
+msgstr "Confirm your email in the message we sent, and we'll remind you a day before the event."
+
+msgid "Нова дата:"
+msgstr "New date:"
+
+msgid "Нагадування перенесено разом із подією."
+msgstr "Your reminder has moved with the event."
+
+msgid "Відписатися:"
+msgstr "Unsubscribe:"
+
+msgid "Скасовано: %(t)s"
+msgstr "Cancelled: %(t)s"
+
+msgid "Змінено дату: %(t)s"
+msgstr "Date changed: %(t)s"
+
+msgid "Подію «%(t)s», про яку ви просили нагадати, скасовано."
+msgstr "The event “%(t)s” you asked to be reminded about has been cancelled."
+
+msgid "Подію «%(t)s», про яку ви просили нагадати, перенесено."
+msgstr "The event “%(t)s” you asked to be reminded about has been rescheduled."
+
+msgid "Нові події за вашим вибором:"
+msgstr "New events matching your choice:"
+
+msgid "Ви отримали цей лист, бо підписалися на календар подій."
+msgstr "You received this email because you subscribed to the event calendar."
+
+msgid "…та ще %(more)s на сайті"
+msgstr "…and %(more)s more on the site"
+
+msgid "Нові події в календарі: %(n)s"
+msgstr "New events in the calendar: %(n)s"
+
+msgid "Завтра: %(t)s"
+msgstr "Tomorrow: %(t)s"
+
+msgid "Нагадуємо: «%(t)s» вже завтра."
+msgstr "Reminder: “%(t)s” is tomorrow."
+
+msgid "Підтвердіть email для нагадування"
+msgstr "Confirm your email for the reminder"
+
+msgid "Підтвердіть підписку на календар подій"
+msgstr "Confirm your event calendar subscription"
+
+msgid "Щоб отримати нагадування за добу до події, підтвердіть адресу:"
+msgstr "To get a reminder a day before the event, confirm your address:"
+
+msgid "Щовівторка надсилатимемо нові події за вашим вибором."
+msgstr "Every Tuesday we'll send new events matching your choice."
+
+msgid "Ваш вибір:"
+msgstr "Your choice:"
+
+msgid "Підтвердіть підписку (посилання діє 7 днів):"
+msgstr "Confirm your subscription (the link is valid for 7 days):"
+
+msgid "Якщо це були не ви — просто проігноруйте лист."
+msgstr "If this wasn't you, just ignore this email."

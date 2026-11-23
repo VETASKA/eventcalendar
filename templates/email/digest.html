@@ -1,0 +1,14 @@
+{% load i18n %}<!doctype html><html><body style="margin:0;background:#f6f5fa;font-family:-apple-system,Segoe UI,Roboto,Arial,sans-serif;color:#1f1b2e">
+<div style="max-width:560px;margin:0 auto;padding:24px 16px">
+  <p style="font-size:18px;font-weight:700;margin:0 0 4px">EventCalendar</p>
+  <p style="color:#6b6780;margin:0 0 18px">{% translate "Нові події за вашим вибором:" %}</p>
+  {% for r in rows %}
+  <a href="{{ r.url }}" style="display:block;background:#fff;border:1px solid #e7e4ef;border-radius:12px;padding:14px 16px;margin:0 0 10px;text-decoration:none;color:#1f1b2e">
+    <b style="font-size:15px">{{ r.event.title }}</b><br>
+    <span style="color:#6b6780;font-size:13px">{{ r.occ.start_date|date:"j E" }}{% if r.city %} · {{ r.city }}{% endif %}</span>
+  </a>
+  {% endfor %}
+  {% if more %}<p><a href="{{ home }}" style="color:#7c3aed">{% blocktranslate %}…та ще {{ more }} на сайті{% endblocktranslate %}</a></p>{% endif %}
+  <p style="color:#9a96aa;font-size:12px;margin-top:24px">{% translate "Ви отримали цей лист, бо підписалися на календар подій." %}
+    <a href="{{ unsubscribe }}" style="color:#9a96aa">{% translate "Відписатися" %}</a></p>
+</div></body></html>

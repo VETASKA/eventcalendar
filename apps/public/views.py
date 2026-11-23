@@ -105,9 +105,13 @@ def calendar_page(request):
         {"key": "city", "all": _("Усі міста"), "items": fc["cities"], "picked": [str(c) for c in f["cities"]]},
         {"key": "format", "all": _("Будь-який формат"), "items": fc["formats"], "picked": f["formats"]},
     ]
+    from apps.subscriptions import telegram
+    from apps.subscriptions.views import subscribe_choices
+    sub_cities, sub_types = subscribe_choices()
     return render(request, "public/calendar.html", {
         "site": request.site, "q": f["q"], "groups": [g for g in groups if g["items"]],
-        "filtered": bool(f["q"] or f["types"] or f["cities"] or f["formats"]), "suggest": SuggestForm()})
+        "filtered": bool(f["q"] or f["types"] or f["cities"] or f["formats"]), "suggest": SuggestForm(),
+        "sub_cities": sub_cities, "sub_types": sub_types, "telegram": telegram.enabled()})
 
 
 def _when(o) -> dict:

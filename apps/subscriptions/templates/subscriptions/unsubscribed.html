@@ -1,0 +1,9 @@
+{% extends "public/base.html" %}{% load i18n %}
+{% block title %}{% translate "Відписатися" %}{% endblock %}
+{% block meta %}<meta name="robots" content="noindex">{% endblock %}
+{% block main %}
+<div class="page"><div class="box">
+  <h1>{% translate "Ви відписалися" %}</h1>
+  <p class="lead">{% translate "Листів більше не буде. Підписатися знову можна на головній сторінці." %} <a href="{{ lp }}/">{% translate "До календаря" %}</a></p>
+</div></div>
+{% endblock %}

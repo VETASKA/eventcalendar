@@ -1,0 +1,10 @@
+{% load i18n %}{% blocktranslate with n=rows|length %}Нові події в календарі: {{ n }}{% endblocktranslate %}
+{% translate "Нові події за вашим вибором:" %}
+{% for r in rows %}
+• {{ r.event.title }}
+  {{ r.occ.start_date|date:"j E" }}{% if r.city %} · {{ r.city }}{% endif %}
+  {{ r.url }}
+{% endfor %}{% if more %}
+{% blocktranslate %}…та ще {{ more }} на сайті{% endblocktranslate %}: {{ home }}{% endif %}
+
+{% translate "Відписатися:" %} {{ unsubscribe }}

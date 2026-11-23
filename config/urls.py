@@ -7,6 +7,7 @@ from apps.core import views as core
 from apps.intake import views as intake
 from apps.public import cabinet
 from apps.public import views as public
+from apps.subscriptions import views as subs
 
 admin.site.site_header = "EventCalendar — модерация"
 admin.site.site_title = "EventCalendar"
@@ -20,6 +21,7 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path("api/v1/events", public.events_api),
     path("api/v1/search", public.search_api),
+    path("telegram/webhook/<str:secret>/", subs.telegram_webhook),
 ]
 
 # public pages: Ukrainian without a prefix, /en/… and /pl/…
@@ -28,6 +30,10 @@ urlpatterns += i18n_patterns(
     path("events/<int:pk>/claim/", cabinet.claim_view),
     re_path(r"^events/(?P<pk>\d+)(?:-(?P<slug>[^/]*))?/$", public.event_page, name="event"),
     path("suggest/", cabinet.suggest_view),
+    path("subscribe/", subs.subscribe),
+    path("subscribe/confirm/<str:token>/", subs.subscribe_confirm),
+    path("unsubscribe/<str:token>/", subs.unsubscribe),
+    path("remind/", subs.remind),
     path("cabinet/", cabinet.cabinet_view),
     path("cabinet/login/", cabinet.login_view),
     path("cabinet/register/", cabinet.register_view),

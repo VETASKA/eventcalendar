@@ -1,0 +1,7 @@
+{% load i18n %}{% blocktranslate with t=event.title %}Завтра: {{ t }}{% endblocktranslate %}
+{% blocktranslate with t=event.title %}Нагадуємо: «{{ t }}» вже завтра.{% endblocktranslate %}
+{{ occ.start_date|date:"j E Y" }}{% if occ.starts_at and occ.precision == "datetime" %}, {{ occ.starts_at|time:"H:i" }}{% endif %}{% if city %} · {{ city }}{% endif %}{% if occ.venue %} · {{ occ.venue }}{% endif %}
+
+{{ url }}
+
+{% translate "Відписатися:" %} {{ unsubscribe }}

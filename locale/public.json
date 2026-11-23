@@ -838,5 +838,185 @@
  "Вітаємо, %(n)s!": {
   "en": "Hello, %(n)s!",
   "pl": "Witaj, %(n)s!"
+ },
+ "Підписатися": {
+  "en": "Subscribe",
+  "pl": "Subskrybuj"
+ },
+ "Нові події щовівторка": {
+  "en": "New events every Tuesday",
+  "pl": "Nowe wydarzenia w każdy wtorek"
+ },
+ "Раз на тиждень — лише нові події за вашим вибором. Відписатися — одним кліком у кожному листі.": {
+  "en": "Once a week — only new events you chose. Unsubscribe with one click in any email.",
+  "pl": "Raz w tygodniu — tylko nowe wydarzenia według Twojego wyboru. Rezygnacja jednym kliknięciem w każdym e-mailu."
+ },
+ "Міста": {
+  "en": "Cities",
+  "pl": "Miasta"
+ },
+ "(нічого не обрано — усі)": {
+  "en": "(nothing selected — all)",
+  "pl": "(nic nie wybrano — wszystkie)"
+ },
+ "Категорії": {
+  "en": "Categories",
+  "pl": "Kategorie"
+ },
+ "Нагадати за добу": {
+  "en": "Remind me a day before",
+  "pl": "Przypomnij dzień wcześniej"
+ },
+ "Сеанс": {
+  "en": "Session",
+  "pl": "Termin"
+ },
+ "Нагадати": {
+  "en": "Remind me",
+  "pl": "Przypomnij"
+ },
+ "Відписатися": {
+  "en": "Unsubscribe",
+  "pl": "Wypisz się"
+ },
+ "Відписатися від розсилки?": {
+  "en": "Unsubscribe from the mailing list?",
+  "pl": "Wypisać się z newslettera?"
+ },
+ "Так, відписатися": {
+  "en": "Yes, unsubscribe",
+  "pl": "Tak, wypisz mnie"
+ },
+ "Ви відписалися": {
+  "en": "You have unsubscribed",
+  "pl": "Wypisano Cię"
+ },
+ "Листів більше не буде. Підписатися знову можна на головній сторінці.": {
+  "en": "No more emails. You can subscribe again on the home page.",
+  "pl": "Nie będziemy już wysyłać e-maili. Możesz ponownie zasubskrybować na stronie głównej."
+ },
+ "Вкажіть email.": {
+  "en": "Enter your email.",
+  "pl": "Podaj e-mail."
+ },
+ "Забагато спроб. Спробуйте пізніше.": {
+  "en": "Too many attempts. Try again later.",
+  "pl": "Zbyt wiele prób. Spróbuj później."
+ },
+ "Перевірте email і спробуйте ще раз.": {
+  "en": "Check your email address and try again.",
+  "pl": "Sprawdź adres e-mail i spróbuj ponownie."
+ },
+ "Підписка в Telegram зʼявиться найближчим часом.": {
+  "en": "Telegram subscription is coming soon.",
+  "pl": "Subskrypcja przez Telegram już wkrótce."
+ },
+ "Майже готово: відкрийте лист і підтвердіть підписку.": {
+  "en": "Almost done: open the email and confirm your subscription.",
+  "pl": "Prawie gotowe: otwórz e-mail i potwierdź subskrypcję."
+ },
+ "Посилання недійсне або застаріле.": {
+  "en": "The link is invalid or expired.",
+  "pl": "Link jest nieprawidłowy lub wygasł."
+ },
+ "Підписку підтверджено.": {
+  "en": "Subscription confirmed.",
+  "pl": "Subskrypcja potwierdzona."
+ },
+ "Email підтверджено — нагадаємо за добу до події.": {
+  "en": "Email confirmed — we'll remind you a day before the event.",
+  "pl": "E-mail potwierdzony — przypomnimy dzień przed wydarzeniem."
+ },
+ "До події менше доби — нагадування вже не встигне.": {
+  "en": "The event is less than a day away — too late for a reminder.",
+  "pl": "Do wydarzenia zostało mniej niż dobę — za późno na przypomnienie."
+ },
+ "Нагадаємо за добу до події.": {
+  "en": "We'll remind you a day before the event.",
+  "pl": "Przypomnimy dzień przed wydarzeniem."
+ },
+ "Підтвердіть email у листі — і ми нагадаємо за добу до події.": {
+  "en": "Confirm your email in the message we sent, and we'll remind you a day before the event.",
+  "pl": "Potwierdź e-mail w wiadomości, a przypomnimy dzień przed wydarzeniem."
+ },
+ "Нова дата:": {
+  "en": "New date:",
+  "pl": "Nowa data:"
+ },
+ "Нагадування перенесено разом із подією.": {
+  "en": "Your reminder has moved with the event.",
+  "pl": "Przypomnienie przesunięto razem z wydarzeniem."
+ },
+ "Відписатися:": {
+  "en": "Unsubscribe:",
+  "pl": "Wypisz się:"
+ },
+ "Скасовано: %(t)s": {
+  "en": "Cancelled: %(t)s",
+  "pl": "Odwołane: %(t)s"
+ },
+ "Змінено дату: %(t)s": {
+  "en": "Date changed: %(t)s",
+  "pl": "Zmiana daty: %(t)s"
+ },
+ "Подію «%(t)s», про яку ви просили нагадати, скасовано.": {
+  "en": "The event “%(t)s” you asked to be reminded about has been cancelled.",
+  "pl": "Wydarzenie „%(t)s”, o którym miałeś otrzymać przypomnienie, zostało odwołane."
+ },
+ "Подію «%(t)s», про яку ви просили нагадати, перенесено.": {
+  "en": "The event “%(t)s” you asked to be reminded about has been rescheduled.",
+  "pl": "Wydarzenie „%(t)s”, o którym miałeś otrzymać przypomnienie, zostało przeniesione."
+ },
+ "Нові події за вашим вибором:": {
+  "en": "New events matching your choice:",
+  "pl": "Nowe wydarzenia według Twojego wyboru:"
+ },
+ "Ви отримали цей лист, бо підписалися на календар подій.": {
+  "en": "You received this email because you subscribed to the event calendar.",
+  "pl": "Otrzymujesz ten e-mail, ponieważ subskrybujesz kalendarz wydarzeń."
+ },
+ "…та ще %(more)s на сайті": {
+  "en": "…and %(more)s more on the site",
+  "pl": "…i jeszcze %(more)s na stronie"
+ },
+ "Нові події в календарі: %(n)s": {
+  "en": "New events in the calendar: %(n)s",
+  "pl": "Nowe wydarzenia w kalendarzu: %(n)s"
+ },
+ "Завтра: %(t)s": {
+  "en": "Tomorrow: %(t)s",
+  "pl": "Jutro: %(t)s"
+ },
+ "Нагадуємо: «%(t)s» вже завтра.": {
+  "en": "Reminder: “%(t)s” is tomorrow.",
+  "pl": "Przypominamy: „%(t)s” już jutro."
+ },
+ "Підтвердіть email для нагадування": {
+  "en": "Confirm your email for the reminder",
+  "pl": "Potwierdź e-mail, aby otrzymać przypomnienie"
+ },
+ "Підтвердіть підписку на календар подій": {
+  "en": "Confirm your event calendar subscription",
+  "pl": "Potwierdź subskrypcję kalendarza wydarzeń"
+ },
+ "Щоб отримати нагадування за добу до події, підтвердіть адресу:": {
+  "en": "To get a reminder a day before the event, confirm your address:",
+  "pl": "Aby otrzymać przypomnienie dzień przed wydarzeniem, potwierdź adres:"
+ },
+ "Щовівторка надсилатимемо нові події за вашим вибором.": {
+  "en": "Every Tuesday we'll send new events matching your choice.",
+  "pl": "W każdy wtorek wyślemy nowe wydarzenia według Twojego wyboru."
+ },
+ "Ваш вибір:": {
+  "en": "Your choice:",
+  "pl": "Twój wybór:"
+ },
+ "Підтвердіть підписку (посилання діє 7 днів):": {
+  "en": "Confirm your subscription (the link is valid for 7 days):",
+  "pl": "Potwierdź subskrypcję (link ważny 7 dni):"
+ },
+ "Якщо це були не ви — просто проігноруйте лист.": {
+  "en": "If this wasn't you, just ignore this email.",
+  "pl": "Jeśli to nie Ty — po prostu zignoruj tę wiadomość."
  }
 }

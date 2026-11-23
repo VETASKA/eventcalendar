@@ -39,7 +39,8 @@ def three(harvey_token, admin_user):
 
 
 def test_category_filter_shows_only_types_with_events(client, three):
-    html = client.get("/").content.decode()
+    page = client.get("/").content.decode()
+    html = page[page.index('data-key="type"'):page.index('id="calendar"')]      # the filter, not the subscribe form
     box = 'type="checkbox" name="type" value="{}"'
     assert box.format("standup") in html and box.format("concert") in html and box.format("forum") not in html
     assert ">2</small>" in html                                   # two stand-ups
