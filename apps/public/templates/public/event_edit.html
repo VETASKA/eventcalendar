@@ -1,0 +1,47 @@
+{% extends "public/base.html" %}{% load i18n %}
+{% block title %}{% translate "Редагувати подію" %} — {{ e.title }}{% endblock %}
+{% block meta %}<meta name="robots" content="noindex">{% endblock %}
+{% block css %}
+  .page { max-width:820px; }
+  .session { border:1px solid var(--line); border-radius:12px; padding:14px 14px 2px; margin:0 0 12px; }
+  .session h3 { margin:0 0 10px; font-size:15px; }
+  .grid { display:grid; grid-template-columns:repeat(4, 1fr); gap:0 12px; }
+  .grid .wide { grid-column:span 2; }
+  .del { font-size:14px; color:var(--muted); display:flex; gap:6px; align-items:center; margin:0 0 12px; }
+  .del input { width:auto; }
+  .note { padding:12px 14px; border-radius:10px; background:#fef3c7; color:#92400e; margin:0 0 16px; }
+  @media (max-width:600px) { .grid { grid-template-columns:1fr 1fr; } }
+{% endblock %}
+{% block main %}
+<div class="page">
+  <a href="{{ lp }}/cabinet/" style="color:var(--muted);text-decoration:none;font-size:14px">← {% translate "Кабінет" %}</a>
+  <div class="box" style="margin-top:12px">
+    <h1>{% translate "Редагувати подію" %}</h1>
+    <p class="lead">{% translate "Зміни зʼявляться на сайті після перевірки модератором. Перенесення та скасування — розглядаються першими." %}</p>
+    {% if pending %}<p class="note">{% translate "Попередні зміни ще на перевірці. Нові замінять їх." %}</p>{% endif %}
+    <form method="post">{% csrf_token %}
+      {% for f in form %}{% include "public/_field.html" %}{% endfor %}
+      <h2 style="font-size:17px;margin:20px 0 10px">{% translate "Дати й місце" %}</h2>
+      {{ sessions.management_form }}
+      {% for s in sessions %}
+        <div class="session">
+          <h3>{% if s.initial.id %}{% blocktranslate with n=forloop.counter %}Сеанс {{ n }}{% endblocktranslate %}{% else %}{% translate "Додати сеанс" %}{% endif %}</h3>
+          {{ s.id }}
+          {% for e in s.non_field_errors %}<p class="form-err">{{ e }}</p>{% endfor %}
+          <div class="grid">
+            {% with f=s.start_date %}{% include "public/_field.html" %}{% endwith %}
+            {% with f=s.end_date %}{% include "public/_field.html" %}{% endwith %}
+            {% with f=s.start_time %}{% include "public/_field.html" %}{% endwith %}
+            {% with f=s.end_time %}{% include "public/_field.html" %}{% endwith %}
+            <div class="wide">{% with f=s.city %}{% include "public/_field.html" %}{% endwith %}</div>
+            <div class="wide">{% with f=s.venue %}{% include "public/_field.html" %}{% endwith %}</div>
+            <div class="wide">{% with f=s.status %}{% include "public/_field.html" %}{% endwith %}</div>
+          </div>
+          {% if s.initial.id %}<label class="del">{{ s.DELETE }} {% translate "Видалити цей сеанс" %}</label>{% endif %}
+        </div>
+      {% endfor %}
+      <button class="submit" type="submit">{% translate "Надіслати на перевірку" %}</button>
+    </form>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,5 @@
+{% load i18n %}{% if approved %}{% translate "Ваші зміни опубліковано" %}{% else %}{% translate "Ваші зміни не прийнято" %}{% endif %}
+{% if approved %}{% blocktranslate with t=event.title %}Зміни до події «{{ t }}» перевірено й опубліковано.{% endblocktranslate %}{% else %}{% blocktranslate with t=event.title %}Модератор не прийняв зміни до події «{{ t }}».{% endblocktranslate %}{% if reason %}
+{{ reason }}{% endif %}{% endif %}
+
+{% translate "Кабінет:" %} {{ cabinet }}

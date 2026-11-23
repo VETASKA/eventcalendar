@@ -14,7 +14,8 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 SOURCES = [*sorted((ROOT / "apps/public/templates").rglob("*.html")), *sorted((ROOT / "apps/public").glob("*.py")),
            *sorted((ROOT / "apps/subscriptions/templates").rglob("*.html")),
-           *sorted((ROOT / "apps/subscriptions").glob("*.py")), *sorted((ROOT / "templates/email").rglob("*.*"))]
+           *sorted((ROOT / "apps/subscriptions").glob("*.py")), *sorted((ROOT / "templates/email").rglob("*.*")),
+           ROOT / "apps/catalog/services.py", ROOT / "apps/organizers/services.py"]
 
 
 def used_ids() -> list[str]:

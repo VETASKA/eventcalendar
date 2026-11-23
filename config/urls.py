@@ -1,6 +1,7 @@
 from django.conf.urls.i18n import i18n_patterns
 from django.contrib import admin
-from django.urls import path, re_path
+from django.contrib.auth import views as auth
+from django.urls import path, re_path, reverse_lazy
 
 from apps.core import views as core
 from apps.intake import views as intake
@@ -31,6 +32,19 @@ urlpatterns += i18n_patterns(
     path("cabinet/login/", cabinet.login_view),
     path("cabinet/register/", cabinet.register_view),
     path("cabinet/logout/", cabinet.logout_view),
+    path("cabinet/verify/<str:token>/", cabinet.verify_email_view),
+    path("cabinet/verify-again/", cabinet.resend_verification),
+    path("cabinet/claims/<int:pk>/", cabinet.claim_detail),
+    path("cabinet/claims/confirm/<str:token>/", cabinet.claim_email_confirm),
+    path("cabinet/events/<int:pk>/edit/", cabinet.event_edit),
+    path("cabinet/password/reset/", cabinet.password_reset, name="password_reset"),
+    path("cabinet/password/sent/", auth.PasswordResetDoneView.as_view(template_name="public/password_reset_done.html"),
+         name="password_reset_done"),
+    path("cabinet/password/<uidb64>/<token>/", auth.PasswordResetConfirmView.as_view(
+        template_name="public/password_reset_confirm.html", success_url=reverse_lazy("password_reset_complete")),
+        name="password_reset_confirm"),
+    path("cabinet/password/done/", auth.PasswordResetCompleteView.as_view(
+        template_name="public/password_reset_complete.html"), name="password_reset_complete"),
     path("", public.calendar_page, name="home"),
     prefix_default_language=False,
 )

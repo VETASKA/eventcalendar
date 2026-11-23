@@ -474,5 +474,369 @@
  "Ще {n} — уточніть запит.": {
   "en": "{n} more — refine your search.",
   "pl": "Jeszcze {n} — doprecyzuj wyszukiwanie."
+ },
+ "Підтвердіть email — посилання в листі. Без цього не можна заявити подію.": {
+  "en": "Please confirm your email — the link is in the letter. You need it to claim an event.",
+  "pl": "Potwierdź e-mail — link jest w wiadomości. Bez tego nie można zgłosić wydarzenia."
+ },
+ "Надіслати лист ще раз": {
+  "en": "Send the letter again",
+  "pl": "Wyślij wiadomość ponownie"
+ },
+ "зміни на перевірці": {
+  "en": "changes under review",
+  "pl": "zmiany w weryfikacji"
+ },
+ "Редагувати": {
+  "en": "Edit",
+  "pl": "Edytuj"
+ },
+ "сайт підтверджено": {
+  "en": "site confirmed",
+  "pl": "strona potwierdzona"
+ },
+ "Контроль над сайтом підтверджено. Модератор видасть права найближчим часом — подія зʼявиться в кабінеті.": {
+  "en": "Control of the site is confirmed. A moderator will grant access soon — the event will appear in your account.",
+  "pl": "Kontrola nad stroną potwierdzona. Moderator wkrótce nada uprawnienia — wydarzenie pojawi się na koncie."
+ },
+ "Заявку відхилено.": {
+  "en": "The request was rejected.",
+  "pl": "Wniosek odrzucono."
+ },
+ "Термін дії коду минув. Створіть заявку ще раз.": {
+  "en": "The code has expired. Please create a new request.",
+  "pl": "Kod wygasł. Utwórz nowy wniosek."
+ },
+ "Він має відкриватися за адресою:": {
+  "en": "It must open at:",
+  "pl": "Musi otwierać się pod adresem:"
+ },
+ "Натисніть «Перевірити». Код дійсний 7 днів і працює лише для цієї заявки.": {
+  "en": "Click “Check”. The code is valid for 7 days and only for this request.",
+  "pl": "Kliknij „Sprawdź”. Kod jest ważny 7 dni i tylko dla tego wniosku."
+ },
+ "Перевірити": {
+  "en": "Check",
+  "pl": "Sprawdź"
+ },
+ "Немає доступу до сайту? Модератор перевірить заявку вручну — просто зачекайте.": {
+  "en": "No access to the site? A moderator will check the request manually — just wait.",
+  "pl": "Brak dostępu do strony? Moderator sprawdzi wniosek ręcznie — wystarczy poczekać."
+ },
+ "Надіслати посилання": {
+  "en": "Send link",
+  "pl": "Wyślij link"
+ },
+ "Модератор перевірить вашу заявку вручну і може звʼязатися з вами за вказаним телефоном.": {
+  "en": "A moderator will check your request manually and may call you on the phone you gave.",
+  "pl": "Moderator sprawdzi wniosek ręcznie i może zadzwonić pod podany numer."
+ },
+ "Створіть на сайті події файл %(f)s з таким рядком:": {
+  "en": "Create the file %(f)s on the event’s site with this line:",
+  "pl": "Utwórz na stronie wydarzenia plik %(f)s z tym wierszem:"
+ },
+ "Вкажіть адресу на домені %(h)s — ми надішлемо на неї одноразове посилання. Публічні скриньки (Gmail, Ukr.net тощо) не підходять.": {
+  "en": "Give an address on %(h)s — we will send a one-time link to it. Public mailboxes (Gmail, Ukr.net etc.) are not accepted.",
+  "pl": "Podaj adres w domenie %(h)s — wyślemy na niego jednorazowy link. Publiczne skrzynki (Gmail, Ukr.net itp.) nie są akceptowane."
+ },
+ "Редагувати подію": {
+  "en": "Edit event",
+  "pl": "Edytuj wydarzenie"
+ },
+ "Зміни зʼявляться на сайті після перевірки модератором. Перенесення та скасування — розглядаються першими.": {
+  "en": "Changes appear on the site after a moderator checks them. Reschedules and cancellations are reviewed first.",
+  "pl": "Zmiany pojawią się na stronie po sprawdzeniu przez moderatora. Przełożenia i odwołania są rozpatrywane najpierw."
+ },
+ "Попередні зміни ще на перевірці. Нові замінять їх.": {
+  "en": "Your previous changes are still under review. New ones will replace them.",
+  "pl": "Poprzednie zmiany są jeszcze w weryfikacji. Nowe je zastąpią."
+ },
+ "Дати й місце": {
+  "en": "Dates and place",
+  "pl": "Terminy i miejsce"
+ },
+ "Додати сеанс": {
+  "en": "Add a session",
+  "pl": "Dodaj termin"
+ },
+ "Видалити цей сеанс": {
+  "en": "Delete this session",
+  "pl": "Usuń ten termin"
+ },
+ "Надіслати на перевірку": {
+  "en": "Send for review",
+  "pl": "Wyślij do weryfikacji"
+ },
+ "Забули пароль?": {
+  "en": "Forgot your password?",
+  "pl": "Nie pamiętasz hasła?"
+ },
+ "Відновлення пароля": {
+  "en": "Password reset",
+  "pl": "Resetowanie hasła"
+ },
+ "Вкажіть email кабінету — надішлемо посилання для нового пароля.": {
+  "en": "Enter your account email — we will send a link to set a new password.",
+  "pl": "Podaj e-mail konta — wyślemy link do ustawienia nowego hasła."
+ },
+ "Новий пароль": {
+  "en": "New password",
+  "pl": "Nowe hasło"
+ },
+ "Пароль змінено": {
+  "en": "Password changed",
+  "pl": "Hasło zmienione"
+ },
+ "Зберегти пароль": {
+  "en": "Save password",
+  "pl": "Zapisz hasło"
+ },
+ "Посилання недійсне": {
+  "en": "Link not valid",
+  "pl": "Link nieważny"
+ },
+ "Воно вже використане або застаріло.": {
+  "en": "It has been used or has expired.",
+  "pl": "Został już użyty lub wygasł."
+ },
+ "Надіслати нове": {
+  "en": "Send a new one",
+  "pl": "Wyślij nowy"
+ },
+ "Перевірте пошту": {
+  "en": "Check your email",
+  "pl": "Sprawdź pocztę"
+ },
+ "Якщо такий кабінет існує, ми надіслали лист із посиланням. Воно діє 3 дні.": {
+  "en": "If such an account exists, we have sent a letter with a link. It is valid for 3 days.",
+  "pl": "Jeśli takie konto istnieje, wysłaliśmy wiadomość z linkiem. Jest ważny 3 dni."
+ },
+ "Кабінет створено. Ми надіслали лист — підтвердіть email за посиланням.": {
+  "en": "Account created. We sent you a letter — please confirm your email with the link.",
+  "pl": "Konto utworzone. Wysłaliśmy wiadomość — potwierdź e-mail, klikając link."
+ },
+ "Спочатку підтвердіть свій email — лист у пошті, або надішліть його ще раз у кабінеті.": {
+  "en": "Please confirm your email first — the letter is in your inbox, or send it again from your account.",
+  "pl": "Najpierw potwierdź e-mail — wiadomość jest w skrzynce lub wyślij ją ponownie z konta."
+ },
+ "Забагато перевірок. Спробуйте пізніше.": {
+  "en": "Too many checks. Please try later.",
+  "pl": "Zbyt wiele sprawdzeń. Spróbuj później."
+ },
+ "Сайт підтверджено. Модератор видасть права найближчим часом.": {
+  "en": "Site confirmed. A moderator will grant access soon.",
+  "pl": "Strona potwierdzona. Moderator wkrótce nada uprawnienia."
+ },
+ "Файл знайдено на іншому сайті. Він має бути на сайті самої події.": {
+  "en": "The file was found on another site. It must be on the event’s own site.",
+  "pl": "Plik znaleziono na innej stronie. Musi być na stronie samego wydarzenia."
+ },
+ "Файл знайдено, але код у ньому не збігається.": {
+  "en": "The file was found, but the code in it does not match.",
+  "pl": "Plik znaleziono, ale kod się nie zgadza."
+ },
+ "Файл не знайдено. Перевірте адресу й спробуйте ще раз за хвилину.": {
+  "en": "File not found. Check the address and try again in a minute.",
+  "pl": "Nie znaleziono pliku. Sprawdź adres i spróbuj ponownie za minutę."
+ },
+ "Забагато листів. Спробуйте пізніше.": {
+  "en": "Too many letters. Please try later.",
+  "pl": "Zbyt wiele wiadomości. Spróbuj później."
+ },
+ "Потрібна адреса на домені сайту події, не публічна пошта.": {
+  "en": "An address on the event site’s domain is needed, not a public mailbox.",
+  "pl": "Potrzebny jest adres w domenie strony wydarzenia, nie publiczna skrzynka."
+ },
+ "Адреса має бути на домені %(host)s.": {
+  "en": "The address must be on %(host)s.",
+  "pl": "Adres musi być w domenie %(host)s."
+ },
+ "Лист надіслано. Відкрийте його й перейдіть за посиланням протягом доби.": {
+  "en": "Letter sent. Open it and follow the link within 24 hours.",
+  "pl": "Wiadomość wysłana. Otwórz ją i kliknij link w ciągu doby."
+ },
+ "Посилання недійсне або вже використане.": {
+  "en": "The link is not valid or has already been used.",
+  "pl": "Link jest nieważny lub został już użyty."
+ },
+ "Пошту підтверджено. Модератор видасть права найближчим часом.": {
+  "en": "Email confirmed. A moderator will grant access soon.",
+  "pl": "Adres potwierdzony. Moderator wkrótce nada uprawnienia."
+ },
+ "Посилання недійсне або застаріле. Надішліть лист ще раз у кабінеті.": {
+  "en": "The link is not valid or has expired. Send the letter again from your account.",
+  "pl": "Link jest nieważny lub wygasł. Wyślij wiadomość ponownie z konta."
+ },
+ "Email підтверджено.": {
+  "en": "Email confirmed.",
+  "pl": "E-mail potwierdzony."
+ },
+ "Лист надіслано ще раз.": {
+  "en": "The letter has been sent again.",
+  "pl": "Wiadomość wysłana ponownie."
+ },
+ "Змін немає.": {
+  "en": "No changes.",
+  "pl": "Brak zmian."
+ },
+ "Зміни надіслано на модерацію. Після перевірки вони зʼявляться на сайті.": {
+  "en": "Changes sent for moderation. They will appear on the site after review.",
+  "pl": "Zmiany wysłane do moderacji. Pojawią się na stronie po sprawdzeniu."
+ },
+ "Забагато запитів. Спробуйте пізніше.": {
+  "en": "Too many requests. Please try later.",
+  "pl": "Zbyt wiele żądań. Spróbuj później."
+ },
+ "Як підтвердите, що подія ваша": {
+  "en": "How will you prove the event is yours",
+  "pl": "Jak potwierdzisz, że wydarzenie jest Twoje"
+ },
+ "Файл на сайті події — найшвидше": {
+  "en": "A file on the event’s site — the fastest",
+  "pl": "Plik na stronie wydarzenia — najszybciej"
+ },
+ "Лист на пошту з домену сайту події": {
+  "en": "A letter to an address on the event site’s domain",
+  "pl": "Wiadomość na adres w domenie strony wydarzenia"
+ },
+ "Перевірка модератором вручну": {
+  "en": "Manual check by a moderator",
+  "pl": "Ręczna weryfikacja przez moderatora"
+ },
+ "Пошта на домені сайту події": {
+  "en": "Email on the event site’s domain",
+  "pl": "E-mail w domenie strony wydarzenia"
+ },
+ "Назва": {
+  "en": "Name",
+  "pl": "Nazwa"
+ },
+ "Короткий анонс": {
+  "en": "Short description",
+  "pl": "Krótki opis"
+ },
+ "1–3 речення своїми словами": {
+  "en": "1–3 sentences in your own words",
+  "pl": "1–3 zdania własnymi słowami"
+ },
+ "Формат": {
+  "en": "Format",
+  "pl": "Format"
+ },
+ "Посилання на реєстрацію або квитки": {
+  "en": "Registration or tickets link",
+  "pl": "Link do rejestracji lub biletów"
+ },
+ "До (якщо кілька днів)": {
+  "en": "Until (if several days)",
+  "pl": "Do (jeśli kilka dni)"
+ },
+ "Початок": {
+  "en": "Starts",
+  "pl": "Początek"
+ },
+ "Кінець": {
+  "en": "Ends",
+  "pl": "Koniec"
+ },
+ "Місце проведення": {
+  "en": "Venue",
+  "pl": "Miejsce"
+ },
+ "Статус": {
+  "en": "Status",
+  "pl": "Status"
+ },
+ "За планом": {
+  "en": "As planned",
+  "pl": "Zgodnie z planem"
+ },
+ "Видалити": {
+  "en": "Delete",
+  "pl": "Usuń"
+ },
+ "Дата закінчення раніше за початок.": {
+  "en": "The end date is before the start.",
+  "pl": "Data zakończenia jest wcześniejsza niż początek."
+ },
+ "Подію додано у ваш кабінет": {
+  "en": "The event has been added to your account",
+  "pl": "Wydarzenie dodano do Twojego konta"
+ },
+ "Заявку відхилено": {
+  "en": "Request rejected",
+  "pl": "Wniosek odrzucony"
+ },
+ "Кабінет:": {
+  "en": "Your account:",
+  "pl": "Twoje konto:"
+ },
+ "Тепер ви можете оновлювати подію «%(t)s» у кабінеті.": {
+  "en": "You can now update “%(t)s” from your account.",
+  "pl": "Możesz teraz aktualizować „%(t)s” na swoim koncie."
+ },
+ "Не вдалося підтвердити, що подія «%(t)s» ваша.": {
+  "en": "We could not confirm that “%(t)s” is your event.",
+  "pl": "Nie udało się potwierdzić, że „%(t)s” to Twoje wydarzenie."
+ },
+ "Підтвердження: це ваша подія?": {
+  "en": "Confirmation: is this your event?",
+  "pl": "Potwierdzenie: czy to Twoje wydarzenie?"
+ },
+ "Якщо це ви — відкрийте посилання (діє 24 години, працює один раз):": {
+  "en": "If it was you, open the link (valid for 24 hours, works once):",
+  "pl": "Jeśli to Ty — otwórz link (ważny 24 godziny, działa raz):"
+ },
+ "Якщо ні — нічого не робіть, права ніхто не отримає.": {
+  "en": "If not, do nothing — nobody will get access.",
+  "pl": "Jeśli nie — nic nie rób, nikt nie otrzyma uprawnień."
+ },
+ "Хтось вказав цю адресу, щоб підтвердити, що подія «%(t)s» належить вашій організації.": {
+  "en": "Someone gave this address to confirm that “%(t)s” belongs to your organization.",
+  "pl": "Ktoś podał ten adres, aby potwierdzić, że „%(t)s” należy do Twojej organizacji."
+ },
+ "Щоб задати новий пароль, відкрийте посилання (діє 3 дні):": {
+  "en": "To set a new password, open the link (valid for 3 days):",
+  "pl": "Aby ustawić nowe hasło, otwórz link (ważny 3 dni):"
+ },
+ "Якщо ви не просили змінити пароль — просто проігноруйте цей лист.": {
+  "en": "If you did not ask to change your password, just ignore this letter.",
+  "pl": "Jeśli nie prosiłeś o zmianę hasła, zignoruj tę wiadomość."
+ },
+ "Новий пароль для EventCalendar": {
+  "en": "New password for EventCalendar",
+  "pl": "Nowe hasło do EventCalendar"
+ },
+ "Ваші зміни опубліковано": {
+  "en": "Your changes are published",
+  "pl": "Twoje zmiany opublikowano"
+ },
+ "Ваші зміни не прийнято": {
+  "en": "Your changes were not accepted",
+  "pl": "Twoje zmiany nie zostały przyjęte"
+ },
+ "Зміни до події «%(t)s» перевірено й опубліковано.": {
+  "en": "The changes to “%(t)s” have been checked and published.",
+  "pl": "Zmiany w „%(t)s” zostały sprawdzone i opublikowane."
+ },
+ "Модератор не прийняв зміни до події «%(t)s».": {
+  "en": "A moderator did not accept the changes to “%(t)s”.",
+  "pl": "Moderator nie przyjął zmian w „%(t)s”."
+ },
+ "Підтвердіть email у EventCalendar": {
+  "en": "Confirm your email at EventCalendar",
+  "pl": "Potwierdź e-mail w EventCalendar"
+ },
+ "Щоб підтвердити адресу, відкрийте посилання (діє 3 дні):": {
+  "en": "To confirm your address, open the link (valid for 3 days):",
+  "pl": "Aby potwierdzić adres, otwórz link (ważny 3 dni):"
+ },
+ "Якщо ви не реєструвалися — просто проігноруйте цей лист.": {
+  "en": "If you did not sign up, just ignore this letter.",
+  "pl": "Jeśli nie rejestrowałeś się, zignoruj tę wiadomość."
+ },
+ "Вітаємо, %(n)s!": {
+  "en": "Hello, %(n)s!",
+  "pl": "Witaj, %(n)s!"
  }
 }

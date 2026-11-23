@@ -1,0 +1,44 @@
+{% extends "public/base.html" %}{% load i18n %}
+{% block title %}{% translate "Це моя подія" %} — {{ e.title }}{% endblock %}
+{% block meta %}<meta name="robots" content="noindex">{% endblock %}
+{% block css %}
+  .steps { margin:0 0 16px; padding-left:20px; } .steps li { margin:0 0 8px; }
+  code.token { display:block; font-size:16px; padding:12px 14px; background:#f6f5fa; border:1px dashed var(--brand);
+               border-radius:10px; word-break:break-all; margin:6px 0 14px; user-select:all; }
+  .ok { padding:12px 14px; border-radius:10px; background:#ecfdf5; color:#065f46; border:1px solid #a7f3d0; }
+{% endblock %}
+{% block main %}
+<div class="page">
+  <a href="{{ lp }}/cabinet/" style="color:var(--muted);text-decoration:none;font-size:14px">← {% translate "Кабінет" %}</a>
+  <div class="box" style="margin-top:12px">
+    <h1>{% translate "Це моя подія" %}</h1>
+    <p class="lead">«{{ e.title }}»</p>
+    {% if claim.status == "verified" %}
+      <p class="ok">{% translate "Контроль над сайтом підтверджено. Модератор видасть права найближчим часом — подія зʼявиться в кабінеті." %}</p>
+    {% elif claim.status == "rejected" %}
+      <p class="form-err">{% translate "Заявку відхилено." %} {{ claim.decision_note }}</p>
+    {% elif claim.method == "file" %}
+      {% if expired %}
+        <p class="form-err">{% translate "Термін дії коду минув. Створіть заявку ще раз." %}</p>
+      {% else %}
+      <ol class="steps">
+        <li>{% blocktranslate with f=file_name %}Створіть на сайті події файл {{ f }} з таким рядком:{% endblocktranslate %}
+          <code class="token">{{ token }}</code></li>
+        <li>{% translate "Він має відкриватися за адресою:" %} <b>https://{{ claim.host }}/{{ file_name }}</b></li>
+        <li>{% translate "Натисніть «Перевірити». Код дійсний 7 днів і працює лише для цієї заявки." %}</li>
+      </ol>
+      <form method="post">{% csrf_token %}<input type="hidden" name="action" value="check_file">
+        <button class="submit" type="submit">{% translate "Перевірити" %}</button></form>
+      <p class="help" style="color:var(--muted);font-size:13px;margin-top:14px">{% translate "Немає доступу до сайту? Модератор перевірить заявку вручну — просто зачекайте." %}</p>
+      {% endif %}
+    {% elif claim.method == "email" and mail_enabled %}
+      <p>{% blocktranslate with h=claim.host %}Вкажіть адресу на домені {{ h }} — ми надішлемо на неї одноразове посилання. Публічні скриньки (Gmail, Ukr.net тощо) не підходять.{% endblocktranslate %}</p>
+      <form method="post">{% csrf_token %}<input type="hidden" name="action" value="send_email">
+        {% with f=email_form.email %}{% include "public/_field.html" %}{% endwith %}
+        <button class="submit" type="submit">{% translate "Надіслати посилання" %}</button></form>
+    {% else %}
+      <p>{% translate "Модератор перевірить вашу заявку вручну і може звʼязатися з вами за вказаним телефоном." %}</p>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

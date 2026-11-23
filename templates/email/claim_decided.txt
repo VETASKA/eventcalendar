@@ -1,0 +1,5 @@
+{% load i18n %}{% if approved %}{% translate "Подію додано у ваш кабінет" %}{% else %}{% translate "Заявку відхилено" %}{% endif %}
+{% if approved %}{% blocktranslate with t=event.title %}Тепер ви можете оновлювати подію «{{ t }}» у кабінеті.{% endblocktranslate %}{% else %}{% blocktranslate with t=event.title %}Не вдалося підтвердити, що подія «{{ t }}» ваша.{% endblocktranslate %}{% if note %}
+{{ note }}{% endif %}{% endif %}
+
+{% translate "Кабінет:" %} {{ cabinet }}

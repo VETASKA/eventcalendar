@@ -20,6 +20,7 @@
       {% for e in form.non_field_errors %}<p class="form-err">{{ e }}</p>{% endfor %}
       {% for f in form %}{% include "public/_field.html" %}{% endfor %}
       <button class="submit" type="submit">{% translate "Увійти" %}</button>
+      <a href="{{ lp }}/cabinet/password/reset/" style="margin-left:14px;color:var(--muted);font-size:14px">{% translate "Забули пароль?" %}</a>
     </form>
     <form method="post" action="{{ lp }}/cabinet/register/" id="p-reg"{% if tab != 'register' %} hidden{% endif %}>{% csrf_token %}
       <input type="hidden" name="next" value="{{ next }}">

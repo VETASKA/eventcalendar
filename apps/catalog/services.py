@@ -237,3 +237,93 @@ def save_moderator_edit(event: Event, data: dict, user, *, expected_revision: in
         current.save()
         log("event.edit", current, actor=user, fields=sorted(data))
         return current
+
+
+# ── proposed changes (import / organizer) ─────────────────────────────────────
+
+EDITABLE = {"title", "summary", "format", "registration_url", "price_text", "organizer_name", "organizer_site",
+            "source_url", "original_language"}
+
+
+def _apply_organizer_sessions(event: Event, sessions: list[dict]) -> None:
+    """Organizer format: [{id|None, start_date, end_date, starts_at, ends_at, precision, status, city_id, venue,
+    deleted}]. Only this event's sessions can be touched."""
+    for s in sessions:
+        o = event.occurrences.filter(pk=s.get("id")).first() if s.get("id") else None
+        if s.get("deleted"):
+            if o:
+                o.delete()
+            continue
+        o = o or Occurrence(event=event)
+        o.start_date, o.end_date = s["start_date"], s.get("end_date") or s["start_date"]
+        o.starts_at, o.ends_at = s.get("starts_at") or None, s.get("ends_at") or None
+        o.precision, o.status = s.get("precision") or "date", s.get("status") or "scheduled"
+        o.city = City.objects.filter(pk=s.get("city_id")).first() if s.get("city_id") else None
+        o.venue = s.get("venue", "")
+        o.save()
+
+
+def apply_revision(rev: EventRevision, user, *, force: bool = False) -> Event:
+    """Apply a proposed change. Refuses when the card changed after the proposal was made, unless forced."""
+    with transaction.atomic():
+        rev = EventRevision.objects.select_for_update().get(pk=rev.pk)
+        if rev.status != "proposed":
+            raise PublishError(["изменение уже рассмотрено"])
+        event = Event.objects.select_for_update().get(pk=rev.event_id)
+        if rev.base_revision != event.revision and not force:
+            raise PublishError([f"карточка изменилась после предложения (версия {rev.base_revision} → "
+                                f"{event.revision}); проверьте и примените ещё раз"])
+        ch = rev.changes
+        touched = set()
+        for k, v in ch.items():
+            if k in EDITABLE:
+                setattr(event, k, v)
+                touched.add(k)
+        if "event_type" in ch:
+            event.event_type = EventType.objects.filter(code=ch["event_type"]).first()
+            touched.add("event_type")
+        if "occurrences" in ch:
+            if rev.origin == "import":
+                _set_occurrences(event, ch["occurrences"])
+            else:
+                _apply_organizer_sessions(event, ch["occurrences"])
+            touched.add("occurrences")
+        if ch.get("_removed_in_source"):
+            for pub in event.publications.filter(status="published"):
+                pub.status, pub.reason, pub.blocked = "unpublished", "удалено в источнике", True
+                pub.save()
+            event.state = "withdrawn"
+        if rev.origin != "import":
+            # an organizer's or moderator's version is protected from later imports
+            event.manual_fields = sorted(set(event.manual_fields) | touched)
+        event.revision += 1
+        event.save()
+        rev.status, rev.decided_at = "approved", timezone.now()
+        rev.save(update_fields=["status", "decided_at"])
+        log("revision.apply", event, actor=user, revision=rev.pk, origin=rev.origin, fields=sorted(touched))
+    _notify_revision(rev, approved=True)
+    return event
+
+
+def reject_revision(rev: EventRevision, user, reason: str = "") -> None:
+    with transaction.atomic():
+        rev = EventRevision.objects.select_for_update().get(pk=rev.pk)
+        if rev.status != "proposed":
+            return
+        rev.status, rev.decided_at = "rejected", timezone.now()
+        rev.save(update_fields=["status", "decided_at"])
+        log("revision.reject", rev.event, actor=user, reason=reason, revision=rev.pk)
+    _notify_revision(rev, approved=False, reason=reason)
+
+
+def _notify_revision(rev: EventRevision, *, approved: bool, reason: str = "") -> None:
+    if rev.origin != "organizer" or not rev.author or not rev.author.email:
+        return
+    from apps.core.i18n import lurl
+    from apps.core.mail import send, site_url
+    from apps.organizers.models import Profile
+    pub = rev.event.publications.select_related("site").first()
+    lang = Profile.of(rev.author).lang
+    send(rev.author.email, "revision_decided", {"event": rev.event, "approved": approved, "reason": reason,
+                                               "cabinet": site_url(pub.site if pub else None, lurl("/cabinet/", lang))},
+         lang=lang)

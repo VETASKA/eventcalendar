@@ -69,7 +69,8 @@ def _is_ip(host: str) -> bool:
         return False
 
 
-def safe_fetch(url: str, *, client: httpx.Client | None = None, resolver=default_resolver) -> FetchResult:
+def safe_fetch(url: str, *, client: httpx.Client | None = None, resolver=default_resolver,
+               allow_text: bool = False) -> FetchResult:
     own = client is None
     client = client or httpx.Client(timeout=TIMEOUT, follow_redirects=False,
                                     headers={"User-Agent": USER_AGENT, "Accept": "text/html,application/xhtml+xml"})
@@ -91,7 +92,7 @@ def safe_fetch(url: str, *, client: httpx.Client | None = None, resolver=default
                         return FetchResult(False, url, status=r.status_code, error=f"HTTP {r.status_code}",
                                            temporary=r.status_code in TEMPORARY_STATUS)
                     ctype = r.headers.get("content-type", "").lower()
-                    if "html" not in ctype and "xml" not in ctype:
+                    if "html" not in ctype and "xml" not in ctype and not (allow_text and "text/plain" in ctype):
                         return FetchResult(False, url, status=r.status_code, error=f"not a web page ({ctype or '?'})")
                     body = b""
                     for chunk in r.iter_bytes():

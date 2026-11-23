@@ -125,6 +125,25 @@ CELERY_TIMEZONE = TIME_ZONE
 CACHES = {"default": {"BACKEND": "django.core.cache.backends.redis.RedisCache", "LOCATION": REDIS_URL}
           if env("REDIS_URL") else {"BACKEND": "django.core.cache.backends.locmem.LocMemCache"}}
 
+# Mail: Gmail / Google Workspace SMTP. Without EMAIL_HOST_USER the site works and mail goes to the log only.
+EMAIL_HOST_USER = env("EMAIL_HOST_USER")
+EMAIL_HOST_PASSWORD = env("EMAIL_HOST_PASSWORD")            # an app password, not the account password
+MAIL_ENABLED = bool(EMAIL_HOST_USER and EMAIL_HOST_PASSWORD)
+EMAIL_BACKEND = ("django.core.mail.backends.smtp.EmailBackend" if MAIL_ENABLED
+                 else "django.core.mail.backends.console.EmailBackend")
+EMAIL_HOST = env("EMAIL_HOST", "smtp.gmail.com")
+EMAIL_PORT = int(env("EMAIL_PORT", "587"))
+EMAIL_USE_TLS = True
+EMAIL_TIMEOUT = 20
+DEFAULT_FROM_EMAIL = env("DEFAULT_FROM_EMAIL") or (f"EventCalendar <{EMAIL_HOST_USER}>" if EMAIL_HOST_USER
+                                                   else "EventCalendar <noreply@localhost>")
+SERVER_EMAIL = DEFAULT_FROM_EMAIL
+
+# Telegram bot: empty until the bot exists; everything Telegram-related stays off without it
+TELEGRAM_BOT_TOKEN = env("TELEGRAM_BOT_TOKEN")
+TELEGRAM_BOT_NAME = env("TELEGRAM_BOT_NAME")                # without @, for t.me links
+TELEGRAM_WEBHOOK_SECRET = env("TELEGRAM_WEBHOOK_SECRET")
+
 # Intake API: max items in one POST
 INTAKE_MAX_BATCH = int(env("INTAKE_MAX_BATCH", "200"))
 
@@ -178,7 +197,7 @@ UNFOLD = {
                  "link": lambda request: reverse_lazy("admin:catalog_event_changelist") + "?state__exact=pending"},
                 {"title": "Все события", "icon": "event", "link": reverse_lazy("admin:catalog_event_changelist")},
                 {"title": "Предложенные изменения", "icon": "difference",
-                 "link": reverse_lazy("admin:catalog_eventrevision_changelist")},
+                 "link": lambda request: reverse_lazy("admin:catalog_eventrevision_changelist") + "?status__exact=proposed"},
                 {"title": "Записи импорта", "icon": "input", "link": reverse_lazy("admin:intake_intakeitem_changelist")},
                 {"title": "Сообщения об ошибках", "icon": "report",
                  "link": reverse_lazy("admin:feedback_errorreport_changelist")},

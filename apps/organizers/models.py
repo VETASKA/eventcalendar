@@ -33,6 +33,7 @@ class Membership(models.Model):
 class Claim(models.Model):
     """«Це моя подія»: a request for rights on one event. Rights appear only after a moderator approves."""
     METHOD = [("file", "файл на сайте"), ("email", "корпоративная почта"), ("manual", "ручная проверка")]
+    TOKEN_DAYS = 7
     STATUS = [("open", "открыт"), ("verified", "контроль подтверждён"), ("approved", "права выданы"),
               ("rejected", "отклонён"), ("expired", "просрочен")]
     user = models.ForeignKey(settings.AUTH_USER_MODEL, verbose_name="пользователь", on_delete=models.CASCADE)
@@ -50,6 +51,8 @@ class Claim(models.Model):
     expires_at = models.DateTimeField("действует до", null=True, blank=True)
     attempts = models.PositiveSmallIntegerField("попыток", default=0)
     status = models.CharField("статус", max_length=10, choices=STATUS, default="open")
+    verify_email = models.EmailField("корпоративный адрес", blank=True)
+    verified_at = models.DateTimeField("контроль подтверждён", null=True, blank=True)
     evidence = models.TextField("чем подтверждает", blank=True,
                                 help_text="Ссылка на страницу, где он указан, корпоративная почта, комментарий")
     decision_note = models.TextField("решение модератора", blank=True)
@@ -81,3 +84,23 @@ class EventGrant(models.Model):
 
     def __str__(self):
         return f"{self.organization} → {self.event}"
+
+
+class Profile(models.Model):
+    """Public-site account extras: whether the email is confirmed and which language the person uses."""
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, verbose_name="пользователь", on_delete=models.CASCADE,
+                                related_name="profile")
+    email_verified = models.BooleanField("email подтверждён", default=False)
+    email_verified_at = models.DateTimeField("когда подтверждён", null=True, blank=True)
+    lang = models.CharField("язык", max_length=5, default="uk")
+
+    class Meta:
+        verbose_name = "профиль"
+        verbose_name_plural = "профили"
+
+    def __str__(self):
+        return str(self.user)
+
+    @classmethod
+    def of(cls, user) -> "Profile":
+        return cls.objects.get_or_create(user=user)[0]

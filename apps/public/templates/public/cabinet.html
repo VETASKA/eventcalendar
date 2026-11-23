@@ -16,6 +16,9 @@
   .tag.ok { background:#dcfce7; color:#166534; }
   .note { color:var(--muted); font-size:14px; }
   .row-actions { display:flex; gap:10px; align-items:center; }
+  .row-actions .edit { font-weight:500; color:var(--brand); }
+  .verify { padding:12px 14px; border-radius:10px; background:#fef3c7; color:#92400e; margin:8px 0 6px; display:flex;
+            justify-content:space-between; gap:12px; flex-wrap:wrap; }
 {% endblock %}
 {% block main %}
 <div class="page">
@@ -25,13 +28,17 @@
       <form method="post" action="{{ lp }}/cabinet/logout/">{% csrf_token %}<button class="linkbtn" type="submit">{% translate "Вийти" %}</button></form>
     </div>
     <p class="note">{{ user.first_name|default:user.email }} · {{ user.email }}</p>
-    {% block cabinet_extra %}{% endblock %}
+    {% if mail_enabled and not profile.email_verified %}
+      <div class="verify">{% translate "Підтвердіть email — посилання в листі. Без цього не можна заявити подію." %}
+        <form method="post" action="{{ lp }}/cabinet/verify-again/">{% csrf_token %}<button class="linkbtn" type="submit">{% translate "Надіслати лист ще раз" %}</button></form></div>
+    {% endif %}
 
     <h2>{% translate "Мої події" %}</h2>
     {% for e in events %}
       <div class="row"><div><a href="{{ lp }}/events/{{ e.pk }}-{{ e.slug }}/">{{ e.title }}</a>
         <small>{% with o=e.occurrences.all.0 %}{% if o %}{{ o.start_date|date:"d.m.Y" }}{% if o.city %} · {{ o.city.name }}{% endif %}{% endif %}{% endwith %}</small></div>
-        <span class="row-actions">{% block event_actions %}{% endblock %}<span class="tag ok">{% translate "підтверджено" %}</span></span></div>
+        <span class="row-actions">{% if e.has_pending %}<span class="tag open">{% translate "зміни на перевірці" %}</span>{% endif %}
+          <a class="edit" href="{{ lp }}/cabinet/events/{{ e.pk }}/edit/">{% translate "Редагувати" %}</a></span></div>
     {% empty %}
       <p class="note">{% translate "Поки немає. Відкрийте свою подію в календарі й натисніть «Це моя подія»." %}</p>
     {% endfor %}
@@ -39,10 +46,11 @@
     {% if claims %}
     <h2>{% translate "Заявки" %}</h2>
     {% for c in claims %}
-      <div class="row"><div><a href="{{ lp }}/events/{{ c.event.pk }}-{{ c.event.slug }}/">{{ c.event.title }}</a>
+      <div class="row"><div><a href="{{ lp }}/cabinet/claims/{{ c.pk }}/">{{ c.event.title }}</a>
         <small>{% translate "надіслано" %} {{ c.created_at|date:"d.m.Y" }}{% if c.decision_note %} · {{ c.decision_note }}{% endif %}</small></div>
         {% if c.status == "rejected" %}<span class="tag rejected">{% translate "відхилено" %}</span>
         {% elif c.status == "expired" %}<span class="tag">{% translate "прострочено" %}</span>
+        {% elif c.status == "verified" %}<span class="tag ok">{% translate "сайт підтверджено" %}</span>
         {% else %}<span class="tag open">{% translate "на перевірці" %}</span>{% endif %}</div>
     {% endfor %}
     {% endif %}

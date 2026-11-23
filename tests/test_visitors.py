@@ -87,7 +87,8 @@ def test_error_report_rate_limited(client, three):
     assert ErrorReport.objects.count() == 10
 
 
-def test_claim_flow_register_then_moderator_approves(client, three, admin_user):
+def test_claim_flow_register_then_moderator_approves(client, three, admin_user, mailoutbox):
+    import re
     ev = three[1]
     r = client.get(f"/events/{ev.pk}/claim/")
     assert r.status_code == 302 and r["Location"] == f"/cabinet/login/?next=/events/{ev.pk}/claim/"
@@ -95,24 +96,27 @@ def test_claim_flow_register_then_moderator_approves(client, three, admin_user):
                                            "next": f"/events/{ev.pk}/claim/"})
     assert r.status_code == 302 and r["Location"] == f"/events/{ev.pk}/claim/"
     assert User.objects.get(username="olena@jazz.ua").first_name == "Олена"
+    # email must be confirmed first
+    assert client.get(f"/events/{ev.pk}/claim/")["Location"] == "/cabinet/"
+    link = re.search(r"https?://\S+/cabinet/verify/\S+/", mailoutbox[0].body).group(0)
+    client.get(link.split("testserver", 1)[1])
     r = client.post(f"/events/{ev.pk}/claim/", {"org_name": "Jazz Park", "role": "організатор", "phone": "+380671234567",
-                                                "evidence": "https://jazz.ua/team"})
-    assert r.status_code == 302 and r["Location"] == "/cabinet/"
+                                                "evidence": "https://jazz.ua/team", "method": "manual"})
     claim = Claim.objects.get()
+    assert r["Location"] == f"/cabinet/claims/{claim.pk}/"
     assert claim.status == "open" and claim.method == "manual"
     user = claim.user
-    # no rights before the moderator decides
-    assert not user_events(user).exists()
+    assert not user_events(user).exists()                       # no rights before the moderator decides
     assert "на перевірці" in client.get("/cabinet/").content.decode()
-    # second visit shows «already sent», no duplicate
-    assert "Заявку вже надіслано" in client.get(f"/events/{ev.pk}/claim/").content.decode()
+    assert client.get(f"/events/{ev.pk}/claim/")["Location"] == f"/cabinet/claims/{claim.pk}/"   # no duplicate
     approve_claim(claim, admin_user)
     assert list(user_events(user)) == [ev]
     ev.refresh_from_db()
     assert ev.organization.name == "Jazz Park" and EventGrant.objects.count() == 1
     html = client.get("/cabinet/").content.decode()
-    assert "Джаз у парку" in html and "підтверджено" in html
+    assert "Джаз у парку" in html and "Редагувати" in html
     assert client.get(f"/events/{ev.pk}/claim/").status_code == 302     # already theirs
+    assert "Подію додано у ваш кабінет" in mailoutbox[-1].subject
 
 
 def test_login_and_wrong_password(client, three):

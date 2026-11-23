@@ -6,7 +6,8 @@ from django.db.models.fields.json import KeyTextTransform
 from django.template.response import TemplateResponse
 from django.utils.html import format_html, format_html_join
 from unfold.admin import ModelAdmin, TabularInline
-from unfold.decorators import display
+from django.shortcuts import redirect
+from unfold.decorators import action, display
 
 from . import services
 from .models import (Event, EventRevision, EventTranslation, EventType, Occurrence, SitePublication, TicketLink,
@@ -294,11 +295,115 @@ class EventAdmin(ModelAdmin):
         self.message_user(request, f"Отклонено публикаций: {n}")
 
 
+FIELD_NAMES = {"title": "название", "summary": "анонс", "format": "формат", "event_type": "тип",
+               "registration_url": "регистрация", "price_text": "цена", "organizer_name": "организатор",
+               "organizer_site": "сайт организатора", "source_url": "источник", "original_language": "язык",
+               "occurrences": "сеансы", "_removed_in_source": "удалено в источнике"}
+
+
+def _session_line(s: dict) -> str:
+    from apps.geo.models import City
+    city = City.objects.filter(pk=s.get("city_id")).first() if s.get("city_id") else None
+    when = s.get("start_date", "")
+    if s.get("end_date") and s.get("end_date") != s.get("start_date"):
+        when += f" — {s['end_date']}"
+    if s.get("starts_at"):
+        when += " " + str(s["starts_at"])[11:16]
+    status = dict(Occurrence.STATUS).get(s.get("status") or "scheduled", "")
+    parts = [when, city.name if city else "", s.get("venue", ""), status if s.get("status") not in (None, "scheduled") else ""]
+    line = " · ".join(p for p in parts if p)
+    return ("<s>" + line + "</s>  (удалить)") if s.get("deleted") else line
+
+
 @admin.register(EventRevision)
 class EventRevisionAdmin(ModelAdmin):
-    list_display = ("event", "origin", "status", "priority", "created_at")
+    list_display = ("created_at", "event_link", "origin", "author", "what", "status_badge", "priority")
+    list_display_links = ("created_at", "what")
     list_filter = ("status", "origin", "priority")
-    raw_id_fields = ("event", "source_item")
+    readonly_fields = ("event", "origin", "author", "status", "created_at", "decided_at", "diff")
+    fields = ("event", "origin", "author", "status", "created_at", "decided_at", "diff")
+    actions = ["apply", "reject"]
+    actions_detail = ["apply_one", "reject_one"]
+    ordering = ("-priority", "-created_at")
+
+    @action(description="Применить", url_path="apply-one")
+    def apply_one(self, request, object_id):
+        rev = EventRevision.objects.get(pk=object_id)
+        try:
+            services.apply_revision(rev, request.user)
+            self.message_user(request, "Изменение применено", messages.SUCCESS)
+        except services.PublishError as e:
+            self.message_user(request, str(e), messages.WARNING)
+        return redirect("admin:catalog_eventrevision_changelist")
+
+    @action(description="Отклонить", url_path="reject-one")
+    def reject_one(self, request, object_id):
+        services.reject_revision(EventRevision.objects.get(pk=object_id), request.user)
+        self.message_user(request, "Изменение отклонено")
+        return redirect("admin:catalog_eventrevision_changelist")
+
+    def has_add_permission(self, request):
+        return False
+
+    @display(description="событие")
+    def event_link(self, obj):
+        return format_html('<a class="text-primary-700 dark:text-primary-300" href="/admin/catalog/event/{}/change/">{}</a>',
+                           obj.event_id, obj.event)
+
+    @display(description="что меняется")
+    def what(self, obj):
+        return ", ".join(FIELD_NAMES.get(k, k) for k in obj.changes)
+
+    @display(description="статус", ordering="status",
+             label={"proposed": "warning", "approved": "success", "rejected": "danger", "superseded": "info"})
+    def status_badge(self, obj):
+        return obj.status, obj.get_status_display()
+
+    @display(description="было → станет")
+    def diff(self, obj):
+        e = obj.event
+        rows = []
+        for k, v in obj.changes.items():
+            if k == "occurrences":
+                old = "<br>".join(_session_line({"start_date": str(o.start_date), "end_date": str(o.end_date),
+                                                 "starts_at": o.starts_at.isoformat() if o.starts_at else None,
+                                                 "city_id": o.city_id, "venue": o.venue, "status": o.status})
+                                  for o in e.occurrences.all())
+                new = "<br>".join(_session_line(x) for x in v)
+            elif k == "event_type":
+                old, new = str(e.event_type or "—"), str(EventType.objects.filter(code=v).first() or v)
+            elif k == "_removed_in_source":
+                old, new = "есть в источнике", "событие удалено в источнике — снять с публикации?"
+            else:
+                old, new = getattr(e, k, ""), v
+            rows.append(format_html('<tr><td class="pr-4 py-2 font-semibold align-top">{}</td>'
+                                    '<td class="pr-4 py-2 align-top text-font-subtle-light dark:text-font-subtle-dark">{}</td>'
+                                    '<td class="py-2 align-top">{}</td></tr>',
+                                    FIELD_NAMES.get(k, k), format_html(str(old or "—")) if k == "occurrences" else old or "—",
+                                    format_html(str(new or "—")) if k == "occurrences" else new or "—"))
+        return format_html('<table class="text-sm"><tr><th></th><th class="text-left pr-4">было</th>'
+                           '<th class="text-left">станет</th></tr>{}</table>', format_html("".join(rows)))
+
+    @admin.action(description="Применить выбранные изменения")
+    def apply(self, request, queryset):
+        ok, failed = 0, []
+        for rev in queryset.filter(status="proposed"):
+            try:
+                services.apply_revision(rev, request.user)
+                ok += 1
+            except services.PublishError as e:
+                failed.append(f"«{rev.event}»: {e}")
+        self.message_user(request, f"Применено: {ok}", messages.SUCCESS if ok else messages.INFO)
+        for f in failed:
+            self.message_user(request, f, messages.WARNING)
+
+    @admin.action(description="Отклонить выбранные изменения")
+    def reject(self, request, queryset):
+        n = 0
+        for rev in queryset.filter(status="proposed"):
+            services.reject_revision(rev, request.user)
+            n += 1
+        self.message_user(request, f"Отклонено: {n}")
 
 
 @admin.register(Topic)

@@ -360,3 +360,276 @@ msgstr "+{n} more"
 
 msgid "Ще {n} — уточніть запит."
 msgstr "{n} more — refine your search."
+
+msgid "Підтвердіть email — посилання в листі. Без цього не можна заявити подію."
+msgstr "Please confirm your email — the link is in the letter. You need it to claim an event."
+
+msgid "Надіслати лист ще раз"
+msgstr "Send the letter again"
+
+msgid "зміни на перевірці"
+msgstr "changes under review"
+
+msgid "Редагувати"
+msgstr "Edit"
+
+msgid "сайт підтверджено"
+msgstr "site confirmed"
+
+msgid "Контроль над сайтом підтверджено. Модератор видасть права найближчим часом — подія зʼявиться в кабінеті."
+msgstr "Control of the site is confirmed. A moderator will grant access soon — the event will appear in your account."
+
+msgid "Заявку відхилено."
+msgstr "The request was rejected."
+
+msgid "Термін дії коду минув. Створіть заявку ще раз."
+msgstr "The code has expired. Please create a new request."
+
+msgid "Він має відкриватися за адресою:"
+msgstr "It must open at:"
+
+msgid "Натисніть «Перевірити». Код дійсний 7 днів і працює лише для цієї заявки."
+msgstr "Click “Check”. The code is valid for 7 days and only for this request."
+
+msgid "Перевірити"
+msgstr "Check"
+
+msgid "Немає доступу до сайту? Модератор перевірить заявку вручну — просто зачекайте."
+msgstr "No access to the site? A moderator will check the request manually — just wait."
+
+msgid "Надіслати посилання"
+msgstr "Send link"
+
+msgid "Модератор перевірить вашу заявку вручну і може звʼязатися з вами за вказаним телефоном."
+msgstr "A moderator will check your request manually and may call you on the phone you gave."
+
+msgid "Створіть на сайті події файл %(f)s з таким рядком:"
+msgstr "Create the file %(f)s on the event’s site with this line:"
+
+msgid "Вкажіть адресу на домені %(h)s — ми надішлемо на неї одноразове посилання. Публічні скриньки (Gmail, Ukr.net тощо) не підходять."
+msgstr "Give an address on %(h)s — we will send a one-time link to it. Public mailboxes (Gmail, Ukr.net etc.) are not accepted."
+
+msgid "Редагувати подію"
+msgstr "Edit event"
+
+msgid "Зміни зʼявляться на сайті після перевірки модератором. Перенесення та скасування — розглядаються першими."
+msgstr "Changes appear on the site after a moderator checks them. Reschedules and cancellations are reviewed first."
+
+msgid "Попередні зміни ще на перевірці. Нові замінять їх."
+msgstr "Your previous changes are still under review. New ones will replace them."
+
+msgid "Дати й місце"
+msgstr "Dates and place"
+
+msgid "Додати сеанс"
+msgstr "Add a session"
+
+msgid "Видалити цей сеанс"
+msgstr "Delete this session"
+
+msgid "Надіслати на перевірку"
+msgstr "Send for review"
+
+msgid "Забули пароль?"
+msgstr "Forgot your password?"
+
+msgid "Відновлення пароля"
+msgstr "Password reset"
+
+msgid "Вкажіть email кабінету — надішлемо посилання для нового пароля."
+msgstr "Enter your account email — we will send a link to set a new password."
+
+msgid "Новий пароль"
+msgstr "New password"
+
+msgid "Пароль змінено"
+msgstr "Password changed"
+
+msgid "Зберегти пароль"
+msgstr "Save password"
+
+msgid "Посилання недійсне"
+msgstr "Link not valid"
+
+msgid "Воно вже використане або застаріло."
+msgstr "It has been used or has expired."
+
+msgid "Надіслати нове"
+msgstr "Send a new one"
+
+msgid "Перевірте пошту"
+msgstr "Check your email"
+
+msgid "Якщо такий кабінет існує, ми надіслали лист із посиланням. Воно діє 3 дні."
+msgstr "If such an account exists, we have sent a letter with a link. It is valid for 3 days."
+
+msgid "Кабінет створено. Ми надіслали лист — підтвердіть email за посиланням."
+msgstr "Account created. We sent you a letter — please confirm your email with the link."
+
+msgid "Спочатку підтвердіть свій email — лист у пошті, або надішліть його ще раз у кабінеті."
+msgstr "Please confirm your email first — the letter is in your inbox, or send it again from your account."
+
+msgid "Забагато перевірок. Спробуйте пізніше."
+msgstr "Too many checks. Please try later."
+
+msgid "Сайт підтверджено. Модератор видасть права найближчим часом."
+msgstr "Site confirmed. A moderator will grant access soon."
+
+msgid "Файл знайдено на іншому сайті. Він має бути на сайті самої події."
+msgstr "The file was found on another site. It must be on the event’s own site."
+
+msgid "Файл знайдено, але код у ньому не збігається."
+msgstr "The file was found, but the code in it does not match."
+
+msgid "Файл не знайдено. Перевірте адресу й спробуйте ще раз за хвилину."
+msgstr "File not found. Check the address and try again in a minute."
+
+msgid "Забагато листів. Спробуйте пізніше."
+msgstr "Too many letters. Please try later."
+
+msgid "Потрібна адреса на домені сайту події, не публічна пошта."
+msgstr "An address on the event site’s domain is needed, not a public mailbox."
+
+msgid "Адреса має бути на домені %(host)s."
+msgstr "The address must be on %(host)s."
+
+msgid "Лист надіслано. Відкрийте його й перейдіть за посиланням протягом доби."
+msgstr "Letter sent. Open it and follow the link within 24 hours."
+
+msgid "Посилання недійсне або вже використане."
+msgstr "The link is not valid or has already been used."
+
+msgid "Пошту підтверджено. Модератор видасть права найближчим часом."
+msgstr "Email confirmed. A moderator will grant access soon."
+
+msgid "Посилання недійсне або застаріле. Надішліть лист ще раз у кабінеті."
+msgstr "The link is not valid or has expired. Send the letter again from your account."
+
+msgid "Email підтверджено."
+msgstr "Email confirmed."
+
+msgid "Лист надіслано ще раз."
+msgstr "The letter has been sent again."
+
+msgid "Змін немає."
+msgstr "No changes."
+
+msgid "Зміни надіслано на модерацію. Після перевірки вони зʼявляться на сайті."
+msgstr "Changes sent for moderation. They will appear on the site after review."
+
+msgid "Забагато запитів. Спробуйте пізніше."
+msgstr "Too many requests. Please try later."
+
+msgid "Як підтвердите, що подія ваша"
+msgstr "How will you prove the event is yours"
+
+msgid "Файл на сайті події — найшвидше"
+msgstr "A file on the event’s site — the fastest"
+
+msgid "Лист на пошту з домену сайту події"
+msgstr "A letter to an address on the event site’s domain"
+
+msgid "Перевірка модератором вручну"
+msgstr "Manual check by a moderator"
+
+msgid "Пошта на домені сайту події"
+msgstr "Email on the event site’s domain"
+
+msgid "Назва"
+msgstr "Name"
+
+msgid "Короткий анонс"
+msgstr "Short description"
+
+msgid "1–3 речення своїми словами"
+msgstr "1–3 sentences in your own words"
+
+msgid "Формат"
+msgstr "Format"
+
+msgid "Посилання на реєстрацію або квитки"
+msgstr "Registration or tickets link"
+
+msgid "До (якщо кілька днів)"
+msgstr "Until (if several days)"
+
+msgid "Початок"
+msgstr "Starts"
+
+msgid "Кінець"
+msgstr "Ends"
+
+msgid "Місце проведення"
+msgstr "Venue"
+
+msgid "Статус"
+msgstr "Status"
+
+msgid "За планом"
+msgstr "As planned"
+
+msgid "Видалити"
+msgstr "Delete"
+
+msgid "Дата закінчення раніше за початок."
+msgstr "The end date is before the start."
+
+msgid "Подію додано у ваш кабінет"
+msgstr "The event has been added to your account"
+
+msgid "Заявку відхилено"
+msgstr "Request rejected"
+
+msgid "Кабінет:"
+msgstr "Your account:"
+
+msgid "Тепер ви можете оновлювати подію «%(t)s» у кабінеті."
+msgstr "You can now update “%(t)s” from your account."
+
+msgid "Не вдалося підтвердити, що подія «%(t)s» ваша."
+msgstr "We could not confirm that “%(t)s” is your event."
+
+msgid "Підтвердження: це ваша подія?"
+msgstr "Confirmation: is this your event?"
+
+msgid "Якщо це ви — відкрийте посилання (діє 24 години, працює один раз):"
+msgstr "If it was you, open the link (valid for 24 hours, works once):"
+
+msgid "Якщо ні — нічого не робіть, права ніхто не отримає."
+msgstr "If not, do nothing — nobody will get access."
+
+msgid "Хтось вказав цю адресу, щоб підтвердити, що подія «%(t)s» належить вашій організації."
+msgstr "Someone gave this address to confirm that “%(t)s” belongs to your organization."
+
+msgid "Щоб задати новий пароль, відкрийте посилання (діє 3 дні):"
+msgstr "To set a new password, open the link (valid for 3 days):"
+
+msgid "Якщо ви не просили змінити пароль — просто проігноруйте цей лист."
+msgstr "If you did not ask to change your password, just ignore this letter."
+
+msgid "Новий пароль для EventCalendar"
+msgstr "New password for EventCalendar"
+
+msgid "Ваші зміни опубліковано"
+msgstr "Your changes are published"
+
+msgid "Ваші зміни не прийнято"
+msgstr "Your changes were not accepted"
+
+msgid "Зміни до події «%(t)s» перевірено й опубліковано."
+msgstr "The changes to “%(t)s” have been checked and published."
+
+msgid "Модератор не прийняв зміни до події «%(t)s»."
+msgstr "A moderator did not accept the changes to “%(t)s”."
+
+msgid "Підтвердіть email у EventCalendar"
+msgstr "Confirm your email at EventCalendar"
+
+msgid "Щоб підтвердити адресу, відкрийте посилання (діє 3 дні):"
+msgstr "To confirm your address, open the link (valid for 3 days):"
+
+msgid "Якщо ви не реєструвалися — просто проігноруйте цей лист."
+msgstr "If you did not sign up, just ignore this letter."
+
+msgid "Вітаємо, %(n)s!"
+msgstr "Hello, %(n)s!"

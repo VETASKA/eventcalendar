@@ -1,0 +1,7 @@
+{% load i18n %}{% translate "Підтвердіть email у EventCalendar" %}
+{% blocktranslate with n=user.first_name %}Вітаємо, {{ n }}!{% endblocktranslate %}
+
+{% translate "Щоб підтвердити адресу, відкрийте посилання (діє 3 дні):" %}
+{{ link }}
+
+{% translate "Якщо ви не реєструвалися — просто проігноруйте цей лист." %}

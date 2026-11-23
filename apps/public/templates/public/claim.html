@@ -1,6 +1,12 @@
 {% extends "public/base.html" %}{% load i18n %}
 {% block title %}{% translate "Це моя подія" %} — {{ e.title }}{% endblock %}
 {% block meta %}<meta name="robots" content="noindex">{% endblock %}
+{% block css %}
+  .methods { border:0; padding:0; } .methods legend { font-weight:600; font-size:14px; margin-bottom:6px; }
+  .radio { display:flex; gap:10px; align-items:center; padding:8px 10px; border:1px solid var(--line); border-radius:10px;
+           margin-bottom:6px; cursor:pointer; }
+  .radio input { accent-color:var(--brand); width:17px; height:17px; }
+{% endblock %}
 {% block main %}
 <div class="page">
   <a class="back" href="{{ lp }}/events/{{ e.pk }}-{{ e.slug }}/" style="color:var(--muted);text-decoration:none;font-size:14px">← {{ e.title }}</a>
@@ -13,6 +19,9 @@
       <p class="lead">«{{ e.title }}». {% translate "Розкажіть, хто ви. Модератор перевірить дані, і подія зʼявиться у вашому кабінеті — тоді ви зможете її оновлювати." %}</p>
       <form method="post">{% csrf_token %}
         {% for f in form %}{% include "public/_field.html" %}{% endfor %}
+        <fieldset class="field methods"><legend>{{ method_form.method.label }}</legend>
+          {% for r in method_form.method %}<label class="radio">{{ r.tag }} <span>{{ r.choice_label }}</span></label>{% endfor %}
+        </fieldset>
         <button class="submit" type="submit">{% translate "Надіслати заявку" %}</button>
       </form>
     {% endif %}

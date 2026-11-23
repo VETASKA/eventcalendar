@@ -4,7 +4,7 @@ from unfold.admin import ModelAdmin, TabularInline
 from unfold.decorators import display
 
 from . import services
-from .models import Claim, EventGrant, Membership, Organization
+from .models import Claim, EventGrant, Membership, Organization, Profile
 
 
 class MemberInline(TabularInline):
@@ -30,12 +30,13 @@ class OrganizationAdmin(ModelAdmin):
 
 @admin.register(Claim)
 class ClaimAdmin(ModelAdmin):
-    list_display = ("created_at", "event_link", "who", "org_name", "role", "phone", "status_badge")
+    list_display = ("created_at", "event_link", "who", "org_name", "phone", "method", "status_badge")
     list_filter = ("status",)
     search_fields = ("event__title", "user__email", "org_name", "phone")
-    readonly_fields = ("user", "event", "org_name", "role", "phone", "evidence", "host", "created_at", "organization")
-    fields = ("event", "user", "org_name", "role", "phone", "evidence", "host", "created_at", "organization",
-              "status", "decision_note")
+    readonly_fields = ("user", "event", "org_name", "role", "phone", "evidence", "host", "method", "verify_email",
+                       "verified_at", "created_at", "organization")
+    fields = ("event", "user", "org_name", "role", "phone", "evidence", "method", "host", "verify_email", "verified_at",
+              "created_at", "organization", "status", "decision_note")
     actions = ["approve", "reject"]
 
     def has_add_permission(self, request):
@@ -94,3 +95,15 @@ class EventGrantAdmin(ModelAdmin):
 
 
 admin.site.register(Membership, ModelAdmin)
+
+
+@admin.register(Profile)
+class ProfileAdmin(ModelAdmin):
+    list_display = ("user", "email_verified", "lang")
+    list_filter = ("email_verified", "lang")
+    search_fields = ("user__email",)
+    actions = ["mark_verified"]
+
+    @admin.action(description="Отметить email подтверждённым")
+    def mark_verified(self, request, qs):
+        self.message_user(request, f"Подтверждено: {qs.update(email_verified=True)}")

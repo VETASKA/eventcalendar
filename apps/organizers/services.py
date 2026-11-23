@@ -31,7 +31,8 @@ def approve_claim(claim: Claim, moderator, note: str = "") -> EventGrant:
             claim.event.organization = org
             claim.event.save(update_fields=["organization", "updated_at"])
         log("claim.approve", claim, actor=moderator, reason=note, event=claim.event_id, organization=org.pk)
-        return grant
+    _notify(claim, approved=True, note=note)
+    return grant
 
 
 def reject_claim(claim: Claim, moderator, note: str) -> None:
@@ -40,6 +41,21 @@ def reject_claim(claim: Claim, moderator, note: str) -> None:
         claim.status, claim.decision_note = "rejected", note
         claim.save()
         log("claim.reject", claim, actor=moderator, reason=note, event=claim.event_id)
+    _notify(claim, approved=False, note=note)
+
+
+def _notify(claim, *, approved: bool, note: str) -> None:
+    from apps.core.i18n import lurl
+    from apps.core.mail import send, site_url
+
+    from .models import Profile
+    if not claim.user.email:
+        return
+    lang = Profile.of(claim.user).lang
+    pub = claim.event.publications.select_related("site").first()
+    send(claim.user.email, "claim_decided", {"event": claim.event, "approved": approved, "note": note,
+                                             "cabinet": site_url(pub.site if pub else None, lurl("/cabinet/", lang))},
+         lang=lang)
 
 
 def revoke(grant: EventGrant, moderator, reason: str) -> None:
