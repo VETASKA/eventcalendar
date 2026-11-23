@@ -125,6 +125,7 @@ from celery.schedules import crontab  # noqa: E402
 CELERY_BEAT_SCHEDULE = {
     # weekly digest: Tuesday 11:00 Kyiv time (owner's choice)
     "weekly-digest": {"task": "apps.subscriptions.tasks.send_digests", "schedule": crontab(minute=0, hour=11, day_of_week=2)},
+    "requeue-stuck-links": {"task": "apps.intake.tasks.requeue_stuck", "schedule": 1800.0},
     "reminders": {"task": "apps.subscriptions.tasks.send_due_reminders", "schedule": 300.0},
 }
 

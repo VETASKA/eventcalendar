@@ -152,3 +152,26 @@ def test_dead_link_is_not_event(suggest, monkeypatch):
                         lambda url, **kw: FetchResult(False, url, status=404, error="HTTP 404"))
     suggest("https://gone.example/e")
     assert IntakeItem.objects.get(source__code="form").status == "not_event"
+
+
+def test_redelivered_task_after_worker_restart_does_nothing(suggest, monkeypatch):
+    calls = []
+    monkeypatch.setattr(tasks, "safe_fetch", fake_fetch({"https://jazz.example/fest": EVENT_PAGE}, calls))
+    suggest("https://jazz.example/fest")
+    item = IntakeItem.objects.get(source__code="form")
+    assert tasks.fetch_page.apply(args=[item.pk]).result == "already done"
+    assert calls == ["https://jazz.example/fest"] and Event.objects.count() == 1
+
+
+def test_link_stuck_in_queue_is_picked_up_again(suggest, monkeypatch, settings):
+    from datetime import timedelta
+    from django.utils import timezone
+    calls = []
+    monkeypatch.setattr(tasks, "safe_fetch", fake_fetch({"https://jazz.example/fest": EVENT_PAGE}, calls))
+    suggest("https://jazz.example/fest")
+    # pretend the queued task was lost (e.g. Redis wiped) long ago
+    IntakeItem.objects.update(status="queued", last_received_at=timezone.now() - timedelta(hours=2))
+    assert tasks.requeue_stuck() == 1
+    assert IntakeItem.objects.get().status == "event_detected" and len(calls) == 2
+    assert tasks.requeue_stuck() == 0
+    assert settings.CELERY_TASK_ACKS_LATE and settings.CELERY_TASK_REJECT_ON_WORKER_LOST

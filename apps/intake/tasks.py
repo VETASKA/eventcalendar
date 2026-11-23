@@ -21,6 +21,8 @@ def fetch_page(self, item_id: int) -> str:
     item = IntakeItem.objects.filter(pk=item_id).first()
     if item is None or not item.url:
         return "gone"
+    if item.status not in ("queued", "fetch_error"):
+        return "already done"          # a redelivered task (worker restart) must not process twice
     r = safe_fetch(item.url)
     fetch = {"at": timezone.now().isoformat(), "final_url": r.url, "status": r.status, "error": r.error}
     parsed = None
@@ -44,3 +46,15 @@ def fetch_page(self, item_id: int) -> str:
         process(item)
     logger.info("fetched %s → %s", item.url, item.status)
     return item.status
+
+
+@shared_task
+def requeue_stuck(minutes: int = 30) -> int:
+    """Safety net: links that sat in the queue too long (e.g. Redis was wiped) are fetched again."""
+    from datetime import timedelta
+    old = timezone.now() - timedelta(minutes=minutes)
+    ids = list(IntakeItem.objects.filter(status="queued", last_received_at__lt=old)
+               .exclude(url="").values_list("pk", flat=True)[:200])
+    for pk in ids:
+        fetch_page.delay(pk)
+    return len(ids)

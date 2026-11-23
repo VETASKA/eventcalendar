@@ -14,8 +14,8 @@ class Site(models.Model):
     # online events with no city: shown here only after a moderator ties them to this storefront
     show_online = models.BooleanField("показывать онлайн-события", default=True)
     theme = models.CharField("оформление", max_length=40, default="default")
-    digest_weekday = models.PositiveSmallIntegerField("день дайджеста", default=4, help_text="0 = понедельник")
-    digest_time = models.TimeField("время дайджеста", default="10:00")
+    digest_weekday = models.PositiveSmallIntegerField("день дайджеста", default=1, help_text="0 = понедельник. Сейчас расписание общее: вторник 11:00 по Киеву")
+    digest_time = models.TimeField("время дайджеста", default="11:00")
     # names of environment variables / secret entries, never the secrets themselves
     secrets_ref = models.JSONField("ссылки на секреты", default=dict, blank=True,
                                    help_text='Имена переменных окружения, не сами секреты: '
