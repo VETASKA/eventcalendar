@@ -74,3 +74,23 @@ def test_fill_format_and_type_in_the_list_then_bulk_approve(admin_client, push):
                                                  "confirm": "yes"})
     assert SitePublication.objects.get(event=e1).status == "published"
     assert SitePublication.objects.get(event=e2).status == "pending"
+
+
+def test_picks_in_the_list_are_saved_when_an_action_is_pressed_without_save(admin_client, push):
+    """The moderator chooses format/type in the list and presses «Одобрить» straight away."""
+    import re
+    from apps.catalog.models import Event, EventType, SitePublication
+    push([harvey_item(1)])
+    ev = Event.objects.get()
+    forum = EventType.objects.get(code="forum")
+    page = admin_client.get("/admin/catalog/event/?state__exact=pending").content.decode()
+    i, pk = re.findall(r'name="form-(\d+)-id" value="(\d+)"', page)[0]
+    data = {"form-TOTAL_FORMS": "1", "form-INITIAL_FORMS": "1", "form-MIN_NUM_FORMS": "0",
+            "form-MAX_NUM_FORMS": "1000", f"form-{i}-id": pk, f"form-{i}-format": "offline",
+            f"form-{i}-event_type": str(forum.pk), "action": "bulk_approve", "_selected_action": [pk], "index": "0"}
+    r = admin_client.post("/admin/catalog/event/?state__exact=pending", data)
+    assert "Подтвердите публикацию" in r.content.decode()
+    ev.refresh_from_db()
+    assert ev.format == "offline" and ev.event_type == forum
+    admin_client.post("/admin/catalog/event/", {"action": "bulk_approve", "_selected_action": [pk], "confirm": "yes"})
+    assert SitePublication.objects.get(event=ev).status == "published"

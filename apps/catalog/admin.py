@@ -167,6 +167,31 @@ class EventAdmin(ModelAdmin):
         ("Служебное", {"classes": ["collapse"], "fields": ("created_at", "updated_at", "expected_revision")}),
     )
 
+    def changelist_view(self, request, extra_context=None):
+        # A moderator picks format/type in the list and presses an action right away: save those picks first,
+        # otherwise «Одобрить» would see the old empty values.
+        if request.method == "POST" and request.POST.get("action") and "_save" not in request.POST \
+                and "form-TOTAL_FORMS" in request.POST:
+            n = self._save_list_edits(request)
+            if n:
+                self.message_user(request, f"Сохранено изменений в списке: {n}", messages.SUCCESS)
+        return super().changelist_view(request, extra_context)
+
+    def _save_list_edits(self, request) -> int:
+        FormSet = self.get_changelist_formset(request)
+        prefix = FormSet.get_default_prefix()
+        formset = FormSet(request.POST, request.FILES, prefix=prefix,
+                          queryset=self._get_list_editable_queryset(request, prefix))
+        if not formset.is_valid():
+            return 0
+        n = 0
+        for form in formset.forms:
+            if form.has_changed():
+                obj = self.save_form(request, form, change=True)
+                self.save_model(request, obj, form, change=True)
+                n += 1
+        return n
+
     def get_changelist_form(self, request, **kwargs):
         """Plain, wide dropdowns in the list (no autocomplete / «add type» buttons), choices loaded once."""
         types = [("", "— тип —")] + [(t.pk, str(t)) for t in EventType.objects.filter(is_active=True)]
